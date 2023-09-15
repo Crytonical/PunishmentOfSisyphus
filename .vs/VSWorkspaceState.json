@@ -1,7 +1,10 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\PunishmentOfSisyphus",
+    "\\PunishmentOfSisyphus\\Assets",
+    "\\PunishmentOfSisyphus\\Assets\\Scripts"
   ],
-  "SelectedNode": "\\C:\\Users\\brods\\Source\\Repos\\PunishmentOfSisyphus",
+  "SelectedNode": "\\PunishmentOfSisyphus\\Assets\\Scripts\\test.cs",
   "PreviewInSolutionExplorer": false
 }
