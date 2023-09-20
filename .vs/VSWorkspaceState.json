@@ -3,8 +3,9 @@
     "",
     "\\PunishmentOfSisyphus",
     "\\PunishmentOfSisyphus\\Assets",
-    "\\PunishmentOfSisyphus\\Assets\\Scripts"
+    "\\PunishmentOfSisyphus\\Assets\\Systems",
+    "\\PunishmentOfSisyphus\\ProjectSettings"
   ],
-  "SelectedNode": "\\PunishmentOfSisyphus\\Assets\\Scripts\\test.cs",
+  "SelectedNode": "\\PunishmentOfSisyphus\\Assets\\Scenes",
   "PreviewInSolutionExplorer": false
 }
