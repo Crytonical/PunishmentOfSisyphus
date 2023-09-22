@@ -9,11 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8354e816e035cf7448472aa272358e77, type: 3}
-  m_Name: BoulderData
+  m_Script: {fileID: 11500000, guid: 7ff2e3d7a8dd1644da3d08576f9177a4, type: 3}
+  m_Name: BoulderEvent
   m_EditorClassIdentifier: 
-  velocity: {x: 0, y: 0}
-  initialVelocity: {x: 1, y: 1}
-  maxVelocity: {x: 30, y: 30}
-  velocityIncrease: 0.001
-  damage: 0

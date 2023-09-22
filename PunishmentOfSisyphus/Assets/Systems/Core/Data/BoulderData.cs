@@ -8,6 +8,13 @@ namespace Ephymeral.Data
 
     public class BoulderData : ScriptableObject
     {
+        [Header("Movement")]
+        public Vector2 velocity;
+        public Vector2 initialVelocity;
+        public Vector2 maxVelocity;
+        public float velocityIncrease;
 
+        [Header("Combat")]
+        public float damage;
     }
 }
