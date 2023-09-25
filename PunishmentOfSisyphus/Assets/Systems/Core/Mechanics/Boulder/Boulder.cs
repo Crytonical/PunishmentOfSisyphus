@@ -24,7 +24,7 @@ namespace Ephymeral.Boulder
         private double damage;
 
         // Checks
-        private bool isHeld;
+        public bool isHeld;
         private bool isThrown;
         private bool isRolling;
         private bool canThrow;
@@ -33,7 +33,6 @@ namespace Ephymeral.Boulder
         #region PROPERTIES
 
         #endregion
-
 
         private void Awake()
         {
@@ -67,45 +66,82 @@ namespace Ephymeral.Boulder
         void Update()
         {
             // Rolling Down
+            // Check if the boulder isn't being held or thrown,
+            //      and that it's current velocity is less than the maximum velocity
             if (!isHeld && !isThrown && velocity.y <= boulderData.maxVelocity.y)
             {
+                // Check if we are starting to roll, i.e we were not rolling last frame
+                if (!isRolling)
+                {
+                    Debug.Log("Initiating Rolling");
+
+                    // Set rolling to true
+                    isRolling = true;
+                }
+                // Set the rigid body's velocity to the increased velocity
                 RB.velocity = new Vector2(RB.velocity.x, -velocity.y);
 
-                // Increase Velocity by 2% each frame it is rolling
-
+                // Increase Velocity by some percent each frame it is rolling
                 velocity.y *= 1.0f + velocityIncrease;
             }
         }
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
-            if (collision.collider.CompareTag("Player"))
-            {
-                // Trigger pickup event on player
-                // playerEvent.PickupBoulder
-                PickedUp();
-            }
-
-            if (collision.collider.CompareTag("Enemies"))
+            if (collision.collider.CompareTag("Enemy") && isThrown)
             {
                 // Trigger damage event on enemy
                 //collision.collider.Enemy.dealDamage(damage);
+
+            }
+        }
+
+        private void OnTriggerEnter2D(Collider2D collision)
+        {
+            if (collision.gameObject.CompareTag("Player"))
+            {
+                Debug.Log("EA");
+                // Trigger pickup event on player
+                // playerEvent.PickupBoulder
+                PickedUp();
             }
         }
 
         private void ThrowBoulder()
         {
-            isThrown = true;
+            if (canThrow)
+            {
+                isThrown = true;
+            }
         }
 
         private void DropBoulder()
-        {
+        { 
+            // Sets trigger
             isHeld = false;
+
+            // Resets velocity
+            velocity = boulderData.initialVelocity;
         }
 
         private void PickedUp()
         {
+            // Sets checks
             isHeld = true;
+            isRolling = false;
+
+            // Stops boulder
+            velocity = Vector2.zero;
+            RB.velocity = velocity;
+
+            // TESTING
+            DropBoulder();
+        }
+
+        private void Ricochet()
+        {
+            // Choose a direction
+            // Determine speeds based on direction and airtime
         }
     }
 }
