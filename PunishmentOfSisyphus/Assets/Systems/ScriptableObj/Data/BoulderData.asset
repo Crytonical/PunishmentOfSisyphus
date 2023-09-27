@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: BoulderData
   m_EditorClassIdentifier: 
   velocity: {x: 0, y: 0}
-  initialVelocity: {x: 1, y: 1}
-  maxVelocity: {x: 30, y: 30}
-  velocityIncrease: 0.001
+  initialVelocity: {x: 0, y: 0.01}
+  maxVelocity: {x: 0, y: 20}
+  velocityIncrease: 1.001
+  airTime: {x: 0, y: 0}
   damage: 0

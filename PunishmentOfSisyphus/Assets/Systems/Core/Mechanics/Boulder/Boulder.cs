@@ -20,13 +20,15 @@ namespace Ephymeral.Boulder
         #region FIELDS
         // Inhereted data
         private Vector2 velocity;
+        private Vector2 ricochetVelocity;
         private float velocityIncrease;
         private double damage;
 
         // Checks
-        public bool isHeld;
+        private bool isHeld;
         private bool isThrown;
         private bool isRolling;
+        private bool isRicocheting;
         private bool canThrow;
         #endregion
 
@@ -43,9 +45,14 @@ namespace Ephymeral.Boulder
             // Initialize Variables
             velocity = boulderData.initialVelocity;
             damage = boulderData.damage;
-            velocityIncrease = boulderData.velocityIncrease;
-            isHeld = false;
+            velocityIncrease = boulderData.velocityPercentIncrease;
+
+            // Default values
+            isHeld = true;
             isThrown = false;
+            isRolling = false;
+            isRicocheting = false;
+            canThrow = true;
         }
 
         private void OnEnable()
@@ -68,7 +75,7 @@ namespace Ephymeral.Boulder
             // Rolling Down
             // Check if the boulder isn't being held or thrown,
             //      and that it's current velocity is less than the maximum velocity
-            if (!isHeld && !isThrown && velocity.y <= boulderData.maxVelocity.y)
+            if (!isRicocheting && !isHeld && !isThrown && velocity.y <= boulderData.maxVelocity.y)
             {
                 // Check if we are starting to roll, i.e we were not rolling last frame
                 if (!isRolling)
@@ -82,7 +89,7 @@ namespace Ephymeral.Boulder
                 RB.velocity = new Vector2(RB.velocity.x, -velocity.y);
 
                 // Increase Velocity by some percent each frame it is rolling
-                velocity.y *= 1.0f + velocityIncrease;
+                velocity.y *= velocityIncrease;
             }
         }
 
@@ -91,8 +98,9 @@ namespace Ephymeral.Boulder
             if (collision.collider.CompareTag("Enemy") && isThrown)
             {
                 // Trigger damage event on enemy
-                //collision.collider.Enemy.dealDamage(damage);
 
+                // Call ricochet function
+                Ricochet(collision);
             }
         }
 
@@ -138,10 +146,17 @@ namespace Ephymeral.Boulder
             DropBoulder();
         }
 
-        private void Ricochet()
+        private void Ricochet(Collision2D collision)
         {
             // Choose a direction
+            isRicocheting = true;
             // Determine speeds based on direction and airtime
+
+
+            // Direction needs to be a percent of the current velocity, but in the opposite direction 
+            // Negate x, use constant 'gravity' mechanic to handle y direction
+            // Will create inconsistent angles, but might look good
+            // Increase scale as the boulder bounces
         }
     }
 }
