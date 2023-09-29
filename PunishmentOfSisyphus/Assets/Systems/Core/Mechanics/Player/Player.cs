@@ -26,12 +26,16 @@ namespace Ephymeral.PlayerNS
 
         #region Fields
         // Movement constants
-        [SerializeField] private const float CARRY_SPEED = 0.75f;
-        [SerializeField] private const float FREE_SPEED = 1f;
-        [SerializeField] private const float DODGE_SPEED = 5f;
-        [SerializeField] private const float DODGE_DECAY = 0.5f;
+        [SerializeField] private const float CARRY_SPEED = 1.5f;
+        [SerializeField] private const float FREE_SPEED = 5f;
+        [SerializeField] private const float DODGE_SPEED = 20f;
+        [SerializeField] private const float DODGE_DECAY = 1f;
 
         [SerializeField] private PlayerState state;
+
+        // Only exists so that directions input during roll are registered
+        // When it ends. Otherwise, you'll need to press the key again
+        private Vector2 dodgeDirection;
         #endregion
 
         #region Properties
@@ -79,7 +83,8 @@ namespace Ephymeral.PlayerNS
                     }
 
                     // Reduce the velocity until it reaches (0,0).
-                    velocity -= direction * DODGE_DECAY * Time.deltaTime;
+                    speed -= DODGE_DECAY;
+                    velocity = dodgeDirection * speed * Time.deltaTime;
                     break;
             }
 
@@ -87,14 +92,20 @@ namespace Ephymeral.PlayerNS
             base.Update();
         }
 
-        //public void OnMove(InputAction.CallbackContext context)
-        //{
-        //    Debug.Log("Hello!");
-        //}
+        public void OnMove(InputAction.CallbackContext context)
+        {
+            direction = context.ReadValue<Vector2>();
+        }
 
         public void OnDodge(InputAction.CallbackContext context)
         {
-
+            if(state != PlayerState.Dodge)
+            {
+                state = PlayerState.Dodge;
+                speed = DODGE_SPEED;
+                dodgeDirection = direction;
+                velocity = dodgeDirection * DODGE_SPEED * Time.deltaTime;
+            }
         }
     }
 }

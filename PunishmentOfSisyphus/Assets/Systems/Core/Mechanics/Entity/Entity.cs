@@ -42,6 +42,7 @@ namespace Ephymeral.EntityNS
         {
             // Update position, alter scale. Children should call parent
             position += velocity;
+            transform.position = position;
             UpdateScale();
         }
 
