@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.InputSystem;
 using Ephymeral.EntityNS;
 using Ephymeral.BoulderNS;
 using System.Threading;
@@ -91,10 +91,5 @@ namespace Ephymeral.PlayerNS
         //{
         //    Debug.Log("Hello!");
         //}
-
-        public void OnDodge(ContextCallback context)
-        {
-            Debug.Log("HAAHHA");
-        }
     }
 }
