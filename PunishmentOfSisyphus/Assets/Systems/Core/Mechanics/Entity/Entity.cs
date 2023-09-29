@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-namespace Ephymeral.Entity
+namespace Ephymeral.EntityNS
 {
     public class Entity : MonoBehaviour
     {
         #region References
-        [SerializeField] private Collider2D collisionBox;
+        // Type of collision should be handled by child
+        protected Collider2D collision;
         #endregion
 
         #region Fields
@@ -23,16 +24,34 @@ namespace Ephymeral.Entity
         #region Properties
         #endregion
 
-        // Start is called before the first frame update
-        void Start()
+        /// <summary>
+        /// Initializes movement vectors
+        /// </summary>
+        protected void Awake()
         {
+            // Create movement vectors
+            direction = new Vector2(0, 0);
+            velocity = new Vector2(0, 0);
+            position = new Vector2(0, 0);
 
+            scale = new Vector2(MAX_SCALE, MAX_SCALE);
         }
 
         // Update is called once per frame
-        void Update()
+        protected void Update()
         {
-            // Update position, alter scale
+            // Update position, alter scale. Children should call parent
+            position += velocity;
+            UpdateScale();
+        }
+
+        /// <summary>
+        /// Calculate the scale based on the position relative to the main camera.
+        /// Scales to a minimum of 0.8f, and maximum of 1.0f. Values can be adjusted
+        /// </summary>
+        private void UpdateScale()
+        {
+
         }
     }
 }

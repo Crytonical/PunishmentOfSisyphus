@@ -4,7 +4,7 @@ using UnityEngine;
 using Ephymeral.Data;
 using Ephymeral.Events;
 
-namespace Ephymeral.Boulder
+namespace Ephymeral.BoulderNS
 {
     public class Boulder : MonoBehaviour
     {
