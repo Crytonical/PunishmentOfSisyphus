@@ -4,6 +4,7 @@ using UnityEngine;
 
 using Ephymeral.EntityNS;
 using Ephymeral.BoulderNS;
+using System.Threading;
 
 // INPUTSYSTEM INS'T WORKING FOR SOME REASON DUE TO DIRECTORY
 
@@ -60,6 +61,7 @@ namespace Ephymeral.PlayerNS
             {
                 case PlayerState.CarryingBounder:
                     // Handle anything boulder related here?
+                    // Slow speed
                     break;
 
                 case PlayerState.Free:
@@ -89,5 +91,10 @@ namespace Ephymeral.PlayerNS
         //{
         //    Debug.Log("Hello!");
         //}
+
+        public void OnDodge(ContextCallback context)
+        {
+            Debug.Log("HAAHHA");
+        }
     }
 }
