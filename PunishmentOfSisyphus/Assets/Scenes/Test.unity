@@ -263,7 +263,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1650843781}
         m_TargetAssemblyTypeName: Ephymeral.PlayerNS.Player, PunishmentOfSisyphus.Core
-        m_MethodName: OnDodge
+        m_MethodName: OnMove
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -609,12 +609,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5150829696afef942b60ee1a8795459a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speed: 0
+  health: 0
+  direction: {x: 0, y: 0}
+  velocity: {x: 0, y: 0}
+  position: {x: 0, y: 0}
+  scale: {x: 0, y: 0}
   boulderEvent: {fileID: 11400000, guid: c72588212e952d144b5b97d5ed1afd7e, type: 2}
   boulderData: {fileID: 11400000, guid: 616287b0a3c030a4caf89a76f2a67b0a, type: 2}
   playerEvent: {fileID: 11400000, guid: ba01c3c52a41b424cac2f5bdeb8b4d89, type: 2}
-  RB: {fileID: 0}
   hitbox: {fileID: 0}
-  velocity: {x: 0, y: 0}
 --- !u!58 &2018752734
 CircleCollider2D:
   m_ObjectHideFlags: 0
