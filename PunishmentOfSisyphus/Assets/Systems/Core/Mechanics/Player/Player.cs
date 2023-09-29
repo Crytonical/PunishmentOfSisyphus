@@ -91,5 +91,10 @@ namespace Ephymeral.PlayerNS
         //{
         //    Debug.Log("Hello!");
         //}
+
+        public void OnDodge(InputAction.CallbackContext context)
+        {
+
+        }
     }
 }

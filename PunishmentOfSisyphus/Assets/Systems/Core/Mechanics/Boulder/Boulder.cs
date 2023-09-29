@@ -3,33 +3,38 @@ using System.Collections.Generic;
 using UnityEngine;
 using Ephymeral.Data;
 using Ephymeral.Events;
+using Ephymeral.EntityNS;
 
 namespace Ephymeral.BoulderNS
 {
-    public class Boulder : MonoBehaviour
+    public enum BoulderState
+    { 
+        Held,
+        Thrown,
+        Rolling,
+        Ricocheting
+    }
+
+    public class Boulder : Entity
     {
         #region REFERENCES
         [SerializeField] private BoulderEvent boulderEvent;
         [SerializeField] private BoulderData boulderData;
         [SerializeField] private PlayerEvent playerEvent;
-        [SerializeField] private Rigidbody2D RB;
         [SerializeField] private CircleCollider2D hitbox;
-        [SerializeField]
         #endregion
 
         #region FIELDS
         // Inhereted data
-        private Vector2 velocity;
         private Vector2 ricochetVelocity;
         private float velocityIncrease;
         private double damage;
 
         // Checks
-        private bool isHeld;
-        private bool isThrown;
-        private bool isRolling;
-        private bool isRicocheting;
         private bool canThrow;
+
+        // State
+        private BoulderState state;
         #endregion
 
         #region PROPERTIES
@@ -38,21 +43,21 @@ namespace Ephymeral.BoulderNS
 
         private void Awake()
         {
+            // Run base Awake function
+            base.Awake();
+
             // Assign References
-            RB = GetComponent<Rigidbody2D>();
             hitbox = GetComponent<CircleCollider2D>();
 
             // Initialize Variables
-            velocity = boulderData.initialVelocity;
             damage = boulderData.damage;
             velocityIncrease = boulderData.velocityPercentIncrease;
 
             // Default values
-            isHeld = true;
-            isThrown = false;
-            isRolling = false;
-            isRicocheting = false;
             canThrow = true;
+
+            // Default State
+            state = BoulderState.Held;
         }
 
         private void OnEnable()
@@ -75,27 +80,33 @@ namespace Ephymeral.BoulderNS
             // Rolling Down
             // Check if the boulder isn't being held or thrown,
             //      and that it's current velocity is less than the maximum velocity
-            if (!isRicocheting && !isHeld && !isThrown && velocity.y <= boulderData.maxVelocity.y)
+
+            switch(state)
             {
-                // Check if we are starting to roll, i.e we were not rolling last frame
-                if (!isRolling)
-                {
-                    Debug.Log("Initiating Rolling");
+                case BoulderState.Held:
+                    // Set vel to 0
+                    velocity = Vector2.zero;
+                    break;
 
-                    // Set rolling to true
-                    isRolling = true;
-                }
-                // Set the rigid body's velocity to the increased velocity
-                RB.velocity = new Vector2(RB.velocity.x, -velocity.y);
+                case BoulderState.Thrown:
+                    // Throw stuff
+                    break;
 
-                // Increase Velocity by some percent each frame it is rolling
-                velocity.y *= velocityIncrease;
+                case BoulderState.Rolling:
+                    // Increase Velocity by some percent each frame it is rolling
+                    velocity.y *= velocityIncrease;
+                    break;
+
+                case BoulderState.Ricocheting:
+                    break;
             }
+
+            transform.position = position;
         }
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
-            if (collision.collider.CompareTag("Enemy") && isThrown)
+            if (collision.collider.CompareTag("Enemy"))
             {
                 // Trigger damage event on enemy
 
@@ -119,28 +130,21 @@ namespace Ephymeral.BoulderNS
         {
             if (canThrow)
             {
-                isThrown = true;
+
             }
         }
 
         private void DropBoulder()
         { 
-            // Sets trigger
-            isHeld = false;
-
             // Resets velocity
             velocity = boulderData.initialVelocity;
         }
 
         private void PickedUp()
         {
-            // Sets checks
-            isHeld = true;
-            isRolling = false;
 
             // Stops boulder
             velocity = Vector2.zero;
-            RB.velocity = velocity;
 
             // TESTING
             DropBoulder();
@@ -149,7 +153,6 @@ namespace Ephymeral.BoulderNS
         private void Ricochet(Collision2D collision)
         {
             // Choose a direction
-            isRicocheting = true;
             // Determine speeds based on direction and airtime
 
 
