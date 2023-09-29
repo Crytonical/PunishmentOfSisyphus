@@ -8,4 +8,25 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/SampleScene.unity
     guid: 2cda990e2423bbf4892e6590ba056729
+  - enabled: 1
+    path: Assets/Scenes/Menus/Title Screen.unity
+    guid: f203ac8cdc48b384fa8cb4a200ff2920
+  - enabled: 1
+    path: Assets/Scenes/Menus/Settings.unity
+    guid: 5dab6a818651669449a67c8016aa851c
+  - enabled: 1
+    path: Assets/Scenes/Menus/Save.unity
+    guid: e9521f96075360c4b9ec90fb4052042b
+  - enabled: 1
+    path: Assets/Scenes/Menus/MainMenu.unity
+    guid: 6a71433f507a6a4469bfce25ffbde4d5
+  - enabled: 1
+    path: Assets/Scenes/Menus/Credits.unity
+    guid: 06832bca8187e674e914fbaf66d8cdfb
+  - enabled: 1
+    path: Assets/Scenes/Game.unity
+    guid: c4d36420780ab8d4ba0e6f6c7c0d7df7
+  - enabled: 1
+    path: Assets/Scenes/Test.unity
+    guid: bef1e8c326705b443882f0bb0047d306
   m_configObjects: {}
