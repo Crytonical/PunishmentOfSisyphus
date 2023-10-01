@@ -12,7 +12,10 @@ namespace Ephymeral.Data
         public Vector2 velocity;
         public Vector2 initialVelocity;
         public Vector2 maxVelocity;
-        public float velocityIncrease;
+        public float velocityPercentIncrease;
+
+        [Header("Ricochet")]
+        public Vector2 airTime;
 
         [Header("Ricochet")]
         public Vector2 airTime;
