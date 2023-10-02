@@ -2,9 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Threading;
+
 using Ephymeral.EntityNS;
 using Ephymeral.BoulderNS;
-using System.Threading;
+using Ephymeral.Events;
+using Ephymeral.Data;
 
 // INPUTSYSTEM INS'T WORKING FOR SOME REASON DUE TO DIRECTORY
 
@@ -15,21 +18,19 @@ namespace Ephymeral.PlayerNS
         CarryingBounder,
         Free,
         Dodge,
-        Damage
+        Damage,
+        Throwing
     }
 
     public class Player : Entity
     {
         #region References
-        private Boulder boulder;
+        [SerializeField] private BoulderEvent boulderEvent;
+        [SerializeField] private PlayerEvent playerEvent;
+        [SerializeField] private PlayerMovementData playerMovementData;
         #endregion
 
         #region Fields
-        // Movement constants
-        [SerializeField] private const float CARRY_SPEED = 1.5f;
-        [SerializeField] private const float FREE_SPEED = 5f;
-        [SerializeField] private const float DODGE_SPEED = 20f;
-        [SerializeField] private const float DODGE_DECAY = 1f;
 
         [SerializeField] private PlayerState state;
 
@@ -41,13 +42,23 @@ namespace Ephymeral.PlayerNS
         #region Properties
         #endregion
 
+        private void OnEnable()
+        {
+            // Add event listeners
+        }
+
+        private void OnDisable()
+        {
+            // remove event listeners
+        }
+
         /// <summary>
         /// Initializes fields
         /// </summary>
         private void Awake()
         {
             // Declare Entity variables
-            speed = FREE_SPEED;
+            speed = playerMovementData.FREE_SPEED;
             health = 100; // FOR TESTING, NOT FINAL
 
             // Just for testing. Should start with carrying boulder
@@ -66,6 +77,7 @@ namespace Ephymeral.PlayerNS
                 case PlayerState.CarryingBounder:
                     // Handle anything boulder related here?
                     // Slow speed
+                    velocity = direction * speed * Time.deltaTime;
                     break;
 
                 case PlayerState.Free:
@@ -79,19 +91,50 @@ namespace Ephymeral.PlayerNS
                     if (velocity == Vector2.zero)
                     {
                         state = PlayerState.Free;
-                        speed = FREE_SPEED;
+                        speed = playerMovementData.FREE_SPEED;
                     }
 
                     // Reduce the velocity until it reaches (0,0).
-                    speed -= DODGE_DECAY;
+                    speed -= playerMovementData.DODGE_DECAY;
                     velocity = dodgeDirection * speed * Time.deltaTime;
                     break;
+
+                case PlayerState.Throwing:
+                    // FOR TESTING JUST SWITCH BACK TO FREE
+                    state = PlayerState.Free;
+                    speed = playerMovementData.FREE_SPEED;
+                    break;
             }
+
+            UpdateEventObject();
 
             // Run parent's update for position and scale change
             base.Update();
         }
 
+        private void UpdateEventObject()
+        {
+            playerEvent.Direction = direction;
+            playerEvent.Velocity = velocity;
+            playerEvent.Speed = speed;
+            playerEvent.State = state;
+            playerEvent.Position = position;
+        }
+
+        // Collision Methods
+        private void OnTriggerEnter2D(Collider2D collision)
+        {
+            if (collision.CompareTag("Boulder"))
+            {
+                Debug.Log("Pickup");
+                state = PlayerState.CarryingBounder;
+                speed = playerMovementData.CARRY_SPEED;
+                boulderEvent.PickUpBoulder();
+            }
+
+        }
+
+        // Input methods
         public void OnMove(InputAction.CallbackContext context)
         {
             direction = context.ReadValue<Vector2>();
@@ -99,12 +142,32 @@ namespace Ephymeral.PlayerNS
 
         public void OnDodge(InputAction.CallbackContext context)
         {
-            if(state != PlayerState.Dodge)
+            if (context.started)
             {
-                state = PlayerState.Dodge;
-                speed = DODGE_SPEED;
-                dodgeDirection = direction;
-                velocity = dodgeDirection * DODGE_SPEED * Time.deltaTime;
+                if (state != PlayerState.Dodge)
+                {
+                    if (state == PlayerState.CarryingBounder)
+                    {
+                        boulderEvent.DropBoulder();
+                    }
+
+                    state = PlayerState.Dodge;
+                    speed = playerMovementData.DODGE_SPEED;
+                    dodgeDirection = direction;
+                    velocity = dodgeDirection * playerMovementData.DODGE_SPEED * Time.deltaTime;
+                }
+            }
+        }
+
+        public void OnThrow(InputAction.CallbackContext context)
+        {
+            if (context.started)
+            {
+                if (state == PlayerState.CarryingBounder)
+                {
+                    state = PlayerState.Throwing;
+                    boulderEvent.Throw();
+                }
             }
         }
     }

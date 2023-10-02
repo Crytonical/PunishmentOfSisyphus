@@ -9,19 +9,17 @@ namespace Ephymeral.Data
     public class BoulderData : ScriptableObject
     {
         [Header("Rolling")]
-        public Vector2 velocity;
-        public Vector2 initialVelocity;
-        public Vector2 maxVelocity;
-        public float velocityPercentIncrease;
+        public float MAX_ROLL_SPEED;
+        public float ROLL_SPEED_INCREASE;
+        public float INITIAL_ROLL_SPEED;
 
         [Header("Ricochet")]
-        public Vector2 airTime;
-
-        [Header("Ricochet")]
-        public Vector2 airTime;
+        public float AIR_TIME;
+        public float RICOCHET_SPEED;
 
         [Header("Combat")]
-        public float damage;
+        public float DAMAGE;
+        public float THROW_SPEED;
 
     }
 }

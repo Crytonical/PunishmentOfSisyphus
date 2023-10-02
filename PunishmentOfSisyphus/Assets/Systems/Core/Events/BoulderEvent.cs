@@ -1,5 +1,8 @@
 using UnityEngine.Events;
 using UnityEngine;
+using Codice.CM.Common;
+
+using Ephymeral.BoulderNS;
 
 namespace Ephymeral.Events
 {
@@ -7,24 +10,27 @@ namespace Ephymeral.Events
     public class BoulderEvent : ScriptableObject
     {
         #region FIELDS
-        private bool isHeld;
-        private bool isThrown;
-        private bool isRolling;
+        private BoulderState state;
 
         #region EVENTS
         [System.NonSerialized]
-        public UnityEvent throwEvent;
+        public UnityEvent thrownEvent;
         public UnityEvent pickupEvent;
         public UnityEvent dropEvent;
+        public UnityEvent ricochetEvent;
         #endregion
+        #endregion
+
+        #region PROPERTIES
+        public BoulderState State { get { return state; } set { state = value; } }
         #endregion
 
         private void OnEnable()
         {
             #region CREATE EVENTS
-            if (throwEvent == null)
+            if (thrownEvent == null)
             {
-                throwEvent = new UnityEvent();
+                thrownEvent = new UnityEvent();
             }
             if (pickupEvent == null)
             {
@@ -34,26 +40,33 @@ namespace Ephymeral.Events
             {
                 dropEvent = new UnityEvent();
             }
+            if (ricochetEvent == null)
+            {
+                ricochetEvent = new UnityEvent();
+            }
             #endregion
         }
 
-
-        // Start is called before the first frame update
-        void Start()
+        public void DropBoulder()
         {
-
+            dropEvent.Invoke();
         }
 
-        // Update is called once per frame
-        void Update()
+        public void PickUpBoulder()
         {
+            pickupEvent.Invoke();
+        }
 
+        public void Throw()
+        {
+            thrownEvent.Invoke();
         }
 
         // --- Events List ---
-         // Picked up
-         // Dropped
-         // Thrown
-         // 
+        // Picked up
+        // Dropped
+        // Thrown
+        // Richochet
+        // Deal damage (?)
     }
 }

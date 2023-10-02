@@ -8,6 +8,12 @@ namespace Ephymeral.Data
 
     public class PlayerMovementData : ScriptableObject
     {
+        [Header("Speeds")]
+        public float CARRY_SPEED;
+        public float FREE_SPEED;
+        public float DODGE_SPEED;
 
+        [Header("Dodging")]
+        public float DODGE_DECAY;
     }
 }

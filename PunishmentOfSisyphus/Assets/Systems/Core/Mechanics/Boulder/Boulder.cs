@@ -4,6 +4,8 @@ using UnityEngine;
 using Ephymeral.Data;
 using Ephymeral.Events;
 using Ephymeral.EntityNS;
+using System.Runtime.CompilerServices;
+using UnityEngine.InputSystem;
 
 namespace Ephymeral.BoulderNS
 {
@@ -27,14 +29,14 @@ namespace Ephymeral.BoulderNS
         #region FIELDS
         // Inhereted data
         private Vector2 ricochetVelocity;
-        private float velocityIncrease;
+        private float velocityIncrease, ricochetTimer;
         private double damage;
 
         // Checks
         private bool canThrow;
 
         // State
-        private BoulderState state;
+        [SerializeField] private BoulderState state;
         #endregion
 
         #region PROPERTIES
@@ -50,8 +52,8 @@ namespace Ephymeral.BoulderNS
             hitbox = GetComponent<CircleCollider2D>();
 
             // Initialize Variables
-            damage = boulderData.damage;
-            velocityIncrease = boulderData.velocityPercentIncrease;
+            damage = boulderData.DAMAGE;
+            velocityIncrease = boulderData.ROLL_SPEED_INCREASE;
 
             // Default values
             canThrow = true;
@@ -62,14 +64,14 @@ namespace Ephymeral.BoulderNS
 
         private void OnEnable()
         {
-            boulderEvent.throwEvent.AddListener(ThrowBoulder);
+            boulderEvent.thrownEvent.AddListener(ThrowBoulder);
             boulderEvent.dropEvent.AddListener(DropBoulder);
             boulderEvent.pickupEvent.AddListener(PickedUp);
         }
 
         private void OnDisable()
         {
-            boulderEvent.throwEvent.RemoveListener(ThrowBoulder);
+            boulderEvent.thrownEvent.RemoveListener(ThrowBoulder);
             boulderEvent.dropEvent.RemoveListener(DropBoulder);
             boulderEvent.pickupEvent.RemoveListener(PickedUp);
         }
@@ -81,77 +83,95 @@ namespace Ephymeral.BoulderNS
             // Check if the boulder isn't being held or thrown,
             //      and that it's current velocity is less than the maximum velocity
 
+            Debug.Log(Input.mousePosition);
+
             switch(state)
             {
                 case BoulderState.Held:
-                    // Set vel to 0
-                    velocity = Vector2.zero;
+                    velocity = playerEvent.Velocity;
                     break;
 
                 case BoulderState.Thrown:
                     // Throw stuff
+                    velocity = direction * speed * Time.deltaTime;
                     break;
 
                 case BoulderState.Rolling:
                     // Increase Velocity by some percent each frame it is rolling
-                    velocity.y *= velocityIncrease;
+                    if (Mathf.Abs(velocity.y) <= boulderData.MAX_ROLL_SPEED)
+                    {
+                        velocity = direction * speed * Time.deltaTime;
+                        speed += velocityIncrease;
+                    }
                     break;
 
                 case BoulderState.Ricocheting:
+                    if (ricochetTimer > 0)
+                    {
+                        ricochetTimer -= Time.deltaTime;
+
+                        if (Mathf.Abs(velocity.y) <= boulderData.MAX_ROLL_SPEED)
+                        {
+                            velocity = direction * speed * Time.deltaTime;
+                        }
+                    }
+
+                    if (ricochetTimer <= 0)
+                    {
+                        state = BoulderState.Rolling;
+                    }
                     break;
             }
 
-            transform.position = position;
+            UpdateEventObject();
+
+            base.Update();
         }
 
-        private void OnCollisionEnter2D(Collision2D collision)
+        private void OnTriggerEnter2D(Collider2D collision)
         {
-            if (collision.collider.CompareTag("Enemy"))
+            if (collision.CompareTag("Enemy"))
             {
                 // Trigger damage event on enemy
 
                 // Call ricochet function
                 Ricochet(collision);
             }
-        }
 
-        private void OnTriggerEnter2D(Collider2D collision)
-        {
-            if (collision.gameObject.CompareTag("Player"))
+            if (collision.CompareTag("Wall"))
             {
-                Debug.Log("EA");
-                // Trigger pickup event on player
-                // playerEvent.PickupBoulder
-                PickedUp();
+                direction *= -1;
             }
         }
 
         private void ThrowBoulder()
         {
-            if (canThrow)
-            {
-
-            }
+            state = BoulderState.Thrown;
+            direction = ((Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition) - playerEvent.Position).normalized; 
+            speed = boulderData.THROW_SPEED;
         }
 
         private void DropBoulder()
-        { 
+        {
             // Resets velocity
-            velocity = boulderData.initialVelocity;
+            direction = Vector2.down;
+            speed = boulderData.INITIAL_ROLL_SPEED;
+            state = BoulderState.Rolling;
         }
 
         private void PickedUp()
         {
-
-            // Stops boulder
-            velocity = Vector2.zero;
-
-            // TESTING
-            DropBoulder();
+            state = BoulderState.Held;
+            position = playerEvent.Position;
+            Debug.Log("Picked Up");
         }
 
-        private void Ricochet(Collision2D collision)
+        private void Ricochet(Collider2D collision)
         {
+            state = BoulderState.Ricocheting;
+            ricochetTimer = boulderData.AIR_TIME;
+            direction = new Vector2(-direction.x, -1.0f);
+            speed = boulderData.RICOCHET_SPEED;
             // Choose a direction
             // Determine speeds based on direction and airtime
 
@@ -160,6 +180,11 @@ namespace Ephymeral.BoulderNS
             // Negate x, use constant 'gravity' mechanic to handle y direction
             // Will create inconsistent angles, but might look good
             // Increase scale as the boulder bounces
+        }
+
+        private void UpdateEventObject()
+        {
+            boulderEvent.State = state;
         }
     }
 }
