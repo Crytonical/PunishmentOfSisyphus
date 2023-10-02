@@ -88,14 +88,15 @@ namespace Ephymeral.PlayerNS
 
                 case PlayerState.Dodge:
                     // Dodge roll has ended. ONLY FOR TESTING
-                    if (velocity == Vector2.zero)
+                    if (speed < 0)
                     {
                         state = PlayerState.Free;
                         speed = playerMovementData.FREE_SPEED;
+                        velocity = direction * speed * Time.deltaTime;
                     }
 
                     // Reduce the velocity until it reaches (0,0).
-                    speed -= playerMovementData.DODGE_DECAY;
+                    speed -= (playerMovementData.DODGE_SPEED / playerMovementData.DODGE_DURATION) * Time.deltaTime;
                     velocity = dodgeDirection * speed * Time.deltaTime;
                     break;
 

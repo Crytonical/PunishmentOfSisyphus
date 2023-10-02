@@ -14,6 +14,6 @@ namespace Ephymeral.Data
         public float DODGE_SPEED;
 
         [Header("Dodging")]
-        public float DODGE_DECAY;
+        public float DODGE_DURATION;
     }
 }
