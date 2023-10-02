@@ -28,8 +28,8 @@ namespace Ephymeral.BoulderNS
 
         #region FIELDS
         // Inhereted data
-        private Vector2 ricochetVelocity;
-        private float velocityIncrease, ricochetTimer;
+        private Vector2 initialVelocity;
+        private float elapsedTime;
         private double damage;
 
         // Checks
@@ -53,7 +53,6 @@ namespace Ephymeral.BoulderNS
 
             // Initialize Variables
             damage = boulderData.DAMAGE;
-            velocityIncrease = boulderData.ROLL_SPEED_INCREASE;
 
             // Default values
             canThrow = true;
@@ -79,53 +78,75 @@ namespace Ephymeral.BoulderNS
         // Update is called once per frame
         void Update()
         {
-            // Rolling Down
-            // Check if the boulder isn't being held or thrown,
-            //      and that it's current velocity is less than the maximum velocity
-
-            Debug.Log(Input.mousePosition);
-
+            // State machine
             switch(state)
             {
+                // Held
                 case BoulderState.Held:
                     velocity = playerEvent.Velocity;
                     break;
 
+                // Throwing
                 case BoulderState.Thrown:
                     // Throw stuff
-                    velocity = direction * speed * Time.deltaTime;
                     break;
-
+                
+                // Rolling
                 case BoulderState.Rolling:
-                    // Increase Velocity by some percent each frame it is rolling
-                    if (Mathf.Abs(velocity.y) <= boulderData.MAX_ROLL_SPEED)
-                    {
-                        velocity = direction * speed * Time.deltaTime;
-                        speed += velocityIncrease;
-                    }
                     break;
 
+                // Ricocheting
                 case BoulderState.Ricocheting:
-                    if (ricochetTimer > 0)
-                    {
-                        ricochetTimer -= Time.deltaTime;
-
-                        if (Mathf.Abs(velocity.y) <= boulderData.MAX_ROLL_SPEED)
-                        {
-                            velocity = direction * speed * Time.deltaTime;
-                        }
-                    }
-
-                    if (ricochetTimer <= 0)
-                    {
-                        state = BoulderState.Rolling;
-                    }
+                    
                     break;
             }
 
             UpdateEventObject();
 
             base.Update();
+        }
+
+        private void FixedUpdate()
+        {
+            switch (state) 
+            {
+                case BoulderState.Held:
+                    // Held
+                    break;
+                case BoulderState.Thrown:
+                    velocity = direction * speed * Time.deltaTime;
+                    break;
+                case BoulderState.Rolling:
+                    // Increase Velocity by some percent each frame it is rolling
+                    if (Mathf.Abs(velocity.y) <= boulderData.MAX_ROLL_SPEED)
+                    {
+                        // Update velocity
+                        elapsedTime += Time.deltaTime;
+                        Debug.Log(elapsedTime);
+
+                        // Acceleration is just gravity for straight downward movement
+                        velocity.y = (initialVelocity.y - (boulderData.GRAVITY * elapsedTime)) / 1000;
+                        velocity.x = 0.0f;
+                    }
+                    break;
+                case BoulderState.Ricocheting:
+                    if (elapsedTime <= boulderData.AIR_TIME)
+                    {
+                        // Decrease ricochet timer
+                        elapsedTime += Time.deltaTime;
+
+                        // Update velocity
+                        velocity.y = direction.y + (speed - boulderData.GRAVITY) * elapsedTime;
+                        velocity.x = direction.x + (speed * elapsedTime);
+                    }
+
+                    // Check if we should end the ricochet
+                    if (elapsedTime >= boulderData.AIR_TIME)
+                    {
+                        DropBoulder();
+                    }
+                    break;
+            }
         }
 
         private void OnTriggerEnter2D(Collider2D collision)
@@ -148,43 +169,40 @@ namespace Ephymeral.BoulderNS
         {
             state = BoulderState.Thrown;
             direction = ((Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition) - playerEvent.Position).normalized; 
-            speed = boulderData.THROW_SPEED;
+            speed = boulderData.THROW_ACCELERATION;
         }
 
         private void DropBoulder()
         {
             // Resets velocity
-            direction = Vector2.down;
-            speed = boulderData.INITIAL_ROLL_SPEED;
+            initialVelocity.y = -0.01f;
             state = BoulderState.Rolling;
+            UpdatePhysicsValues();
         }
 
         private void PickedUp()
         {
             state = BoulderState.Held;
             position = playerEvent.Position;
-            Debug.Log("Picked Up");
+            UpdatePhysicsValues();
         }
 
         private void Ricochet(Collider2D collision)
         {
             state = BoulderState.Ricocheting;
-            ricochetTimer = boulderData.AIR_TIME;
-            direction = new Vector2(-direction.x, -1.0f);
-            speed = boulderData.RICOCHET_SPEED;
-            // Choose a direction
-            // Determine speeds based on direction and airtime
-
-
-            // Direction needs to be a percent of the current velocity, but in the opposite direction 
-            // Negate x, use constant 'gravity' mechanic to handle y direction
-            // Will create inconsistent angles, but might look good
-            // Increase scale as the boulder bounces
+            direction = new Vector2(-direction.x, direction.y);
+            speed = boulderData.RICOCHET_ACCELERATION;
+            UpdatePhysicsValues();
         }
 
         private void UpdateEventObject()
         {
             boulderEvent.State = state;
+        }
+
+        private void UpdatePhysicsValues()
+        {
+            elapsedTime = 0;
         }
     }
 }
