@@ -92,6 +92,8 @@ namespace Ephymeral.PlayerNS
                     {
                         state = PlayerState.Free;
                         speed = playerMovementData.FREE_SPEED;
+
+                        // Lets player move immediately instead of waiting until next frame
                         velocity = direction * speed * Time.deltaTime;
                     }
 
