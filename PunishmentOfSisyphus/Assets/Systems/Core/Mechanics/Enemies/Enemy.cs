@@ -51,7 +51,19 @@ namespace Ephymeral.EnemyNS
             enemyEvent.deathEvent.AddListener(Die);
         }
 
-        
+        private void FixedUpdate()
+        {
+            switch(state)
+            {
+                case EnemyState.Seeking:
+
+                    break;
+                case EnemyState.Attacking:
+                    break;
+                case EnemyState.Damage:
+                    break;
+            }
+        }
 
         private void TakeDamage(float damage)
         {

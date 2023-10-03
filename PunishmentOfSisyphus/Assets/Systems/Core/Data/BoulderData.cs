@@ -13,16 +13,15 @@ namespace Ephymeral.Data
 
         [Header("Rolling")]
         public float MAX_ROLL_SPEED;
-        public float INITIAL_ROLL_VELOCITY;
+        public float INITIAL_ROLL_SPEED;
 
         [Header("Ricochet")]
         public float AIR_TIME;
-        public float RICOCHET_SPEED;
+        public float INITIAL_RICOCHET_SPEED;
         public float RICOCHET_ACCELERATION;
 
         [Header("Throwing")]
         public float THROW_SPEED;
-        public float THROW_ACCELERATION;
 
         [Header("Combat")]
         public float DAMAGE;

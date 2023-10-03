@@ -117,30 +117,37 @@ namespace Ephymeral.BoulderNS
                     break;
                 case BoulderState.Thrown:
                     // Need to calculate speed not velocity
+                    elapsedTime += Time.deltaTime;
 
-                    velocity = direction * speed * Time.deltaTime;
+                    speed = (boulderData.THROW_SPEED) / 1000;
+
+                    velocity = direction * speed;
                     break;
                 case BoulderState.Rolling:
                     // Increase Velocity by some percent each frame it is rolling
                     if (Mathf.Abs(velocity.y) <= boulderData.MAX_ROLL_SPEED)
                     {
-                        // Update velocity
                         elapsedTime += Time.deltaTime;
 
-                        // Acceleration is just gravity for straight downward movement
-                        velocity.y = (initialVelocity.y + (-boulderData.GRAVITY * elapsedTime)) / 1000;
-                        velocity.x = 0.0f;
+                        // Update speed
+                        speed = (boulderData.INITIAL_ROLL_SPEED + (boulderData.GRAVITY * elapsedTime)) / 1000;
+
+                        // Update velocity
+                        velocity = direction * speed;
                     }
                     break;
                 case BoulderState.Ricocheting:
                     if (elapsedTime <= boulderData.AIR_TIME)
                     {
-                        // Decrease ricochet timer
                         elapsedTime += Time.deltaTime;
+                        // Update speed
+                        speed = (boulderData.INITIAL_RICOCHET_SPEED + (boulderData.RICOCHET_ACCELERATION * elapsedTime)) / 1000;
+                        velocity.x = direction.x * speed;
 
                         // Update velocity
-                        velocity.y = (initialVelocity.y + (-boulderData.GRAVITY * elapsedTime)) / 1000;
-                        velocity.x = (initialVelocity.x + (speed * elapsedTime)) / 1000;
+                        // Add lerping / curves
+                        speed = (boulderData.INITIAL_RICOCHET_SPEED + (-boulderData.GRAVITY * elapsedTime)) / 1000;
+                        velocity.y = direction.y * speed;
                     }
 
                     // Check if we should end the ricochet
@@ -172,15 +179,13 @@ namespace Ephymeral.BoulderNS
         private void ThrowBoulder()
         {
             state = BoulderState.Thrown;
-            direction = ((Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition) - playerEvent.Position).normalized; 
-            speed = boulderData.THROW_ACCELERATION;
+            direction = ((Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition) - playerEvent.Position).normalized;
         }
 
         private void DropBoulder()
         {
-            // Resets velocity
-            initialVelocity.y = -0.01f;
             state = BoulderState.Rolling;
+            direction = Vector2.down;
             UpdatePhysicsValues();
         }
 
@@ -194,8 +199,7 @@ namespace Ephymeral.BoulderNS
         private void Ricochet(Collider2D collision)
         {
             state = BoulderState.Ricocheting;
-            initialVelocity = new Vector2(-direction.x, direction.y);
-            speed = boulderData.RICOCHET_ACCELERATION * initialVelocity.x;
+            direction = new Vector2(-direction.x, 1.0f);
             UpdatePhysicsValues();
         }
 
