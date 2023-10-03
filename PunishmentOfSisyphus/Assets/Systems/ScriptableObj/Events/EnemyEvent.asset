@@ -9,15 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8354e816e035cf7448472aa272358e77, type: 3}
-  m_Name: BoulderData
+  m_Script: {fileID: 11500000, guid: 2c0a04ec3f908764b872cd980017824e, type: 3}
+  m_Name: EnemyEvent
   m_EditorClassIdentifier: 
-  GRAVITY: 0.5
-  MAX_ROLL_SPEED: 10
-  INITIAL_ROLL_VELOCITY: 0
-  AIR_TIME: 1
-  RICOCHET_SPEED: 5
-  RICOCHET_ACCELERATION: 15
-  THROW_SPEED: 10
-  THROW_ACCELERATION: 30
-  DAMAGE: 90
+  attackEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  deathEvent:
+    m_PersistentCalls:
+      m_Calls: []

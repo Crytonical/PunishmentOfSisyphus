@@ -2,7 +2,8 @@
     "name": "PunishmentOfSisyphus.Core",
     "rootNamespace": "",
     "references": [
-        "GUID:75469ad4d38634e559750d17036d5f7c"
+        "GUID:75469ad4d38634e559750d17036d5f7c",
+        "GUID:35c27ff51569481449a44f35e19cff80"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

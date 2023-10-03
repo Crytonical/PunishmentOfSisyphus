@@ -212,6 +212,7 @@ GameObject:
   - component: {fileID: 502398847}
   - component: {fileID: 502398846}
   - component: {fileID: 502398845}
+  - component: {fileID: 502398849}
   m_Layer: 7
   m_Name: Enemy
   m_TagString: Enemy
@@ -358,6 +359,25 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &502398849
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 502398844}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6537a14268b3f3a4c9b345bf5f845a5d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  boulderEvent: {fileID: 11400000, guid: c72588212e952d144b5b97d5ed1afd7e, type: 2}
+  boulderData: {fileID: 11400000, guid: 616287b0a3c030a4caf89a76f2a67b0a, type: 2}
+  playerEvent: {fileID: 11400000, guid: ba01c3c52a41b424cac2f5bdeb8b4d89, type: 2}
+  enemyData: {fileID: 11400000, guid: 21f25de256c547143863166e236fceb9, type: 2}
+  enemyEvent: {fileID: 11400000, guid: 9be8e1655348fbd4d861fe627d679425, type: 2}
+  hitbox: {fileID: 0}
+  state: 0
 --- !u!1 &1027140932
 GameObject:
   m_ObjectHideFlags: 0

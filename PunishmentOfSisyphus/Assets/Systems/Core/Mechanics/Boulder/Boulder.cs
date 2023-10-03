@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Runtime.CompilerServices;
+using UnityEngine.InputSystem;
+
 using Ephymeral.Data;
 using Ephymeral.Events;
 using Ephymeral.EntityNS;
-using System.Runtime.CompilerServices;
-using UnityEngine.InputSystem;
+using Ephymeral.EnemyNS;
 
 namespace Ephymeral.BoulderNS
 {
@@ -30,7 +32,7 @@ namespace Ephymeral.BoulderNS
         // Inhereted data
         private Vector2 initialVelocity;
         private float elapsedTime;
-        private double damage;
+        private float damage;
 
         // Checks
         private bool canThrow;
@@ -114,6 +116,8 @@ namespace Ephymeral.BoulderNS
                     // Held
                     break;
                 case BoulderState.Thrown:
+                    // Need to calculate speed not velocity
+
                     velocity = direction * speed * Time.deltaTime;
                     break;
                 case BoulderState.Rolling:
@@ -122,10 +126,9 @@ namespace Ephymeral.BoulderNS
                     {
                         // Update velocity
                         elapsedTime += Time.deltaTime;
-                        Debug.Log(elapsedTime);
 
                         // Acceleration is just gravity for straight downward movement
-                        velocity.y = (initialVelocity.y - (boulderData.GRAVITY * elapsedTime)) / 1000;
+                        velocity.y = (initialVelocity.y + (-boulderData.GRAVITY * elapsedTime)) / 1000;
                         velocity.x = 0.0f;
                     }
                     break;
@@ -136,8 +139,8 @@ namespace Ephymeral.BoulderNS
                         elapsedTime += Time.deltaTime;
 
                         // Update velocity
-                        velocity.y = direction.y + (speed - boulderData.GRAVITY) * elapsedTime;
-                        velocity.x = direction.x + (speed * elapsedTime);
+                        velocity.y = (initialVelocity.y + (-boulderData.GRAVITY * elapsedTime)) / 1000;
+                        velocity.x = (initialVelocity.x + (speed * elapsedTime)) / 1000;
                     }
 
                     // Check if we should end the ricochet
@@ -154,6 +157,7 @@ namespace Ephymeral.BoulderNS
             if (collision.CompareTag("Enemy"))
             {
                 // Trigger damage event on enemy
+                collision.GetComponent<Enemy>().enemyEvent.TakeDamage(damage);
 
                 // Call ricochet function
                 Ricochet(collision);
@@ -190,8 +194,8 @@ namespace Ephymeral.BoulderNS
         private void Ricochet(Collider2D collision)
         {
             state = BoulderState.Ricocheting;
-            direction = new Vector2(-direction.x, direction.y);
-            speed = boulderData.RICOCHET_ACCELERATION;
+            initialVelocity = new Vector2(-direction.x, direction.y);
+            speed = boulderData.RICOCHET_ACCELERATION * initialVelocity.x;
             UpdatePhysicsValues();
         }
 

@@ -6,7 +6,6 @@ using Ephymeral.PlayerNS;
 
 namespace Ephymeral.Events
 {
-
     [CreateAssetMenu(fileName = "PlayerEvent", menuName = "EventObjects/PlayerEvent")]
     public class PlayerEvent : ScriptableObject
     {
