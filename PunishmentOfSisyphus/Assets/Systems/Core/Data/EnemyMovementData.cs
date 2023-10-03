@@ -8,6 +8,14 @@ namespace Ephymeral.Data
 
     public class EnemyMovementData : ScriptableObject
     {
+        [Header("General")]
+        public float GRAVITY;
 
+        [Header("Movement")]
+        public float MOVE_SPEED;
+
+        [Header("Combat")]
+        public float DAMAGE;
+        public float HEALTH;
     }
 }

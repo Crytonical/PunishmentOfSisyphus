@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using static Codice.Client.Commands.WkTree.WorkspaceTreeNode;
 
+using Ephymeral.EntityNS;
+
 namespace Ephymeral.EnemyNS
 {
     public enum EnemyState
@@ -15,7 +17,7 @@ namespace Ephymeral.EnemyNS
         Damage
     }
 
-    public class Enemy : MonoBehaviour
+    public class Enemy : Entity
     {
         #region REFERENCES
         [SerializeField] private BoulderEvent boulderEvent;
@@ -29,7 +31,6 @@ namespace Ephymeral.EnemyNS
         #region FIELDS
         // Inhereted data
         private double damage;
-        private double health = 100;
 
         // State
         [SerializeField] private EnemyState state;
@@ -51,14 +52,34 @@ namespace Ephymeral.EnemyNS
             enemyEvent.deathEvent.AddListener(Die);
         }
 
+        private void Awake()
+        {
+            base.Awake();
+
+            position = new Vector2(20, 20);
+
+            health = enemyData.HEALTH;
+            speed = enemyData.MOVE_SPEED;
+            damage = enemyData.DAMAGE;
+        }
+
         private void FixedUpdate()
         {
             switch(state)
             {
                 case EnemyState.Seeking:
+                    direction = ((playerEvent.Position - position).normalized) / 1000;
+                    velocity = direction * speed;
 
+                    if ((playerEvent.Position - position).magnitude < 0.5)
+                    {
+                        state = EnemyState.Attacking;
+                    }
                     break;
                 case EnemyState.Attacking:
+                    direction = Vector2.zero;
+                    velocity = direction * speed;
+                    Debug.Log("I am ttackgin");
                     break;
                 case EnemyState.Damage:
                     break;
