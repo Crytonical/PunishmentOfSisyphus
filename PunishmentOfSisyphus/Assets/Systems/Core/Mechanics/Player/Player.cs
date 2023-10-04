@@ -149,15 +149,17 @@ namespace Ephymeral.PlayerNS
             {
                 if (state != PlayerState.Dodge)
                 {
+                    // Don't have them dodge when firing the boulder
                     if (state == PlayerState.CarryingBounder)
-                    {
                         boulderEvent.DropBoulder();
-                    }
 
-                    state = PlayerState.Dodge;
-                    speed = playerMovementData.DODGE_SPEED;
-                    dodgeDirection = direction;
-                    velocity = dodgeDirection * playerMovementData.DODGE_SPEED * Time.deltaTime;
+                    else
+                    {
+                        state = PlayerState.Dodge;
+                        speed = playerMovementData.DODGE_SPEED;
+                        dodgeDirection = direction;
+                        velocity = dodgeDirection * playerMovementData.DODGE_SPEED * Time.deltaTime;
+                    }
                 }
             }
         }
