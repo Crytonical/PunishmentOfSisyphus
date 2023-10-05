@@ -1,33 +1,44 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Runtime.CompilerServices;
+using UnityEngine.InputSystem;
+
 using Ephymeral.Data;
 using Ephymeral.Events;
+using Ephymeral.EntityNS;
+using Ephymeral.EnemyNS;
 
-namespace Ephymeral.Boulder
+namespace Ephymeral.BoulderNS
 {
-    public class Boulder : MonoBehaviour
+    public enum BoulderState
+    { 
+        Held,
+        Thrown,
+        Rolling,
+        Ricocheting
+    }
+
+    public class Boulder : Entity
     {
         #region REFERENCES
         [SerializeField] private BoulderEvent boulderEvent;
         [SerializeField] private BoulderData boulderData;
         [SerializeField] private PlayerEvent playerEvent;
-        [SerializeField] private Rigidbody2D RB;
         [SerializeField] private CircleCollider2D hitbox;
-        [SerializeField]
         #endregion
 
         #region FIELDS
         // Inhereted data
-        private Vector2 velocity;
-        private float velocityIncrease;
-        private double damage;
+        private Vector2 initialVelocity;
+        private float elapsedTime;
+        private float damage;
 
         // Checks
-        public bool isHeld;
-        private bool isThrown;
-        private bool isRolling;
         private bool canThrow;
+
+        // State
+        [SerializeField] private BoulderState state;
         #endregion
 
         #region PROPERTIES
@@ -36,28 +47,32 @@ namespace Ephymeral.Boulder
 
         private void Awake()
         {
+            // Run base Awake function
+            base.Awake();
+
             // Assign References
-            RB = GetComponent<Rigidbody2D>();
             hitbox = GetComponent<CircleCollider2D>();
 
             // Initialize Variables
-            velocity = boulderData.initialVelocity;
-            damage = boulderData.damage;
-            velocityIncrease = boulderData.velocityIncrease;
-            isHeld = false;
-            isThrown = false;
+            damage = boulderData.DAMAGE;
+
+            // Default values
+            canThrow = true;
+
+            // Default State
+            state = BoulderState.Held;
         }
 
         private void OnEnable()
         {
-            boulderEvent.throwEvent.AddListener(ThrowBoulder);
+            boulderEvent.thrownEvent.AddListener(ThrowBoulder);
             boulderEvent.dropEvent.AddListener(DropBoulder);
             boulderEvent.pickupEvent.AddListener(PickedUp);
         }
 
         private void OnDisable()
         {
-            boulderEvent.throwEvent.RemoveListener(ThrowBoulder);
+            boulderEvent.thrownEvent.RemoveListener(ThrowBoulder);
             boulderEvent.dropEvent.RemoveListener(DropBoulder);
             boulderEvent.pickupEvent.RemoveListener(PickedUp);
         }
@@ -65,83 +80,137 @@ namespace Ephymeral.Boulder
         // Update is called once per frame
         void Update()
         {
-            // Rolling Down
-            // Check if the boulder isn't being held or thrown,
-            //      and that it's current velocity is less than the maximum velocity
-            if (!isHeld && !isThrown && velocity.y <= boulderData.maxVelocity.y)
+            // State machine
+            switch(state)
             {
-                // Check if we are starting to roll, i.e we were not rolling last frame
-                if (!isRolling)
-                {
-                    Debug.Log("Initiating Rolling");
+                // Held
+                case BoulderState.Held:
+                    velocity = playerEvent.Velocity;
+                    break;
 
-                    // Set rolling to true
-                    isRolling = true;
-                }
-                // Set the rigid body's velocity to the increased velocity
-                RB.velocity = new Vector2(RB.velocity.x, -velocity.y);
+                // Throwing
+                case BoulderState.Thrown:
+                    // Throw stuff
+                    break;
+                
+                // Rolling
+                case BoulderState.Rolling:
+                    break;
 
-                // Increase Velocity by some percent each frame it is rolling
-                velocity.y *= 1.0f + velocityIncrease;
+                // Ricocheting
+                case BoulderState.Ricocheting:
+                    
+                    break;
             }
+
+            UpdateEventObject();
+
+            base.Update();
         }
 
-        private void OnCollisionEnter2D(Collision2D collision)
+        private void FixedUpdate()
         {
-            if (collision.collider.CompareTag("Enemy") && isThrown)
+            switch (state) 
             {
-                // Trigger damage event on enemy
-                //collision.collider.Enemy.dealDamage(damage);
+                case BoulderState.Held:
+                    // Held
+                    break;
+                case BoulderState.Thrown:
+                    // Need to calculate speed not velocity
+                    elapsedTime += Time.deltaTime;
 
+                    speed = (boulderData.THROW_SPEED) / 1000;
+
+                    velocity = direction * speed;
+                    break;
+                case BoulderState.Rolling:
+                    // Increase Velocity by some percent each frame it is rolling
+                    if (Mathf.Abs(velocity.y) <= boulderData.MAX_ROLL_SPEED)
+                    {
+                        elapsedTime += Time.deltaTime;
+
+                        // Update speed
+                        speed = (boulderData.INITIAL_ROLL_SPEED + (boulderData.GRAVITY * elapsedTime)) / 1000;
+
+                        // Update velocity
+                        velocity = direction * speed;
+                    }
+                    break;
+                case BoulderState.Ricocheting:
+                    if (elapsedTime <= boulderData.AIR_TIME)
+                    {
+                        elapsedTime += Time.deltaTime;
+                        // Update speed
+                        speed = (boulderData.INITIAL_RICOCHET_SPEED + (boulderData.RICOCHET_ACCELERATION * elapsedTime)) / 1000;
+                        velocity.x = direction.x * speed;
+
+                        // Update velocity
+                        // Add lerping / curves
+                        speed = (boulderData.INITIAL_RICOCHET_SPEED + (-boulderData.GRAVITY * elapsedTime)) / 1000;
+                        velocity.y = direction.y * speed;
+                    }
+
+                    // Check if we should end the ricochet
+                    if (elapsedTime >= boulderData.AIR_TIME)
+                    {
+                        DropBoulder();
+                    }
+                    break;
             }
         }
 
         private void OnTriggerEnter2D(Collider2D collision)
         {
-            if (collision.gameObject.CompareTag("Player"))
+            if (collision.CompareTag("Enemy"))
             {
-                Debug.Log("EA");
-                // Trigger pickup event on player
-                // playerEvent.PickupBoulder
-                PickedUp();
+                // Trigger damage event on enemy
+                collision.GetComponent<Enemy>().enemyEvent.TakeDamage(damage);
+
+                // Call ricochet function
+                Ricochet(collision);
+            }
+
+            if (collision.CompareTag("Wall"))
+            {
+                direction *= -1;
             }
         }
 
         private void ThrowBoulder()
         {
-            if (canThrow)
-            {
-                isThrown = true;
-            }
+            state = BoulderState.Thrown;
+            direction = ((Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition) - playerEvent.Position).normalized;
         }
 
         private void DropBoulder()
-        { 
-            // Sets trigger
-            isHeld = false;
-
-            // Resets velocity
-            velocity = boulderData.initialVelocity;
+        {
+            state = BoulderState.Rolling;
+            direction = Vector2.down;
+            UpdatePhysicsValues();
         }
 
         private void PickedUp()
         {
-            // Sets checks
-            isHeld = true;
-            isRolling = false;
-
-            // Stops boulder
-            velocity = Vector2.zero;
-            RB.velocity = velocity;
-
-            // TESTING
-            DropBoulder();
+            state = BoulderState.Held;
+            position = playerEvent.Position;
+            UpdatePhysicsValues();
         }
 
-        private void Ricochet()
+        private void Ricochet(Collider2D collision)
         {
-            // Choose a direction
-            // Determine speeds based on direction and airtime
+            state = BoulderState.Ricocheting;
+            direction = new Vector2(-direction.x, 1.0f);
+            UpdatePhysicsValues();
+        }
+
+        private void UpdateEventObject()
+        {
+            boulderEvent.State = state;
+        }
+
+        private void UpdatePhysicsValues()
+        {
+            elapsedTime = 0;
         }
     }
 }

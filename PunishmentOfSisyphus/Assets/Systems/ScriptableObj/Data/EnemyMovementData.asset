@@ -12,3 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 693867210b6dc1143800920bf01df731, type: 3}
   m_Name: EnemyMovementData
   m_EditorClassIdentifier: 
+  GRAVITY: 1
+  MOVE_SPEED: 3
+  DAMAGE: 3
+  HEALTH: 100

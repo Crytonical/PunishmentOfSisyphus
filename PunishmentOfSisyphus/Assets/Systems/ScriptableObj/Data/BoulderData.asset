@@ -12,8 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8354e816e035cf7448472aa272358e77, type: 3}
   m_Name: BoulderData
   m_EditorClassIdentifier: 
-  velocity: {x: 0, y: 0}
-  initialVelocity: {x: 1, y: 1}
-  maxVelocity: {x: 30, y: 30}
-  velocityIncrease: 0.001
-  damage: 0
+  GRAVITY: 3
+  MAX_ROLL_SPEED: 10
+  INITIAL_ROLL_SPEED: 0.1
+  AIR_TIME: 3
+  INITIAL_RICOCHET_SPEED: 4
+  RICOCHET_ACCELERATION: 1
+  THROW_SPEED: 10
+  DAMAGE: 90
