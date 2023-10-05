@@ -19,7 +19,8 @@ namespace Ephymeral.PlayerNS
         Free,
         Dodge,
         Damage,
-        Throwing
+        Throwing,
+        Lunging
     }
 
     public class Player : Entity
@@ -102,6 +103,10 @@ namespace Ephymeral.PlayerNS
                     velocity = dodgeDirection * speed * Time.deltaTime;
                     break;
 
+                case PlayerState.Lunging:
+
+                    break;
+
                 case PlayerState.Throwing:
                     // FOR TESTING JUST SWITCH BACK TO FREE
                     state = PlayerState.Free;
@@ -151,7 +156,8 @@ namespace Ephymeral.PlayerNS
                 {
                     // Don't have them dodge when firing the boulder
                     if (state == PlayerState.CarryingBounder)
-                        boulderEvent.DropBoulder();
+                        //boulderEvent.DropBoulder();
+                        return;
 
                     else
                     {
@@ -173,7 +179,70 @@ namespace Ephymeral.PlayerNS
                     state = PlayerState.Throwing;
                     boulderEvent.Throw();
                 }
+                else
+                {
+                    state = PlayerState.Lunging;
+                    Vector2 lunchDir = ((Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition) - playerEvent.Position).normalized;
+                    StartCoroutine(LunchCo(lunchDir));
+
+                }
             }
+        }
+
+        IEnumerator LunchCo(Vector2 lunchDir)
+        {
+            float timer = 0f;
+
+            float startValue = playerMovementData.LUNGE_SPEED;
+            float endValue = playerMovementData.FREE_SPEED;
+
+            float duration = playerMovementData.LUNGE_DURATION;
+
+            float prog; //Easing Vars
+            float t;
+
+            while (timer < duration)
+            {
+                if (state == PlayerState.Lunging) //Cancel if the lunch is interupted.
+                {
+                    t = timer / duration;
+                    prog = CubicBezier(t, 1f, .01f, .94f, .97f);
+
+                    float currentValue = Mathf.Lerp(startValue, endValue, prog);
+
+                    Debug.Log("Current Value: " + currentValue);
+
+                    velocity = lunchDir * currentValue * Time.deltaTime;
+
+                    timer += Time.deltaTime;
+                    yield return null;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            if(timer >= duration)
+                state = PlayerState.Free;
+
+        }
+
+        // Cubic Bezier easing function, courtesy of stack overflow
+        float CubicBezier(float t, float p0, float p1, float p2, float p3)
+        {
+            float u = 1.0f - t;
+            float tt = t * t;
+            float uu = u * u;
+            float uuu = uu * u;
+            float ttt = tt * t;
+
+            float p = uuu * p0; // (1-t)^3 * P0
+            p += 3 * uu * t * p1; // 3 * (1-t)^2 * t * P1
+            p += 3 * u * tt * p2; // 3 * (1-t) * t^2 * P2
+            p += ttt * p3; // t^3 * P3
+
+            return p;
         }
     }
 }

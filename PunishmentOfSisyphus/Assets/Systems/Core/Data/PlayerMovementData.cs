@@ -15,5 +15,9 @@ namespace Ephymeral.Data
 
         [Header("Dodging")]
         public float DODGE_DURATION;
+
+        [Header("Attacking")]
+        public float LUNGE_SPEED;
+        public float LUNGE_DURATION;
     }
 }
