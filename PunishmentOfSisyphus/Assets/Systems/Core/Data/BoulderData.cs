@@ -21,7 +21,8 @@ namespace Ephymeral.Data
         public float RICOCHET_ACCELERATION;
 
         [Header("Throwing")]
-        public float THROW_SPEED;
+        public float INITIAL_THROW_SPEED;
+        public float THROW_DECELERATION;
 
         [Header("Combat")]
         public float DAMAGE;

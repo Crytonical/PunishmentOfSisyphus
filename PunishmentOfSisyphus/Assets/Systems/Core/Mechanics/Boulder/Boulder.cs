@@ -119,9 +119,14 @@ namespace Ephymeral.BoulderNS
                     // Need to calculate speed not velocity
                     elapsedTime += Time.deltaTime;
 
-                    speed = (boulderData.THROW_SPEED) / 1000;
+                    speed = (boulderData.INITIAL_THROW_SPEED + (-boulderData.THROW_DECELERATION * elapsedTime)) / 1000;
 
                     velocity = direction * speed;
+
+                    if (speed <= 0)
+                    {
+                        DropBoulder();
+                    }
                     break;
                 case BoulderState.Rolling:
                     // Increase Velocity by some percent each frame it is rolling
@@ -161,7 +166,7 @@ namespace Ephymeral.BoulderNS
 
         private void OnTriggerEnter2D(Collider2D collision)
         {
-            if (collision.CompareTag("Enemy"))
+            if (collision.CompareTag("Enemy") && state == BoulderState.Thrown)
             {
                 // Trigger damage event on enemy
                 collision.GetComponent<Enemy>().enemyEvent.TakeDamage(damage);
@@ -172,7 +177,7 @@ namespace Ephymeral.BoulderNS
 
             if (collision.CompareTag("Wall"))
             {
-                direction *= -1;
+                direction.x *= -1;
             }
         }
 

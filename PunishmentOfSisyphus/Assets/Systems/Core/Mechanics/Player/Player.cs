@@ -140,6 +140,17 @@ namespace Ephymeral.PlayerNS
                 boulderEvent.PickUpBoulder();
             }
 
+            if (collision.CompareTag("EnemyWeapon"))
+            {
+                // Taking Damage
+                TakeDamage(20f);
+            }
+        }
+
+        private void TakeDamage(float damage)
+        {
+            health -= damage;
+            Debug.Log(health);
         }
 
         // Input methods
