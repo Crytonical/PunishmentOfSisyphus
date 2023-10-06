@@ -9,15 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8354e816e035cf7448472aa272358e77, type: 3}
-  m_Name: BoulderData
+  m_Script: {fileID: 11500000, guid: 693867210b6dc1143800920bf01df731, type: 3}
+  m_Name: SlowEnemyData
   m_EditorClassIdentifier: 
-  GRAVITY: 3
-  MAX_ROLL_SPEED: 10
-  INITIAL_ROLL_SPEED: 0.1
-  AIR_TIME: 3
-  INITIAL_RICOCHET_SPEED: 4
-  RICOCHET_ACCELERATION: 1
-  THROW_SPEED: 10
-  THROW_DECELERATION: -10
-  DAMAGE: 90
+  GRAVITY: 0
+  MOVE_SPEED: 0
+  DAMAGE: 0
+  HEALTH: 0
