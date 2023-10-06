@@ -68,7 +68,8 @@ namespace Ephymeral.EnemyNS
             switch(state)
             {
                 case EnemyState.Seeking:
-                    direction = ((playerEvent.Position - position).normalized) / 1000;
+                    //direction = ((playerEvent.Position - position).normalized) / 1000;
+                    direction = ((playerEvent.Position - position).normalized);
                     velocity = direction * speed;
 
                     if ((playerEvent.Position - position).magnitude < 0.5)
