@@ -56,7 +56,7 @@ namespace Ephymeral.PlayerNS
         /// <summary>
         /// Initializes fields
         /// </summary>
-        private void Awake()
+        protected override void Awake()
         {
             // Declare Entity variables
             speed = playerMovementData.FREE_SPEED;
@@ -71,7 +71,7 @@ namespace Ephymeral.PlayerNS
         }
 
         // Update is called once per frame
-        private void Update()
+        protected override void Update()
         {
             switch (state)
             {

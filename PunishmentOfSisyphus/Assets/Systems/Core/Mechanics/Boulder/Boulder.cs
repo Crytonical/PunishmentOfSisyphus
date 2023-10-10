@@ -46,7 +46,7 @@ namespace Ephymeral.BoulderNS
 
         #endregion
 
-        private void Awake()
+        protected override void Awake()
         {
             // Run base Awake function
             base.Awake();
@@ -79,7 +79,7 @@ namespace Ephymeral.BoulderNS
         }
 
         // Update is called once per frame
-        void Update()
+        protected override void Update()
         {
             // State machine
             switch (state)
@@ -133,7 +133,7 @@ namespace Ephymeral.BoulderNS
             if (collision.CompareTag("Enemy"))
             {
                 // Trigger damage event on enemy
-                collision.GetComponent<Enemy>().enemyEvent.TakeDamage(damage);
+                //collision.GetComponent<Enemy>().enemyEvent.TakeDamage(damage);
 
                 // Call ricochet function
                 Ricochet(collision);
