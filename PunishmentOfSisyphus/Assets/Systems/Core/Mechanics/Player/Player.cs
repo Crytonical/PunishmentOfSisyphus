@@ -206,11 +206,9 @@ namespace Ephymeral.PlayerNS
                 if (state == PlayerState.Lunging) //Cancel if the lunch is interupted.
                 {
                     t = timer / duration;
-                    prog = CubicBezier(t, 1f, .01f, .94f, .97f);
+                    prog = t*t;
 
                     float currentValue = Mathf.Lerp(startValue, endValue, prog);
-
-                    Debug.Log("Current Value: " + currentValue);
 
                     velocity = lunchDir * currentValue * Time.deltaTime;
 
