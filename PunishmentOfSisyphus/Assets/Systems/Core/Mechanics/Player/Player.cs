@@ -73,38 +73,21 @@ namespace Ephymeral.PlayerNS
         // Update is called once per frame
         private void Update()
         {
-            switch(state)
+            switch (state)
             {
-                case PlayerState.CarryingBounder:
-                    // Handle anything boulder related here?
-                    // Slow speed
-                    velocity = direction * speed * Time.deltaTime;
-                    break;
-
-                case PlayerState.Free:
-                    // Check for collision with boulder
-
-                    velocity = direction * speed * Time.deltaTime;
-                    break;
-
                 case PlayerState.Dodge:
                     // Dodge roll has ended. ONLY FOR TESTING
-                    if (speed < 0)
+                    if (speed <= 0)
                     {
                         state = PlayerState.Free;
                         speed = playerMovementData.FREE_SPEED;
-
-                        // Lets player move immediately instead of waiting until next frame
-                        velocity = direction * speed * Time.deltaTime;
                     }
 
-                    // Reduce the velocity until it reaches (0,0).
+                    // Reduce the velocity until it reaches (0,0). Set to reduce so dodge lasts set amount of time
+                    acceleration += (playerMovementData.DODGE_SPEED / playerMovementData.DODGE_DURATION) * (dodgeDirection * -1);
+
+                    // Only used for the sake of determining when the roll is over. Checking with vectors is messier
                     speed -= (playerMovementData.DODGE_SPEED / playerMovementData.DODGE_DURATION) * Time.deltaTime;
-                    velocity = dodgeDirection * speed * Time.deltaTime;
-                    break;
-
-                case PlayerState.Lunging:
-
                     break;
 
                 case PlayerState.Throwing:
@@ -113,6 +96,10 @@ namespace Ephymeral.PlayerNS
                     speed = playerMovementData.FREE_SPEED;
                     break;
             }
+
+            // No need for switch statements for Free or CarryingBoulder
+            if (state != PlayerState.Dodge)
+                velocity = direction * speed;
 
             UpdateEventObject();
 
@@ -165,17 +152,20 @@ namespace Ephymeral.PlayerNS
             {
                 if (state != PlayerState.Dodge)
                 {
-                    // Don't have them dodge when firing the boulder
+                    // Don't have them dodge when firing the boulder. JUST FOR NOW
                     if (state == PlayerState.CarryingBounder)
-                        //boulderEvent.DropBoulder();
-                        return;
+                    {
+                        boulderEvent.DropBoulder();
+                        speed = playerMovementData.FREE_SPEED;
+                        state = PlayerState.Free;
+                    }
 
                     else
                     {
                         state = PlayerState.Dodge;
                         speed = playerMovementData.DODGE_SPEED;
                         dodgeDirection = direction;
-                        velocity = dodgeDirection * playerMovementData.DODGE_SPEED * Time.deltaTime;
+                        velocity = dodgeDirection * playerMovementData.DODGE_SPEED;
                     }
                 }
             }

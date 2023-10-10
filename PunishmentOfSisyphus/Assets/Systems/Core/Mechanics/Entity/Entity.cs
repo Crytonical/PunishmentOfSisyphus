@@ -17,7 +17,7 @@ namespace Ephymeral.EntityNS
         private const float MAX_SCALE = 1.0f;
 
         [SerializeField] protected float speed, health;
-        [SerializeField] protected Vector2 direction, velocity, position;
+        [SerializeField] protected Vector2 direction, acceleration, velocity, position;
         [SerializeField] private Vector2 scale;
         #endregion
 
@@ -31,6 +31,7 @@ namespace Ephymeral.EntityNS
         {
             // Create movement vectors
             direction = new Vector2(0, 0);
+            acceleration = new Vector2(0, 0);
             velocity = new Vector2(0, 0);
             position = new Vector2(0, 0);
 
@@ -41,9 +42,12 @@ namespace Ephymeral.EntityNS
         protected void Update()
         {
             // Update position, alter scale. Children should call parent
-            position += velocity;
+            velocity += acceleration * Time.deltaTime;
+            position += velocity * Time.deltaTime;
             transform.position = position;
             UpdateScale();
+
+            acceleration = Vector2.zero;
         }
 
         /// <summary>
