@@ -14,4 +14,16 @@ public class SceneManagerScript : MonoBehaviour
     {
         Application.Quit();
     }
+
+    public void pauseUnPause()
+    {
+        if(Time.timeScale == 0)
+        {
+            Time.timeScale = 1;
+        }
+        else
+        {
+            Time.timeScale = 0;
+        }
+    }
 }
