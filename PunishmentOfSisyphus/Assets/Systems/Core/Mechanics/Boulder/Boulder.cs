@@ -123,7 +123,11 @@ namespace Ephymeral.BoulderNS
                     ricochetTime = 0;
                 }
             }
-                    speed = (boulderData.INITIAL_THROW_SPEED + (-boulderData.THROW_DECELERATION * elapsedTime)) / 1000;
+
+            switch (state)
+            {
+                case BoulderState.Thrown:
+                    speed = (boulderData.INITIAL_THROW_SPEED + (-boulderData.THROW_DECELERATION * elapsedTime));
 
                     velocity = direction * speed;
 
@@ -139,28 +143,26 @@ namespace Ephymeral.BoulderNS
                         elapsedTime += Time.deltaTime;
 
                         // Update speed
-                        speed = (boulderData.INITIAL_ROLL_SPEED + (boulderData.GRAVITY * elapsedTime)) / 1000;
+                        speed = (boulderData.INITIAL_ROLL_SPEED + (boulderData.GRAVITY * elapsedTime));
 
                         // Update velocity
                         velocity = direction * speed;
                     }
                     break;
                 case BoulderState.Ricocheting:
-                    if (elapsedTime <= boulderData.AIR_TIME)
+                    ricochetTime += Time.deltaTime;
+                    acceleration += direction * boulderData.RICOCHET_ACCELERATION;
+
+                    if (ricochetTime >= boulderData.AIR_TIME)
                     {
-                        elapsedTime += Time.deltaTime;
-                        // Update speed
-                        speed = (boulderData.INITIAL_RICOCHET_SPEED + (boulderData.RICOCHET_ACCELERATION * elapsedTime)) / 1000;
-                        velocity.x = direction.x * speed;
-
-                        // Update velocity
-                        // Add lerping / curves
-                        speed = (boulderData.INITIAL_RICOCHET_SPEED + (-boulderData.GRAVITY * elapsedTime)) / 1000;
-                        velocity.y = direction.y * speed;
+                        state = BoulderState.Rolling;
+                        ricochetTime = 0;
                     }
-
-            if (state != BoulderState.Held)
-                acceleration += Vector2.down * boulderData.GRAVITY;
+                    break;
+                case BoulderState.Held:
+                    acceleration += Vector2.down * boulderData.GRAVITY;
+                    break;
+            }
         }
 
         private void OnTriggerEnter2D(Collider2D collision)
@@ -176,7 +178,6 @@ namespace Ephymeral.BoulderNS
 
             if (collision.CompareTag("Wall"))
             {
-                direction *= -1;
                 velocity *= direction;
                 direction.x *= -1;
             }
@@ -186,7 +187,7 @@ namespace Ephymeral.BoulderNS
         {
             state = BoulderState.Thrown;
             direction = ((Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition) - playerEvent.Position).normalized;
-            velocity = boulderData.THROW_SPEED * direction;
+            velocity = boulderData.INITIAL_THROW_SPEED * direction;
         }
 
         private void DropBoulder()

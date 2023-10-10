@@ -82,6 +82,8 @@ namespace Ephymeral.EnemyNS
             attackState = AttackState.None;
 
             canAttack = true;
+
+            acceleration = new Vector2(1.0f, 1.0f);
         }
 
         private void FixedUpdate()
@@ -90,9 +92,8 @@ namespace Ephymeral.EnemyNS
             {
                 case EnemyState.Seeking:
                     //direction = ((playerEvent.Position - position).normalized) / 1000;
-                    direction = ((playerEvent.Position - position).normalized);
                     direction = (playerEvent.Position - position).normalized;
-                    speed = enemyData.MOVE_SPEED / 1000;
+                    speed = enemyData.MOVE_SPEED;
                     velocity = direction * speed;
 
                     // Rotate towards player position

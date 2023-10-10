@@ -73,6 +73,12 @@ namespace Ephymeral.PlayerNS
         // Update is called once per frame
         private void Update()
         {
+            if (health <= 0)
+            {
+                Debug.Log("Player has died");
+                Die();
+            }
+
             switch (state)
             {
                 case PlayerState.Dodge:
@@ -138,6 +144,12 @@ namespace Ephymeral.PlayerNS
         {
             health -= damage;
             Debug.Log(health);
+        }
+
+        private void Die()
+        {
+            enabled = false;
+            Destroy(gameObject);
         }
 
         // Input methods
