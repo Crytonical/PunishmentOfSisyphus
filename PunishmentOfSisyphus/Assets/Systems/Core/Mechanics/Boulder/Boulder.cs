@@ -46,7 +46,7 @@ namespace Ephymeral.BoulderNS
 
         #endregion
 
-        protected void Awake()
+        protected override void Awake()
         {
             // Run base Awake function
             base.Awake();
@@ -79,7 +79,7 @@ namespace Ephymeral.BoulderNS
         }
 
         // Update is called once per frame
-        protected void Update()
+        protected override void Update()
         {
             // State machine
             switch (state)
@@ -161,7 +161,7 @@ namespace Ephymeral.BoulderNS
             {
                 // Trigger damage event on enemy
                 Debug.Log("hit enemy");
-                collision.GetComponent<Enemy>().EnemyEvent.TakeDamage(damage);
+                collision.GetComponent<Enemy>().TakeDamage(damage);
 
                 // Call ricochet function
                 Ricochet(collision);
@@ -186,6 +186,7 @@ namespace Ephymeral.BoulderNS
         {
             state = BoulderState.Rolling;
             direction = Vector2.down;
+            velocity = Vector2.zero;
             UpdatePhysicsValues();
         }
 
@@ -199,7 +200,8 @@ namespace Ephymeral.BoulderNS
         private void Ricochet(Collider2D collision)
         {
             state = BoulderState.Ricocheting;
-            direction = Vector2.up;
+            direction.x = -direction.x;
+            direction.y = Vector2.up.y;
             velocity *= direction;
             UpdatePhysicsValues();
         }

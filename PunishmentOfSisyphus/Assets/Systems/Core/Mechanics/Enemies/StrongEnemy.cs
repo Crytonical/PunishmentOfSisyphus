@@ -26,7 +26,10 @@ namespace Ephymeral.EnemyNS
 
             state = EnemyState.Seeking;
             attackState = AttackState.CoolingDown;
-            weaponHitbox.enabled = false;
+            if (weaponHitbox)
+            {
+                weaponHitbox.enabled = false;
+            }
             StartCoroutine(AttackCooldown(attackCooldown));
         }
 

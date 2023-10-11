@@ -57,17 +57,15 @@ namespace Ephymeral.EnemyNS
 
         private void OnEnable()
         {
-            enemyEvent.damageEvent.AddListener(TakeDamage);
             enemyEvent.deathEvent.AddListener(Die);
         }
 
         private void OnDisable()
         {
-            enemyEvent.damageEvent.RemoveListener(TakeDamage);
             enemyEvent.deathEvent.AddListener(Die);
         }
 
-        protected void Awake()
+        protected override void Awake()
         {
             base.Awake();
 
@@ -81,7 +79,7 @@ namespace Ephymeral.EnemyNS
             attackCooldown = enemyData.ATTACK_COOLDOWN;
 
             // Get a reference to the hitbox, disable it 
-            weaponHitbox = GameObject.Find("Sword").GetComponent<BoxCollider2D>();
+            weaponHitbox = gameObject.transform.GetChild(0).GetComponent<BoxCollider2D>();
             weaponHitbox.enabled = false;
             spriteRenderer = GetComponent<SpriteRenderer>();
 
@@ -130,23 +128,29 @@ namespace Ephymeral.EnemyNS
                     }
                     break;
                 case EnemyState.Damage:
+                    spriteRenderer.color = Color.gray;
+                    StartCoroutine(DamageStun(enemyData.DAMAGE_STUN_DURATION));
                     break;
             }
         }
 
-        private void TakeDamage(float damage)
+        public void TakeDamage(float damage)
         {
+            Debug.Log(gameObject.name + " Is taking damage: " + damage);
+            state = EnemyState.Damage;
+            attackState = AttackState.None;
             health -= damage;
 
             if (health <= 0)
             {
-                enemyEvent.Die();
+                Die();
             }
         }
 
         private void Die()
         {
             enabled = false;
+            StopAllCoroutines();
             Destroy(gameObject);
         }
 
@@ -163,7 +167,10 @@ namespace Ephymeral.EnemyNS
 
             state = EnemyState.Seeking;
             attackState = AttackState.CoolingDown;
-            weaponHitbox.enabled = false;
+            if (weaponHitbox)
+            {
+                weaponHitbox.enabled = false;
+            }
             StartCoroutine(AttackCooldown(attackCooldown));
         }
 
@@ -192,6 +199,18 @@ namespace Ephymeral.EnemyNS
             }
 
             attackState = AttackState.None;
+        }
+
+        protected virtual IEnumerator DamageStun(float time)
+        {
+            while (time > 0)
+            {
+                time -= Time.deltaTime;
+                spriteRenderer.color = Color.gray;
+                velocity = Vector2.zero;
+                yield return null;
+            }
+            state = EnemyState.Seeking;
         }
     }
 }

@@ -3,8 +3,25 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+using Ephymeral.Events;
+
 public class SceneManagerScript : MonoBehaviour
 {
+    #region REFERENCES
+    [SerializeField] private SceneEvent sceneEvent;
+    #endregion
+
+
+    private void OnEnable()
+    {
+        sceneEvent.gameOverEvent.AddListener(loadScene);
+    }
+
+    private void OnDisable()
+    {
+        sceneEvent.gameOverEvent.RemoveListener(loadScene);
+    }
+
     public void loadScene(string sceneName)
     {
         SceneManager.LoadScene(sceneName);

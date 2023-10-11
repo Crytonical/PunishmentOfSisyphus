@@ -30,6 +30,7 @@ namespace Ephymeral.PlayerNS
         [SerializeField] private BoulderEvent boulderEvent;
         [SerializeField] private PlayerEvent playerEvent;
         [SerializeField] private PlayerMovementData playerMovementData;
+        [SerializeField] private SceneEvent sceneEvent;
         #endregion
 
         #region Fields
@@ -57,7 +58,7 @@ namespace Ephymeral.PlayerNS
         /// <summary>
         /// Initializes fields
         /// </summary>
-        protected void Awake()
+        protected override void Awake()
         {
             // Declare Entity variables
             speed = playerMovementData.FREE_SPEED;
@@ -72,7 +73,7 @@ namespace Ephymeral.PlayerNS
         }
 
         // Update is called once per frame
-        protected void Update()
+        protected override void Update()
         {
             if (health <= 0)
             {
@@ -147,6 +148,7 @@ namespace Ephymeral.PlayerNS
 
         private void Die()
         {
+            sceneEvent.GameOver("GameOver");
             enabled = false;
             Destroy(gameObject);
         }

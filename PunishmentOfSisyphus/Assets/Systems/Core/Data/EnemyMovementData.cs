@@ -22,5 +22,6 @@ namespace Ephymeral.Data
         public float ATTACK_WIND_UP;
         public float ATTACK_COOLDOWN;
         public float ATTACK_DURATION;
+        public float DAMAGE_STUN_DURATION;
     }
 }
