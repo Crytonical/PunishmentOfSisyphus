@@ -79,7 +79,7 @@ public class FXManager : MonoBehaviour
         Time.timeScale = 1f;
 
         //Shake Screen
-        ShakeScreen(1f, 10);
+        ShakeScreen(0.1f, 10);
     }
 
     #endregion
