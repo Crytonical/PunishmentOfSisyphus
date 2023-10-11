@@ -27,7 +27,7 @@ namespace Ephymeral.EnemyNS
         Executing
     }
 
-    public abstract class Enemy : Entity
+    public class Enemy : Entity
     {
         #region REFERENCES
         [SerializeField] protected BoulderEvent boulderEvent;
@@ -67,7 +67,7 @@ namespace Ephymeral.EnemyNS
             enemyEvent.deathEvent.AddListener(Die);
         }
 
-        protected override void Awake()
+        protected void Awake()
         {
             base.Awake();
 
@@ -91,6 +91,8 @@ namespace Ephymeral.EnemyNS
             canAttack = true;
 
             acceleration = new Vector2(1.0f, 1.0f);
+
+            position = enemyData.SPAWN_POSITION;
         }
 
         private void FixedUpdate()
@@ -124,7 +126,6 @@ namespace Ephymeral.EnemyNS
 
                     if (attackState == AttackState.None)
                     {
-                        Debug.Log("I am attacking");
                         StartCoroutine(AttackWindUP(attackWindUp));
                     }
                     break;

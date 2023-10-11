@@ -57,7 +57,7 @@ namespace Ephymeral.PlayerNS
         /// <summary>
         /// Initializes fields
         /// </summary>
-        protected override void Awake()
+        protected void Awake()
         {
             // Declare Entity variables
             speed = playerMovementData.FREE_SPEED;
@@ -72,7 +72,7 @@ namespace Ephymeral.PlayerNS
         }
 
         // Update is called once per frame
-        protected override void Update()
+        protected void Update()
         {
             if (health <= 0)
             {
@@ -128,7 +128,6 @@ namespace Ephymeral.PlayerNS
         {
             if (collision.CompareTag("Boulder"))
             {
-                Debug.Log("Pickup");
                 state = PlayerState.CarryingBounder;
                 speed = playerMovementData.CARRY_SPEED;
                 boulderEvent.PickUpBoulder();
@@ -144,7 +143,6 @@ namespace Ephymeral.PlayerNS
         private void TakeDamage(float damage)
         {
             health -= damage;
-            Debug.Log(health);
         }
 
         private void Die()

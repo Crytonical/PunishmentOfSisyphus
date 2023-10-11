@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: EnemyMovementData
   m_EditorClassIdentifier: 
   GRAVITY: 1
+  SPAWN_POSITION: {x: 2, y: 2}
   MOVE_SPEED: 3
   DAMAGE: 3
   HEALTH: 100

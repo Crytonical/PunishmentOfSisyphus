@@ -46,7 +46,7 @@ namespace Ephymeral.BoulderNS
 
         #endregion
 
-        protected override void Awake()
+        protected void Awake()
         {
             // Run base Awake function
             base.Awake();
@@ -79,7 +79,7 @@ namespace Ephymeral.BoulderNS
         }
 
         // Update is called once per frame
-        protected override void Update()
+        protected void Update()
         {
             // State machine
             switch (state)
@@ -140,10 +140,12 @@ namespace Ephymeral.BoulderNS
                 case BoulderState.Ricocheting:
                     ricochetTime += Time.deltaTime;
                     acceleration += direction * boulderData.RICOCHET_ACCELERATION;
+                    speed = boulderData.INITIAL_RICOCHET_SPEED + (acceleration.magnitude * ricochetTime);
+                    velocity = direction * speed;
 
                     if (ricochetTime >= boulderData.AIR_TIME)
                     {
-                        state = BoulderState.Rolling;
+                        DropBoulder();
                         ricochetTime = 0;
                     }
                     break;
@@ -158,6 +160,7 @@ namespace Ephymeral.BoulderNS
             if (collision.CompareTag("Enemy") && state == BoulderState.Thrown)
             {
                 // Trigger damage event on enemy
+                Debug.Log("hit enemy");
                 collision.GetComponent<Enemy>().EnemyEvent.TakeDamage(damage);
 
                 // Call ricochet function
@@ -196,7 +199,7 @@ namespace Ephymeral.BoulderNS
         private void Ricochet(Collider2D collision)
         {
             state = BoulderState.Ricocheting;
-            direction = direction * -1;
+            direction = Vector2.up;
             velocity *= direction;
             UpdatePhysicsValues();
         }

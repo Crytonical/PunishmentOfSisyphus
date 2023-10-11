@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: SlowEnemyData
   m_EditorClassIdentifier: 
   GRAVITY: 1
+  SPAWN_POSITION: {x: -1, y: -1}
   MOVE_SPEED: 1
   DAMAGE: 25
   HEALTH: 100
