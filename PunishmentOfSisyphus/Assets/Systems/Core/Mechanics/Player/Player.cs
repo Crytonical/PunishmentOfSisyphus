@@ -163,7 +163,7 @@ namespace Ephymeral.PlayerNS
         {
             if (context.started)
             {
-                if (state != PlayerState.Dodge)
+                if (state != PlayerState.Dodge && boulderEvent.State != BoulderState.Held)
                 {
                     //// Don't have them dodge when firing the boulder. JUST FOR NOW
                     //if (state == PlayerState.CarryingBounder)

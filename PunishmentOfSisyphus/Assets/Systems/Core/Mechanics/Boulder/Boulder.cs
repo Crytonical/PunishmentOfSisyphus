@@ -100,7 +100,6 @@ namespace Ephymeral.BoulderNS
 
                 // Ricocheting
                 case BoulderState.Ricocheting:
-
                     break;
             }
 
@@ -141,8 +140,8 @@ namespace Ephymeral.BoulderNS
 
                 case BoulderState.Ricocheting:
                     ricochetTime += Time.deltaTime;
-                    acceleration += direction * boulderData.RICOCHET_ACCELERATION;
-                    speed = boulderData.INITIAL_RICOCHET_SPEED + (acceleration.magnitude * ricochetTime);
+                    //acceleration += direction * boulderData.RICOCHET_ACCELERATION;
+                    speed = boulderData.INITIAL_RICOCHET_SPEED + (boulderData.RICOCHET_ACCELERATION * ricochetTime);
                     velocity = direction * speed;
 
                     if (ricochetTime >= boulderData.AIR_TIME)
