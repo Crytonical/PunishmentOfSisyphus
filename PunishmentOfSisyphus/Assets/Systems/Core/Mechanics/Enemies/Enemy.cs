@@ -67,7 +67,7 @@ namespace Ephymeral.EnemyNS
             enemyEvent.deathEvent.AddListener(Die);
         }
 
-        private void Awake()
+        protected override void Awake()
         {
             base.Awake();
 

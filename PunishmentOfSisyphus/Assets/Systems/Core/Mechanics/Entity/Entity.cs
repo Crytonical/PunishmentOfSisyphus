@@ -27,7 +27,7 @@ namespace Ephymeral.EntityNS
         /// <summary>
         /// Initializes movement vectors
         /// </summary>
-        protected void Awake()
+        protected virtual void Awake()
         {
             // Create movement vectors
             direction = new Vector2(0, 0);
@@ -39,7 +39,7 @@ namespace Ephymeral.EntityNS
         }
 
         // Update is called once per frame
-        protected void Update()
+        protected virtual void Update()
         {
             // Update position, alter scale. Children should call parent
             velocity += acceleration * Time.deltaTime;
@@ -54,7 +54,7 @@ namespace Ephymeral.EntityNS
         /// Calculate the scale based on the position relative to the main camera.
         /// Scales to a minimum of 0.8f, and maximum of 1.0f. Values can be adjusted
         /// </summary>
-        private void UpdateScale()
+        protected virtual void UpdateScale()
         {
 
         }

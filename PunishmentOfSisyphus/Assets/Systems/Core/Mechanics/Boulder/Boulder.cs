@@ -46,7 +46,7 @@ namespace Ephymeral.BoulderNS
 
         #endregion
 
-        private void Awake()
+        protected override void Awake()
         {
             // Run base Awake function
             base.Awake();
@@ -79,7 +79,7 @@ namespace Ephymeral.BoulderNS
         }
 
         // Update is called once per frame
-        void Update()
+        protected override void Update()
         {
             // State machine
             switch (state)

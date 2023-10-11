@@ -57,7 +57,7 @@ namespace Ephymeral.PlayerNS
         /// <summary>
         /// Initializes fields
         /// </summary>
-        private void Awake()
+        protected override void Awake()
         {
             // Declare Entity variables
             speed = playerMovementData.FREE_SPEED;
@@ -72,7 +72,7 @@ namespace Ephymeral.PlayerNS
         }
 
         // Update is called once per frame
-        private void Update()
+        protected override void Update()
         {
             if (health <= 0)
             {
@@ -220,11 +220,9 @@ namespace Ephymeral.PlayerNS
                 if (state == PlayerState.Lunging) //Cancel if the lunch is interupted.
                 {
                     t = timer / duration;
-                    prog = CubicBezier(t, 1f, .01f, .94f, .97f);
+                    prog = t*t;
 
                     float currentValue = Mathf.Lerp(startValue, endValue, prog);
-
-                    Debug.Log("Current Value: " + currentValue);
 
                     velocity = lunchDir * currentValue * Time.deltaTime;
 
