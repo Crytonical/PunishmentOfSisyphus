@@ -86,7 +86,7 @@ namespace Ephymeral.BoulderNS
             {
                 // Held
                 case BoulderState.Held:
-                    velocity = playerEvent.Velocity;
+                    position = playerEvent.Position;
                     break;
 
                 // Throwing
@@ -124,6 +124,7 @@ namespace Ephymeral.BoulderNS
                         DropBoulder();
                     }
                     break;
+
                 case BoulderState.Rolling:
                     // Increase Velocity by some percent each frame it is rolling
                     if (Mathf.Abs(velocity.y) <= boulderData.MAX_ROLL_SPEED)
@@ -137,6 +138,7 @@ namespace Ephymeral.BoulderNS
                         velocity = direction * speed;
                     }
                     break;
+
                 case BoulderState.Ricocheting:
                     ricochetTime += Time.deltaTime;
                     acceleration += direction * boulderData.RICOCHET_ACCELERATION;
@@ -149,6 +151,7 @@ namespace Ephymeral.BoulderNS
                         ricochetTime = 0;
                     }
                     break;
+
                 case BoulderState.Held:
                     acceleration += Vector2.down * boulderData.GRAVITY;
                     break;
