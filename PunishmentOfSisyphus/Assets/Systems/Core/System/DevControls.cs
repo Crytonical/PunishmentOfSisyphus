@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 using Ephymeral.EntityNS;
 using Ephymeral.BoulderNS;
@@ -56,8 +57,13 @@ public class DevControls : MonoBehaviour
         // Return Boulder
         if (Input.GetKeyDown("b"))
         {
-            // Call your method or trigger your event here
             boulderEvent.PickUpBoulder();
+        }
+
+        //Reload test scene
+        if (Input.GetKeyDown("r"))
+        {
+            SceneManager.LoadScene("Test");
         }
     }
 }

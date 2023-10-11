@@ -79,7 +79,7 @@ public class FXManager : MonoBehaviour
         Time.timeScale = 1f;
 
         //Shake Screen
-        ShakeScreen(0.001f, 2);
+        ShakeScreen(1f, 10);
     }
 
     #endregion
@@ -97,8 +97,8 @@ public class FXManager : MonoBehaviour
 
         while (elapsed < duration)
         {
-            float x = originalPosition.x + Random.Range(-1f, 1f); //* shakeIntensity;
-            float y = originalPosition.y + Random.Range(-1f, 1f); //* shakeIntensity;
+            float x = originalPosition.x + Random.Range(-1f, 1f)* shakeIntensity;
+            float y = originalPosition.y + Random.Range(-1f, 1f)* shakeIntensity;
             float z = originalPosition.z;
 
             Camera.main.transform.position = new Vector3(x, y, z);

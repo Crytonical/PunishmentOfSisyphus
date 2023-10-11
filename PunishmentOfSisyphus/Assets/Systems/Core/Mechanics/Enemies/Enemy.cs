@@ -141,8 +141,7 @@ namespace Ephymeral.EnemyNS
             attackState = AttackState.None;
             health -= damage;
 
-            FXManager.Instance.ScreenFreeze(10);
-            FXManager.Instance.ShakeScreen(10, 20);
+            FXManager.Instance.ScreenFreeze(7);
 
             if (health <= 0)
             {
