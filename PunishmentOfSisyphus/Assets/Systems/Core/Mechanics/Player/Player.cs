@@ -8,6 +8,7 @@ using Ephymeral.EntityNS;
 using Ephymeral.BoulderNS;
 using Ephymeral.Events;
 using Ephymeral.Data;
+using Ephymeral.EnemyNS;
 
 // INPUTSYSTEM INS'T WORKING FOR SOME REASON DUE TO DIRECTORY
 
@@ -136,7 +137,7 @@ namespace Ephymeral.PlayerNS
             if (collision.CompareTag("EnemyWeapon"))
             {
                 // Taking Damage
-                TakeDamage(20f);
+                TakeDamage(collision.GetComponentInParent<Enemy>().Damage);
             }
         }
 

@@ -10,28 +10,57 @@ namespace Ephymeral.EnemyNS
 {
     public class StrongEnemy : Enemy
     {
-        private void FixedUpdate()
-        {
-            switch (state)
-            {
-                case EnemyState.Seeking:
-                    //direction = ((playerEvent.Position - position).normalized) / 1000;
-                    direction = ((playerEvent.Position - position).normalized);
-                    velocity = direction * speed;
 
-                    if ((playerEvent.Position - position).magnitude <= 1.0f)
-                    {
-                        state = EnemyState.Attacking;
-                    }
-                    break;
-                case EnemyState.Attacking:
-                    direction = Vector2.zero;
-                    velocity = direction * speed;
-                    Debug.Log("I am attacking");
-                    break;
-                case EnemyState.Damage:
-                    break;
+
+        protected override IEnumerator Attack(float duration)
+        {
+            weaponHitbox.enabled = true;
+            while (duration > 0)
+            {
+                duration -= Time.deltaTime;
+                spriteRenderer.color = Color.yellow;
+                // lerp towards player
+                transform.Rotate(new Vector3(0.0f, 0.0f, 1.0f));
+                yield return null;
             }
+
+            state = EnemyState.Seeking;
+            attackState = AttackState.CoolingDown;
+            weaponHitbox.enabled = false;
+            StartCoroutine(AttackCooldown(attackCooldown));
+        }
+
+        protected override IEnumerator AttackWindUP(float time)
+        {
+            attackState = AttackState.WindingUp;
+            float tTime = time;
+            while (time > 0)
+            {
+                time -= Time.deltaTime;
+                spriteRenderer.color = Color.cyan;
+                // Lerp away from player
+
+                direction = (playerEvent.Position - position).normalized;
+                Quaternion xToY = Quaternion.LookRotation(Vector3.forward, Vector3.left);
+                Quaternion targetRotation = Quaternion.LookRotation(transform.forward, direction);
+                transform.rotation = targetRotation * xToY;
+                yield return null;
+            }
+
+            attackState = AttackState.Executing;
+            StartCoroutine(Attack(attackDuration));
+        }
+
+        protected override IEnumerator AttackCooldown(float time)
+        {
+            while (time > 0)
+            {
+                time -= Time.deltaTime;
+                spriteRenderer.color = Color.white;
+                yield return null;
+            }
+
+            attackState = AttackState.None;
         }
     }
 }

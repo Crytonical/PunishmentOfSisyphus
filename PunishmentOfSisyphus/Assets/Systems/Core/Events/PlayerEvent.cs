@@ -19,6 +19,7 @@ namespace Ephymeral.Events
         [System.NonSerialized]
         public UnityEvent dodgeEvent;
         public UnityEvent throwEvent;
+        public UnityEvent<float> damageEvent;
         public UnityEvent takeDamageEvent;
         public UnityEvent attackEvent;
         #endregion
@@ -52,7 +53,16 @@ namespace Ephymeral.Events
             {
                 dodgeEvent = new UnityEvent();
             }
+            if (damageEvent == null) 
+            { 
+                damageEvent = new UnityEvent<float>();
+            }
             #endregion
+        }
+
+        public void TakeDamage(float damage)
+        {
+            damageEvent.Invoke(damage);
         }
 
         // Event list

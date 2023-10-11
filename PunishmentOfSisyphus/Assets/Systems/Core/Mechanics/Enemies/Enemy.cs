@@ -10,6 +10,7 @@ using Ephymeral.EntityNS;
 
 namespace Ephymeral.EnemyNS
 {
+    // State of enemy
     public enum EnemyState
     {
         Seeking,
@@ -17,6 +18,7 @@ namespace Ephymeral.EnemyNS
         Damage
     }
     
+    // State of enemy when attacking
     public enum AttackState
     {
         None,
@@ -25,31 +27,32 @@ namespace Ephymeral.EnemyNS
         Executing
     }
 
-    public class Enemy : Entity
+    public abstract class Enemy : Entity
     {
         #region REFERENCES
-        [SerializeField] private BoulderEvent boulderEvent;
-        [SerializeField] private BoulderData boulderData;
-        [SerializeField] private PlayerEvent playerEvent;
-        [SerializeField] private EnemyMovementData enemyData;
-        [SerializeField] public EnemyEvent enemyEvent;
-        [SerializeField] private CircleCollider2D hitbox;
-        private BoxCollider2D weaponHitbox;
-        private SpriteRenderer spriteRenderer;
+        [SerializeField] protected BoulderEvent boulderEvent;
+        [SerializeField] protected BoulderData boulderData;
+        [SerializeField] protected PlayerEvent playerEvent;
+        [SerializeField] protected EnemyMovementData enemyData;
+        [SerializeField] protected EnemyEvent enemyEvent;
+        [SerializeField] protected CircleCollider2D hitbox;
+        protected BoxCollider2D weaponHitbox;
+        protected SpriteRenderer spriteRenderer;
         #endregion
 
         #region FIELDS
         // Inhereted data
-        private double damage;
-        private bool canAttack;
+        protected float damage, attackRange, attackWindUp, attackDuration, attackCooldown;
+        protected bool canAttack;
 
         // State
-        [SerializeField] private EnemyState state;
-        [SerializeField] private AttackState attackState;
+        [SerializeField] protected EnemyState state;
+        [SerializeField] protected AttackState attackState;
         #endregion
 
         #region PROPERTIES
-
+        public EnemyEvent EnemyEvent {  get { return enemyEvent; } }
+        public float Damage { get { return damage; } }
         #endregion
 
         private void OnEnable()
@@ -68,12 +71,16 @@ namespace Ephymeral.EnemyNS
         {
             base.Awake();
 
-            position = new Vector2(2, 2);
-
+            // Inherit data from data handler
             health = enemyData.HEALTH;
             speed = enemyData.MOVE_SPEED;
             damage = enemyData.DAMAGE;
-            // For now this works
+            attackRange = enemyData.ATTACK_RANGE;
+            attackWindUp = enemyData.ATTACK_WIND_UP;
+            attackDuration = enemyData.ATTACK_DURATION;
+            attackCooldown = enemyData.ATTACK_COOLDOWN;
+
+            // Get a reference to the hitbox, disable it 
             weaponHitbox = GameObject.Find("Sword").GetComponent<BoxCollider2D>();
             weaponHitbox.enabled = false;
             spriteRenderer = GetComponent<SpriteRenderer>();
@@ -105,7 +112,7 @@ namespace Ephymeral.EnemyNS
                     if (attackState == AttackState.None)
                     {
                         spriteRenderer.color = Color.red;
-                        if ((playerEvent.Position - position).magnitude < 1)
+                        if ((playerEvent.Position - position).magnitude < attackRange)
                         {
                             state = EnemyState.Attacking;
                         }
@@ -118,7 +125,7 @@ namespace Ephymeral.EnemyNS
                     if (attackState == AttackState.None)
                     {
                         Debug.Log("I am attacking");
-                        StartCoroutine(AttackWindUP(1));
+                        StartCoroutine(AttackWindUP(attackWindUp));
                     }
                     break;
                 case EnemyState.Damage:
@@ -142,23 +149,24 @@ namespace Ephymeral.EnemyNS
             Destroy(gameObject);
         }
 
-        IEnumerator Attack(float duration)
+        protected virtual IEnumerator Attack(float duration)
         {
             weaponHitbox.enabled = true;
             while (duration > 0)
             {
                 duration -= Time.deltaTime;
                 spriteRenderer.color = Color.yellow;
+                // lerp towards player
                 yield return null;
             }
 
             state = EnemyState.Seeking;
             attackState = AttackState.CoolingDown;
             weaponHitbox.enabled = false;
-            StartCoroutine(AttackCooldown(4));
+            StartCoroutine(AttackCooldown(attackCooldown));
         }
 
-        IEnumerator AttackWindUP(float time)
+        protected virtual IEnumerator AttackWindUP(float time)
         {
             attackState = AttackState.WindingUp;
             float tTime = time;
@@ -166,15 +174,14 @@ namespace Ephymeral.EnemyNS
             {
                 time -= Time.deltaTime;
                 spriteRenderer.color = Color.cyan;
-
                 yield return null;
             }
 
             attackState = AttackState.Executing;
-            StartCoroutine(Attack(0.3f));
+            StartCoroutine(Attack(attackDuration));
         }
 
-        IEnumerator AttackCooldown(float time)
+        protected virtual IEnumerator AttackCooldown(float time)
         {
             while (time > 0)
             {

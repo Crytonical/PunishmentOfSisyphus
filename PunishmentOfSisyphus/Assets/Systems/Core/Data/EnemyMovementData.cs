@@ -17,5 +17,9 @@ namespace Ephymeral.Data
         [Header("Combat")]
         public float DAMAGE;
         public float HEALTH;
+        public float ATTACK_RANGE;
+        public float ATTACK_WIND_UP;
+        public float ATTACK_COOLDOWN;
+        public float ATTACK_DURATION;
     }
 }

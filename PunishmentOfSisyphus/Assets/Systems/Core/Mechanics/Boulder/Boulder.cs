@@ -111,22 +111,10 @@ namespace Ephymeral.BoulderNS
 
         private void FixedUpdate()
         {
-            // Accelerate the boulder when it has ricocheted off an enemy
-            if (state == BoulderState.Ricocheting)
-            {
-                ricochetTime += Time.deltaTime;
-                acceleration += direction * boulderData.RICOCHET_ACCELERATION;
-
-                if (ricochetTime >= boulderData.AIR_TIME)
-                {
-                    state = BoulderState.Rolling;
-                    ricochetTime = 0;
-                }
-            }
-
             switch (state)
             {
                 case BoulderState.Thrown:
+                    elapsedTime += Time.deltaTime;
                     speed = (boulderData.INITIAL_THROW_SPEED + (-boulderData.THROW_DECELERATION * elapsedTime));
 
                     velocity = direction * speed;
@@ -170,7 +158,7 @@ namespace Ephymeral.BoulderNS
             if (collision.CompareTag("Enemy") && state == BoulderState.Thrown)
             {
                 // Trigger damage event on enemy
-                collision.GetComponent<Enemy>().enemyEvent.TakeDamage(damage);
+                collision.GetComponent<Enemy>().EnemyEvent.TakeDamage(damage);
 
                 // Call ricochet function
                 Ricochet(collision);
@@ -188,6 +176,7 @@ namespace Ephymeral.BoulderNS
             state = BoulderState.Thrown;
             direction = ((Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition) - playerEvent.Position).normalized;
             velocity = boulderData.INITIAL_THROW_SPEED * direction;
+            UpdatePhysicsValues();
         }
 
         private void DropBoulder()
