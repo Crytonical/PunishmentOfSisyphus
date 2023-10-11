@@ -562,10 +562,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8cb39fedce3759947a21886bd94b8895, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  boulderEvent: {fileID: 0}
-  playerEvent: {fileID: 0}
-  playerMovementData: {fileID: 0}
-  sceneEvent: {fileID: 0}
+  boulderEvent: {fileID: 11400000, guid: c72588212e952d144b5b97d5ed1afd7e, type: 2}
+  playerEvent: {fileID: 11400000, guid: ba01c3c52a41b424cac2f5bdeb8b4d89, type: 2}
+  playerMovementData: {fileID: 11400000, guid: 709afc19be3fddf4caba888db382b539, type: 2}
+  sceneEvent: {fileID: 11400000, guid: d2ad50618a2459e4d98a1232a99252a7, type: 2}
 --- !u!114 &591558422
 MonoBehaviour:
   m_ObjectHideFlags: 0

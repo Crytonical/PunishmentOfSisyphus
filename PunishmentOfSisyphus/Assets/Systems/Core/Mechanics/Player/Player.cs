@@ -182,10 +182,14 @@ namespace Ephymeral.PlayerNS
                     //}
 
                     // Removed the "drop bouler if you try to dodge" thing because it felt clunky. -Avery
-                    state = PlayerState.Dodge;
-                    speed = playerMovementData.DODGE_SPEED;
-                    dodgeDirection = direction;
-                    velocity = dodgeDirection * playerMovementData.DODGE_SPEED;
+                    if (state == PlayerState.Free)
+                    {
+                        state = PlayerState.Dodge;
+                        speed = playerMovementData.DODGE_SPEED;
+                        dodgeDirection = direction;
+                        velocity = dodgeDirection * playerMovementData.DODGE_SPEED;
+                    }
+                    
                 }
             }
         }
