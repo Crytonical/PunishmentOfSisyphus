@@ -45,7 +45,7 @@ public class FXManager : MonoBehaviour
         // Wait for duration
         for (int i = 0; i < pauseFrames; i++)
         {
-            yield return null;
+            yield return new WaitForSecondsRealtime(1.0f);
         }
 
         // Resume game
@@ -104,7 +104,6 @@ public class FXManager : MonoBehaviour
             Camera.main.transform.position = new Vector3(x, y, z);
 
             elapsed += 1;
-
             yield return null;
         }
 
