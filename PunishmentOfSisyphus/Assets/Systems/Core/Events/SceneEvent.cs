@@ -9,7 +9,6 @@ namespace Ephymeral.Events
     [CreateAssetMenu(fileName = "SceneEvent", menuName = "EventObjects/SceneEvent")]
     public class SceneEvent : ScriptableObject
     {
-
         #region FIELDS
 
         #region EVENTS

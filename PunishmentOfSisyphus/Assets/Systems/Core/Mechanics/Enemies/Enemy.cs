@@ -36,6 +36,7 @@ namespace Ephymeral.EnemyNS
         [SerializeField] protected EnemyMovementData enemyData;
         [SerializeField] protected EnemyEvent enemyEvent;
         [SerializeField] protected CircleCollider2D hitbox;
+        [SerializeField] protected EnemySpawnerEvent spawnerEvent;
         protected BoxCollider2D weaponHitbox;
         protected SpriteRenderer spriteRenderer;
         #endregion
@@ -152,8 +153,8 @@ namespace Ephymeral.EnemyNS
         private void Die()
         {
             enabled = false;
+            spawnerEvent.EnemyDeathEvent(gameo);
             StopAllCoroutines();
-            Destroy(gameObject);
         }
 
         protected virtual IEnumerator Attack(float duration)
