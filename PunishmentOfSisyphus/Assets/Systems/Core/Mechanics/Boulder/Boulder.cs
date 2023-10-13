@@ -209,7 +209,7 @@ namespace Ephymeral.BoulderNS
 
         private void UpdateEventObject()
         {
-            boulderEvent.State = state;
+            //boulderEvent.State = state;
         }
 
         private void UpdatePhysicsValues()
