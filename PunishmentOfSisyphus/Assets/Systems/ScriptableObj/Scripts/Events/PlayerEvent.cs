@@ -2,8 +2,6 @@ using UnityEngine.Events;
 using UnityEngine;
 using UnityEditor;
 
-using Ephymeral.PlayerNS;
-
 namespace Ephymeral.Events
 {
     [CreateAssetMenu(fileName = "PlayerEvent", menuName = "EventObjects/PlayerEvent")]
@@ -13,7 +11,6 @@ namespace Ephymeral.Events
         private bool canThrow;
         private float speed;
         private Vector2 direction, velocity, position;
-        private PlayerState state;
 
         #region EVENTS
         [System.NonSerialized]
@@ -31,7 +28,6 @@ namespace Ephymeral.Events
         public Vector2 Direction { get { return direction; } set {  direction = value; } }
         public Vector2 Velocity { get { return velocity; } set { velocity = value; } }
         public Vector2 Position { get { return position; } set { position = value; } }
-        public PlayerState State { get { return state; } set { state = value; } }
         #endregion
 
         private void OnEnable()

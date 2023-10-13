@@ -93,7 +93,6 @@ namespace Ephymeral.EnemyNS
 
             // In theory, this will give a random position on the circumference of a circle with radius 3
             position = new Vector2(Mathf.Cos(Random.Range(0.0f, 2f * Mathf.PI)) * 3.0f, Mathf.Sin(Random.Range(0.0f, 2f * Mathf.PI)) * 3.0f);
-            Debug.Log(position);
         }
 
         private void FixedUpdate()

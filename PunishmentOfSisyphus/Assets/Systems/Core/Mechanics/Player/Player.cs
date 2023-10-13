@@ -9,8 +9,11 @@ using Ephymeral.BoulderNS;
 using Ephymeral.Events;
 using Ephymeral.Data;
 using Ephymeral.EnemyNS;
+using UnityEngine.SceneManagement;
 
 // INPUTSYSTEM INS'T WORKING FOR SOME REASON DUE TO DIRECTORY
+
+// NEED TO UPDATE BOULDER WHEN BOULDER DOES THINGS SINCE WE ARE CHANGING ASSEMBLY REFERENCE STUFF
 
 namespace Ephymeral.PlayerNS
 {
@@ -30,7 +33,7 @@ namespace Ephymeral.PlayerNS
         [SerializeField] private BoulderEvent boulderEvent;
         [SerializeField] private PlayerEvent playerEvent;
         [SerializeField] private PlayerMovementData playerMovementData;
-        [SerializeField] private SceneEvent sceneEvent;
+        //[SerializeField] private SceneEvent sceneEvent;
         #endregion
 
         #region Fields
@@ -77,7 +80,6 @@ namespace Ephymeral.PlayerNS
         {
             if (health <= 0)
             {
-                Debug.Log("Player has died");
                 Die();
             }
 
@@ -120,7 +122,6 @@ namespace Ephymeral.PlayerNS
             playerEvent.Direction = direction;
             playerEvent.Velocity = velocity;
             playerEvent.Speed = speed;
-            playerEvent.State = state;
             playerEvent.Position = position;
         }
 
@@ -148,7 +149,8 @@ namespace Ephymeral.PlayerNS
 
         private void Die()
         {
-            sceneEvent.GameOver("GameOver");
+            //sceneEvent.GameOver("GameOver");
+            SceneManager.LoadScene("GameOver");
             enabled = false;
             Destroy(gameObject);
         }
@@ -163,7 +165,7 @@ namespace Ephymeral.PlayerNS
         {
             if (context.started)
             {
-                if (state != PlayerState.Dodge && boulderEvent.State != BoulderState.Held)
+                if (state != PlayerState.Dodge)
                 {
                     //// Don't have them dodge when firing the boulder. JUST FOR NOW
                     //if (state == PlayerState.CarryingBounder)

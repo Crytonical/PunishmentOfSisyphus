@@ -108,7 +108,6 @@ namespace Ephymeral.EnemyNS
 
                     case "s":
                         enemiesAlive.Add(Instantiate(strongPrefab, new Vector2(0.0f, 0.0f), Quaternion.identity));
-                        Debug.Log("Created Strong Enemy");
                         break;
 
                     case "f":

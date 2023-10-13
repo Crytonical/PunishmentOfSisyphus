@@ -41,7 +41,7 @@ public class DevControls : MonoBehaviour
     [SerializeField] private BoulderEvent boulderEvent;
     [SerializeField] private PlayerEvent playerEvent;
     [SerializeField] private PlayerMovementData playerMovementData;
-    [SerializeField] private SceneEvent sceneEvent;
+    //[SerializeField] private SceneEvent sceneEvent;
 
     #endregion
 

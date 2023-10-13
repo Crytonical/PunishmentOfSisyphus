@@ -10,8 +10,6 @@ namespace Ephymeral.EnemyNS
 {
     public class StrongEnemy : Enemy
     {
-
-
         protected override IEnumerator Attack(float duration)
         {
             weaponHitbox.enabled = true;
@@ -20,7 +18,7 @@ namespace Ephymeral.EnemyNS
                 duration -= Time.deltaTime;
                 spriteRenderer.color = Color.yellow;
                 // lerp towards player
-                transform.Rotate(new Vector3(0.0f, 0.0f, 1.0f));
+                transform.Rotate(new Vector3(0.0f, 0.0f, enemyData.ROTATE_SPEED));
                 yield return null;
             }
 

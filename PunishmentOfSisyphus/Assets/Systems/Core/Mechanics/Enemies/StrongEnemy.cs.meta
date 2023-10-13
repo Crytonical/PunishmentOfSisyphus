@@ -3,7 +3,14 @@ guid: 767aec4c1fa2ab8468efbc5b8f0b6f05
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - boulderEvent: {fileID: 11400000, guid: c72588212e952d144b5b97d5ed1afd7e, type: 2}
+  - boulderData: {fileID: 11400000, guid: 616287b0a3c030a4caf89a76f2a67b0a, type: 2}
+  - playerEvent: {fileID: 11400000, guid: ba01c3c52a41b424cac2f5bdeb8b4d89, type: 2}
+  - enemyData: {fileID: 11400000, guid: e1f15f5c19c4395459d61f52f10027ea, type: 2}
+  - enemyEvent: {fileID: 11400000, guid: 9be8e1655348fbd4d861fe627d679425, type: 2}
+  - hitbox: {instanceID: 0}
+  - spawnerEvent: {fileID: 11400000, guid: 76c6f242bc574684baad315c10a94140, type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
