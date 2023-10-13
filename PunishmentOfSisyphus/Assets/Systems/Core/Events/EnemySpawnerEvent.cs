@@ -6,7 +6,8 @@ using UnityEngine.Events;
 
 namespace Ephymeral.Events
 {
-    public class EnemySpawnerEvent : MonoBehaviour
+    [CreateAssetMenu(fileName = "EnemySpawnerEvent", menuName = "EventObjects/EnemySpawnerEvent")]
+    public class EnemySpawnerEvent : ScriptableObject
     {
         #region FIELDS
 
@@ -39,5 +40,9 @@ namespace Ephymeral.Events
             enemyDeathEvent.Invoke(enemy);
         }
 
+        public void EndWave()
+        {
+            waveEnd.Invoke();
+        }
     }
 }

@@ -10,7 +10,6 @@ namespace Ephymeral.Data
     {
         [Header("General")]
         public float GRAVITY;
-        public Vector2 SPAWN_POSITION;
 
         [Header("Movement")]
         public float MOVE_SPEED;

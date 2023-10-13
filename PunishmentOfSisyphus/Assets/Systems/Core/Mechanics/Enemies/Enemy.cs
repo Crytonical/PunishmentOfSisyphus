@@ -91,7 +91,9 @@ namespace Ephymeral.EnemyNS
 
             acceleration = new Vector2(1.0f, 1.0f);
 
-            position = enemyData.SPAWN_POSITION;
+            // In theory, this will give a random position on the circumference of a circle with radius 3
+            position = new Vector2(Mathf.Cos(Random.Range(0.0f, 2f * Mathf.PI)) * 3.0f, Mathf.Sin(Random.Range(0.0f, 2f * Mathf.PI)) * 3.0f);
+            Debug.Log(position);
         }
 
         private void FixedUpdate()
@@ -153,7 +155,7 @@ namespace Ephymeral.EnemyNS
         private void Die()
         {
             enabled = false;
-            spawnerEvent.EnemyDeathEvent(gameo);
+            spawnerEvent.EnemyDeathEvent(gameObject);
             StopAllCoroutines();
         }
 
