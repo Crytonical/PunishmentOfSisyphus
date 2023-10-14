@@ -35,9 +35,6 @@ namespace Ephymeral.BoulderNS
         private float ricochetTime;
         private float damage;
 
-        // Checks
-        private bool canThrow;
-
         // State
         [SerializeField] private BoulderState state;
         #endregion
@@ -56,9 +53,6 @@ namespace Ephymeral.BoulderNS
 
             // Initialize Variables
             damage = boulderData.DAMAGE;
-
-            // Default values
-            canThrow = true;
 
             // Default State
             state = BoulderState.Held;

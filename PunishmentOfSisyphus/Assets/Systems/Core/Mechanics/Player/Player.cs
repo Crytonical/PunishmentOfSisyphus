@@ -32,7 +32,7 @@ namespace Ephymeral.PlayerNS
         #region References
         [SerializeField] private BoulderEvent boulderEvent;
         [SerializeField] private PlayerEvent playerEvent;
-        [SerializeField] private PlayerMovementData playerMovementData;
+        [SerializeField] private PlayerData playerData;
         //[SerializeField] private SceneEvent sceneEvent;
         #endregion
 
@@ -51,11 +51,13 @@ namespace Ephymeral.PlayerNS
         private void OnEnable()
         {
             // Add event listeners
+            playerEvent.damageEvent.AddListener(TakeDamage);
         }
 
         private void OnDisable()
         {
             // remove event listeners
+            playerEvent.damageEvent.RemoveListener(TakeDamage);
         }
 
         /// <summary>
@@ -64,8 +66,8 @@ namespace Ephymeral.PlayerNS
         protected override void Awake()
         {
             // Declare Entity variables
-            speed = playerMovementData.FREE_SPEED;
-            health = 100; // FOR TESTING, NOT FINAL
+            speed = playerData.FREE_SPEED;
+            health = playerData.MAX_HP; // FOR TESTING, NOT FINAL
 
             // Just for testing. Should start with carrying boulder
             state = PlayerState.Free;
@@ -90,20 +92,20 @@ namespace Ephymeral.PlayerNS
                     if (speed <= 0)
                     {
                         state = PlayerState.Free;
-                        speed = playerMovementData.FREE_SPEED;
+                        speed = playerData.FREE_SPEED;
                     }
 
                     // Reduce the velocity until it reaches (0,0). Set to reduce so dodge lasts set amount of time
-                    acceleration += (playerMovementData.DODGE_SPEED / playerMovementData.DODGE_DURATION) * (dodgeDirection * -1);
+                    acceleration += (playerData.DODGE_SPEED / playerData.DODGE_DURATION) * (dodgeDirection * -1);
 
                     // Only used for the sake of determining when the roll is over. Checking with vectors is messier
-                    speed -= (playerMovementData.DODGE_SPEED / playerMovementData.DODGE_DURATION) * Time.deltaTime;
+                    speed -= (playerData.DODGE_SPEED / playerData.DODGE_DURATION) * Time.deltaTime;
                     break;
 
                 case PlayerState.Throwing:
                     // FOR TESTING JUST SWITCH BACK TO FREE
                     state = PlayerState.Free;
-                    speed = playerMovementData.FREE_SPEED;
+                    speed = playerData.FREE_SPEED;
                     break;
             }
 
@@ -131,14 +133,14 @@ namespace Ephymeral.PlayerNS
             if (collision.CompareTag("Boulder"))
             {
                 state = PlayerState.CarryingBounder;
-                speed = playerMovementData.CARRY_SPEED;
+                speed = playerData.CARRY_SPEED;
                 boulderEvent.PickUpBoulder();
             }
 
             if (collision.CompareTag("EnemyWeapon"))
             {
                 // Taking Damage
-                TakeDamage(collision.GetComponentInParent<Enemy>().Damage);
+                playerEvent.TakeDamage(collision.GetComponentInParent<Enemy>().Damage);
             }
         }
 
@@ -187,9 +189,9 @@ namespace Ephymeral.PlayerNS
                     if (state == PlayerState.Free)
                     {
                         state = PlayerState.Dodge;
-                        speed = playerMovementData.DODGE_SPEED;
+                        speed = playerData.DODGE_SPEED;
                         dodgeDirection = direction;
-                        velocity = dodgeDirection * playerMovementData.DODGE_SPEED;
+                        velocity = dodgeDirection * playerData.DODGE_SPEED;
                     }
                     
                 }
@@ -219,10 +221,10 @@ namespace Ephymeral.PlayerNS
         {
             float timer = 0f;
 
-            float startValue = playerMovementData.LUNGE_SPEED;
-            float endValue = playerMovementData.FREE_SPEED;
+            float startValue = playerData.LUNGE_SPEED;
+            float endValue = playerData.FREE_SPEED;
 
-            float duration = playerMovementData.LUNGE_DURATION;
+            float duration = playerData.LUNGE_DURATION;
 
             float prog; //Easing Vars
             float t;

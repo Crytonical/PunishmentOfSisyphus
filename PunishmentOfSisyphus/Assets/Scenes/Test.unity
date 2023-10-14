@@ -247,8 +247,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   boulderEvent: {fileID: 11400000, guid: c72588212e952d144b5b97d5ed1afd7e, type: 2}
   playerEvent: {fileID: 11400000, guid: ba01c3c52a41b424cac2f5bdeb8b4d89, type: 2}
-  playerMovementData: {fileID: 11400000, guid: 709afc19be3fddf4caba888db382b539, type: 2}
-  sceneEvent: {fileID: 11400000, guid: d2ad50618a2459e4d98a1232a99252a7, type: 2}
+  playerMovementData: {fileID: 11400000, guid: 4a6ccf259fe08e44f9f68162b85ca0eb, type: 2}
 --- !u!114 &591558422
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -272,6 +271,7 @@ GameObject:
   - component: {fileID: 663067998}
   - component: {fileID: 663068000}
   - component: {fileID: 663067999}
+  - component: {fileID: 663068001}
   m_Layer: 0
   m_Name: Healthbar Health
   m_TagString: Untagged
@@ -319,11 +319,11 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
-  m_PreserveAspect: 0
+  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  m_Type: 3
+  m_PreserveAspect: 1
   m_FillCenter: 1
-  m_FillMethod: 4
+  m_FillMethod: 0
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
@@ -337,6 +337,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 663067997}
   m_CullTransparentMesh: 1
+--- !u!114 &663068001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 663067997}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 610e34b1c1c61684283487bb5983b3b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerEvent: {fileID: 11400000, guid: ba01c3c52a41b424cac2f5bdeb8b4d89, type: 2}
+  playerData: {fileID: 11400000, guid: 4a6ccf259fe08e44f9f68162b85ca0eb, type: 2}
 --- !u!1 &1027140932
 GameObject:
   m_ObjectHideFlags: 0
@@ -740,7 +754,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -451, y: -309}
+  m_AnchoredPosition: {x: -335, y: -206}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1503578546
@@ -941,8 +955,7 @@ MonoBehaviour:
   scale: {x: 0, y: 0}
   boulderEvent: {fileID: 11400000, guid: c72588212e952d144b5b97d5ed1afd7e, type: 2}
   playerEvent: {fileID: 11400000, guid: ba01c3c52a41b424cac2f5bdeb8b4d89, type: 2}
-  playerMovementData: {fileID: 11400000, guid: 709afc19be3fddf4caba888db382b539, type: 2}
-  sceneEvent: {fileID: 11400000, guid: d2ad50618a2459e4d98a1232a99252a7, type: 2}
+  playerData: {fileID: 11400000, guid: 4a6ccf259fe08e44f9f68162b85ca0eb, type: 2}
   state: 0
 --- !u!212 &1650843782
 SpriteRenderer:
@@ -1237,7 +1250,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -509, y: 223}
+  m_AnchoredPosition: {x: -396, y: 203}
   m_SizeDelta: {x: 30, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1828470357
