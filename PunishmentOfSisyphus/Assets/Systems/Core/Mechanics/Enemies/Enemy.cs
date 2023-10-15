@@ -102,8 +102,17 @@ namespace Ephymeral.EnemyNS
                 case EnemyState.Seeking:
                     //direction = ((playerEvent.Position - position).normalized) / 1000;
                     direction = (playerEvent.Position - position).normalized;
-                    speed = enemyData.MOVE_SPEED;
-                    velocity = direction * speed;
+
+                    if ((playerEvent.Position - position).magnitude > attackRange)
+                    {
+                        speed = enemyData.MOVE_SPEED;
+                        velocity = direction * speed;
+                    }
+                    else
+                    {
+                        speed = 0;
+                        velocity = direction * speed;
+                    }
 
                     // Rotate towards player position
                     Quaternion xToY = Quaternion.LookRotation(Vector3.forward, Vector3.left);

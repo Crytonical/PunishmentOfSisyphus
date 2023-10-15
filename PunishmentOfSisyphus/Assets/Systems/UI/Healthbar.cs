@@ -34,7 +34,7 @@ public class Healthbar : MonoBehaviour
     {
         // Need to get current HP
         Debug.Log(hpBar.gameObject.name + " Fill Amount Before" + hpBar.fillAmount);
-        hpBar.fillAmount = damageTaken / playerData.MAX_HP;
+        hpBar.fillAmount = playerEvent.Health / playerData.MAX_HP;
         Debug.Log("Healthbar Fill Amount After" + hpBar.fillAmount);
     }
 }

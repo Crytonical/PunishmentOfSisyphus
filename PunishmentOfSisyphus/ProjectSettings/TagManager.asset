@@ -45,3 +45,6 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Boulder
+    uniqueID: 2663064889
+    locked: 0

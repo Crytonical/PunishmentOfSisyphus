@@ -125,6 +125,7 @@ namespace Ephymeral.PlayerNS
             playerEvent.Velocity = velocity;
             playerEvent.Speed = speed;
             playerEvent.Position = position;
+            playerEvent.Health = health;
         }
 
         // Collision Methods
