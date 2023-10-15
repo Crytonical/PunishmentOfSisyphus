@@ -138,7 +138,7 @@ namespace Ephymeral.PlayerNS
                 boulderEvent.PickUpBoulder();
             }
 
-            if (collision.CompareTag("EnemyWeapon"))
+            if (collision.CompareTag("EnemyWeapon") || collision.CompareTag("Bullet"))
             {
                 // Taking Damage
                 playerEvent.TakeDamage(collision.GetComponentInParent<Enemy>().Damage);

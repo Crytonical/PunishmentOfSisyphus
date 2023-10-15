@@ -80,8 +80,11 @@ namespace Ephymeral.EnemyNS
             attackCooldown = enemyData.ATTACK_COOLDOWN;
 
             // Get a reference to the hitbox, disable it 
-            weaponHitbox = gameObject.transform.GetChild(0).GetComponent<BoxCollider2D>();
-            weaponHitbox.enabled = false;
+            if (gameObject.transform.childCount > 0)
+            {
+                weaponHitbox = gameObject.transform.GetChild(0).GetComponent<BoxCollider2D>();
+                weaponHitbox.enabled = false;
+            }
             spriteRenderer = GetComponent<SpriteRenderer>();
 
             state = EnemyState.Seeking;

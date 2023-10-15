@@ -8,6 +8,8 @@ TagManager:
   - Boulder
   - Wall
   - EnemyWeapon
+  - ScreenBounds
+  - Bullet
   layers:
   - Default
   - TransparentFX
@@ -18,7 +20,7 @@ TagManager:
   - Boulder
   - Enemies
   - Walls
-  - 
+  - Bounds
   - 
   - 
   - 

@@ -22,6 +22,10 @@ namespace Ephymeral.Data
         public float ATTACK_COOLDOWN;
         public float ATTACK_DURATION;
         public float DAMAGE_STUN_DURATION;
-        public float ROTATE_SPEED;
+
+        // This can change its usage based on the type of enemy using it
+        //      for the slow enemy it is the speed it rotates when spinning
+        //      for the ranged enemy it is the speed of the bullet
+        public float ATTACK_SPEED_MODIFIER;
     }
 }

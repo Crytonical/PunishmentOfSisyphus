@@ -45,7 +45,7 @@ namespace Ephymeral.EnemyNS
             // Initialize default wave info
             waveNum = 0; // 1
             levelNum = 1;
-            maxWaves = 3;
+            maxWaves = 4;
 
             levelWaves = new Dictionary<string, List<List<string>>>();
             enemiesAlive = new List<GameObject>();
@@ -53,25 +53,22 @@ namespace Ephymeral.EnemyNS
             // FOR TESTING, CHANGE WHEN WE HAVE FILE IO
             levelWaves["Level1"] = new List<List<string>>
             {
-                new List<string>() {"s", "s"},          // Wave 1: 2 enemies
-                new List<string>() {"s", "s", "s"},     // Wave 2: 3 enemies
-                new List<string>() {"s", "s", "s", "s"} // Wave 3: 4 enemies
+                new List<string>() {"s", "r"},           // Wave 1: 2 enemies
+                new List<string>() {"s", "r", "r"},      // Wave 2: 3 enemies
+                new List<string>() {"s", "s", "r", "r"}, // Wave 3: 4 enemies
+                new List<string>() {"s", "s", "s", "r", "r", "r"}  // Wave 4: 6 enemies
             };
 
             // SPawn initial wave
             SpawnWave();
         }
 
-        private void Update()
-        {
-        }
-
         private void IncrementWave()
         {
             if (waveNum < maxWaves)
             {
-                SpawnWave();
                 waveNum++;
+                SpawnWave();
             }
             else
             {
