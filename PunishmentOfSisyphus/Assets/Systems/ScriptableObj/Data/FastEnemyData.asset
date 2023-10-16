@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: FastEnemyData
   m_EditorClassIdentifier: 
   GRAVITY: 1
-  MOVE_SPEED: 3
+  MOVE_SPEED: 2.16
   DAMAGE: 10
   HEALTH: 35
   ATTACK_RANGE: 0.25
