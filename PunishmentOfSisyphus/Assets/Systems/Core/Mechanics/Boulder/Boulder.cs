@@ -196,7 +196,12 @@ namespace Ephymeral.BoulderNS
             {
                 direction *= -1;
                 velocity.x = velocity.x * -1;
-            }
+                }
+
+                if (collision.CompareTag("ScreenBounds"))
+                {
+                    boulderEvent.BoulderFail();
+                }
         }
 
         private void ThrowBoulder()

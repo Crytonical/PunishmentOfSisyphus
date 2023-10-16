@@ -10,6 +10,7 @@ TagManager:
   - EnemyWeapon
   - ScreenBounds
   - Bullet
+  - BoulderFail
   layers:
   - Default
   - TransparentFX

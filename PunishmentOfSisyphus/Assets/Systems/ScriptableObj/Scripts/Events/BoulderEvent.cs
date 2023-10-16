@@ -16,6 +16,7 @@ namespace Ephymeral.Events
         public UnityEvent pickupEvent;
         public UnityEvent dropEvent;
         public UnityEvent ricochetEvent;
+        public UnityEvent boulderFail;
         #endregion
         #endregion
 
@@ -41,6 +42,10 @@ namespace Ephymeral.Events
             {
                 ricochetEvent = new UnityEvent();
             }
+            if (boulderFail == null) 
+            {
+                boulderFail = new UnityEvent();
+            }
             #endregion
         }
 
@@ -57,6 +62,11 @@ namespace Ephymeral.Events
         public void Throw()
         {
             thrownEvent.Invoke();
+        }
+
+        public void BoulderFail()
+        {
+            boulderFail.Invoke();
         }
 
         // --- Events List ---
