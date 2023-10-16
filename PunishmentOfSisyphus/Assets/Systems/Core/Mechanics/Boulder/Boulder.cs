@@ -125,10 +125,11 @@ namespace Ephymeral.BoulderNS
                         elapsedTime += Time.deltaTime;
 
                         // Update speed
-                        speed = (boulderData.INITIAL_ROLL_SPEED + (boulderData.GRAVITY * elapsedTime));
+                        //speed = (boulderData.INITIAL_ROLL_SPEED + (boulderData.GRAVITY * elapsedTime));
 
-                        // Update velocity
-                        velocity = direction * speed;
+                        //// Update velocity
+                        //velocity = direction * speed;
+                        acceleration += (boulderData.GRAVITY * Vector2.down) * elapsedTime;
                     }
                     break;
 
@@ -180,7 +181,7 @@ namespace Ephymeral.BoulderNS
         private void DropBoulder()
         {
             state = BoulderState.Rolling;
-            direction = Vector2.down;
+            //direction = Vector2.down;
             velocity = Vector2.zero;
             UpdatePhysicsValues();
         }

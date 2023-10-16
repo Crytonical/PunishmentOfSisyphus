@@ -54,9 +54,9 @@ namespace Ephymeral.EnemyNS
             levelWaves["Level1"] = new List<List<string>>
             {
                 new List<string>() {"s", "r"},           // Wave 1: 2 enemies
-                new List<string>() {"s", "r", "r"},      // Wave 2: 3 enemies
-                new List<string>() {"s", "s", "r", "r"}, // Wave 3: 4 enemies
-                new List<string>() {"s", "s", "s", "r", "r", "r"}  // Wave 4: 6 enemies
+                new List<string>() {"s", "f", "r"},      // Wave 2: 3 enemies
+                new List<string>() {"s", "s", "f", "r"}, // Wave 3: 4 enemies
+                new List<string>() {"s", "s", "f", "f", "r", "r"}  // Wave 4: 6 enemies
             };
 
             // Spawn initial wave

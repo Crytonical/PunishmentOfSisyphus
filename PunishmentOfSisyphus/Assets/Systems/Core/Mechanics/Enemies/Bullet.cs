@@ -38,6 +38,7 @@ namespace Ephymeral.EnemyNS
             {
                 Debug.Log("Player hit!");
                 playerEvent.TakeDamage(damage);
+                Destroy(gameObject);
             }
         }
     }
