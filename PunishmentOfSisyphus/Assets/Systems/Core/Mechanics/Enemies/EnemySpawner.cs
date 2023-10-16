@@ -59,15 +59,15 @@ namespace Ephymeral.EnemyNS
                 new List<string>() {"s", "s", "s", "r", "r", "r"}  // Wave 4: 6 enemies
             };
 
-            // SPawn initial wave
+            // Spawn initial wave
             SpawnWave();
         }
 
         private void IncrementWave()
         {
+            waveNum++;
             if (waveNum < maxWaves)
             {
-                waveNum++;
                 SpawnWave();
             }
             else
@@ -82,7 +82,6 @@ namespace Ephymeral.EnemyNS
 
         private void RemoveEnemy(GameObject enemy)
         {
-            Debug.Log("Removing: " + enemy);
             enemiesAlive.Remove(enemy);
             Destroy(enemy);
 

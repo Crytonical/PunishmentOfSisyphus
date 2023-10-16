@@ -150,7 +150,6 @@ namespace Ephymeral.EnemyNS
 
         public void TakeDamage(float damage)
         {
-            Debug.Log(gameObject.name + " Is taking damage: " + damage);
             state = EnemyState.Damage;
             attackState = AttackState.None;
             health -= damage;
