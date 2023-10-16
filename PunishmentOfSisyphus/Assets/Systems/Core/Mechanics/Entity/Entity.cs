@@ -50,6 +50,18 @@ namespace Ephymeral.EntityNS
             acceleration = Vector2.zero;
         }
 
+
+        protected virtual void FixedUpdate()
+        {
+            // Update position, alter scale. Children should call parent
+            velocity += acceleration * Time.deltaTime;
+            position += velocity * Time.deltaTime;
+            transform.position = position;
+            UpdateScale();
+
+            acceleration = Vector2.zero;
+        }
+
         /// <summary>
         /// Calculate the scale based on the position relative to the main camera.
         /// Scales to a minimum of 0.8f, and maximum of 1.0f. Values can be adjusted

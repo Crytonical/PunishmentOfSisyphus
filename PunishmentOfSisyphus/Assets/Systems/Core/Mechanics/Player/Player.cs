@@ -10,6 +10,7 @@ using Ephymeral.Events;
 using Ephymeral.Data;
 using Ephymeral.EnemyNS;
 using UnityEngine.SceneManagement;
+//using System.Numerics;
 
 // INPUTSYSTEM INS'T WORKING FOR SOME REASON DUE TO DIRECTORY
 
@@ -34,6 +35,7 @@ namespace Ephymeral.PlayerNS
         [SerializeField] private PlayerEvent playerEvent;
         [SerializeField] private PlayerData playerData;
         //[SerializeField] private SceneEvent sceneEvent;
+        [SerializeField] private GameObject levelBounds;
         #endregion
 
         #region Fields
@@ -42,7 +44,7 @@ namespace Ephymeral.PlayerNS
 
         // Only exists so that directions input during roll are registered
         // When it ends. Otherwise, you'll need to press the key again
-        private Vector2 dodgeDirection;
+        private UnityEngine.Vector2 dodgeDirection;
         #endregion
 
         #region Properties
@@ -80,10 +82,12 @@ namespace Ephymeral.PlayerNS
         // Update is called once per frame
         protected override void Update()
         {
+            //Death
             if (health <= 0)
             {
                 Die();
             }
+
 
             switch (state)
             {
@@ -115,8 +119,25 @@ namespace Ephymeral.PlayerNS
 
             UpdateEventObject();
 
-            // Run parent's update for position and scale change
             base.Update();
+
+            //Keep in bounds
+            if (!levelBounds.GetComponent<RectTransform>().rect.Contains(transform.position) )
+            {
+                Rect rect = levelBounds.GetComponent<RectTransform>().rect;
+                Vector2 vector = position;
+
+                // Clamp the x component to be within the rectangle's x boundaries
+                float clampedX = Mathf.Clamp(vector.x, rect.xMin, rect.xMax);
+
+                // Clamp the y component to be within the rectangle's y boundaries
+                float clampedY = Mathf.Clamp(vector.y, rect.yMin, rect.yMax);
+
+                // Return the new vector with clamped components
+                position = new Vector2(clampedX, clampedY);
+                
+            }
+
         }
 
         private void UpdateEventObject()
