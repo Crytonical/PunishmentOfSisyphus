@@ -52,12 +52,14 @@ namespace Ephymeral.PlayerNS
         {
             // Add event listeners
             playerEvent.damageEvent.AddListener(TakeDamage);
+            boulderEvent.boulderFail.AddListener(Die);
         }
 
         private void OnDisable()
         {
             // remove event listeners
-            playerEvent.damageEvent.RemoveListener(TakeDamage);
+            playerEvent.damageEvent.RemoveAllListeners();
+            boulderEvent.boulderFail.RemoveAllListeners();
         }
 
         /// <summary>
@@ -80,11 +82,6 @@ namespace Ephymeral.PlayerNS
         // Update is called once per frame
         protected override void Update()
         {
-            if (health <= 0)
-            {
-                Die();
-            }
-
             switch (state)
             {
                 case PlayerState.Dodge:
@@ -148,14 +145,19 @@ namespace Ephymeral.PlayerNS
         private void TakeDamage(float damage)
         {
             health -= damage;
+
+            if (health <= 0)
+            {
+                Die();
+            }
         }
 
         private void Die()
         {
             //sceneEvent.GameOver("GameOver");
-            SceneManager.LoadScene("GameOver");
             enabled = false;
             Destroy(gameObject);
+            SceneManager.LoadScene("GameOver");
         }
 
         // Input methods
