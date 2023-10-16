@@ -146,7 +146,7 @@ namespace Ephymeral.BoulderNS
 
                 case BoulderState.Rolling:
                     // Apply gravity while rolling
-                    if (Mathf.Sign(velocity.y) == -1 && Speed > boulderData.MAX_ROLL_SPEED) //TODO: This might calculate Speed an unnecessary amount of times. Find better logic
+                    if (Mathf.Sign(velocity.y) == -1 && speed > boulderData.MAX_ROLL_SPEED) //TODO: This might calculate Speed an unnecessary amount of times. Find better logic
                     {
                         velocity = velocity.normalized * boulderData.MAX_ROLL_SPEED;
                     }
@@ -196,12 +196,12 @@ namespace Ephymeral.BoulderNS
             {
                 direction *= -1;
                 velocity.x = velocity.x * -1;
-                }
+            }
 
-                if (collision.CompareTag("ScreenBounds"))
-                {
-                    boulderEvent.BoulderFail();
-                }
+            if (collision.CompareTag("ScreenBounds"))
+            {
+                boulderEvent.BoulderFail();
+            }
         }
 
         private void ThrowBoulder()

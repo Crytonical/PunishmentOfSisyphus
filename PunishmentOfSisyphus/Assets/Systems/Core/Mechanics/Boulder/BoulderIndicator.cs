@@ -19,10 +19,10 @@ public class BoulderIndicator : MonoBehaviour
     {
         if(boulder.transform.position.y > bounds.yMax)
         {
-            transform.position = new Vector2(boulder.transform.position.x, bounds.yMax - 1.2f);
+            transform.position = new Vector2(boulder.transform.position.x, bounds.yMax - 1.0f);
 
             float distance = boulder.transform.position.y - bounds.yMax;
-            float scalingFactor = 0.04f;
+            float scalingFactor = 0.14f;
             float newScale = 1.0f - scalingFactor * distance;
             newScale = Mathf.Max(newScale, 0.1f);
             transform.localScale = new Vector3(newScale, newScale, 1.0f);
