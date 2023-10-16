@@ -35,9 +35,6 @@ namespace Ephymeral.BoulderNS
         private float ricochetTime;
         private float damage;
 
-        // Checks
-        private bool canThrow;
-
         // State
         [SerializeField] private BoulderState state;
         #endregion
@@ -56,9 +53,6 @@ namespace Ephymeral.BoulderNS
 
             // Initialize Variables
             damage = boulderData.DAMAGE;
-
-            // Default values
-            canThrow = true;
 
             // Default State
             state = BoulderState.Held;
@@ -131,10 +125,11 @@ namespace Ephymeral.BoulderNS
                         elapsedTime += Time.deltaTime;
 
                         // Update speed
-                        speed = (boulderData.INITIAL_ROLL_SPEED + (boulderData.GRAVITY * elapsedTime));
+                        //speed = (boulderData.INITIAL_ROLL_SPEED + (boulderData.GRAVITY * elapsedTime));
 
-                        // Update velocity
-                        velocity = direction * speed;
+                        //// Update velocity
+                        //velocity = direction * speed;
+                        acceleration += (boulderData.GRAVITY * Vector2.down) * elapsedTime;
                     }
                     break;
 
@@ -186,7 +181,7 @@ namespace Ephymeral.BoulderNS
         private void DropBoulder()
         {
             state = BoulderState.Rolling;
-            direction = Vector2.down;
+            //direction = Vector2.down;
             velocity = Vector2.zero;
             UpdatePhysicsValues();
         }
@@ -209,7 +204,7 @@ namespace Ephymeral.BoulderNS
 
         private void UpdateEventObject()
         {
-            boulderEvent.State = state;
+            //boulderEvent.State = state;
         }
 
         private void UpdatePhysicsValues()

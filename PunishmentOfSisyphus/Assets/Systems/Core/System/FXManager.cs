@@ -107,8 +107,6 @@ public class FXManager : MonoBehaviour
             yield return null;
         }
 
-        Debug.Log("Screen Shake Over");
-
         // Reset the camera position
         Camera.main.transform.position = originalPosition;
     }

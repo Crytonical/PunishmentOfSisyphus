@@ -2,8 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-using Ephymeral.EnemyNS;
-using Ephymeral.PlayerNS;
 using UnityEngine.Events;
 
 namespace Ephymeral.Events

@@ -8,7 +8,7 @@ using Ephymeral.Events;
 
 namespace Ephymeral.EnemyNS
 {
-    public class StrongEnemy : Enemy
+    public class FastEnemy : Enemy
     {
         protected override IEnumerator Attack(float duration)
         {

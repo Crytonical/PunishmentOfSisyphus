@@ -4,7 +4,6 @@ using Ephymeral.Events;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static Codice.Client.Commands.WkTree.WorkspaceTreeNode;
 
 using Ephymeral.EntityNS;
 
@@ -36,6 +35,7 @@ namespace Ephymeral.EnemyNS
         [SerializeField] protected EnemyMovementData enemyData;
         [SerializeField] protected EnemyEvent enemyEvent;
         [SerializeField] protected CircleCollider2D hitbox;
+        [SerializeField] protected EnemySpawnerEvent spawnerEvent;
         protected BoxCollider2D weaponHitbox;
         protected SpriteRenderer spriteRenderer;
         #endregion
@@ -79,8 +79,11 @@ namespace Ephymeral.EnemyNS
             attackCooldown = enemyData.ATTACK_COOLDOWN;
 
             // Get a reference to the hitbox, disable it 
-            weaponHitbox = gameObject.transform.GetChild(0).GetComponent<BoxCollider2D>();
-            weaponHitbox.enabled = false;
+            if (gameObject.transform.childCount > 0)
+            {
+                weaponHitbox = gameObject.transform.GetChild(0).GetComponent<BoxCollider2D>();
+                weaponHitbox.enabled = false;
+            }
             spriteRenderer = GetComponent<SpriteRenderer>();
 
             state = EnemyState.Seeking;
@@ -90,7 +93,8 @@ namespace Ephymeral.EnemyNS
 
             acceleration = new Vector2(1.0f, 1.0f);
 
-            position = enemyData.SPAWN_POSITION;
+            // In theory, this will give a random position on the circumference of a circle with radius 3
+            position = new Vector2(Mathf.Cos(Random.Range(0.0f, 2f * Mathf.PI)) * 3.0f, Mathf.Sin(Random.Range(0.0f, 2f * Mathf.PI)) * 3.0f);
         }
 
         private void FixedUpdate()
@@ -100,8 +104,17 @@ namespace Ephymeral.EnemyNS
                 case EnemyState.Seeking:
                     //direction = ((playerEvent.Position - position).normalized) / 1000;
                     direction = (playerEvent.Position - position).normalized;
-                    speed = enemyData.MOVE_SPEED;
-                    velocity = direction * speed;
+
+                    if ((playerEvent.Position - position).magnitude > attackRange)
+                    {
+                        speed = enemyData.MOVE_SPEED;
+                        velocity = direction * speed;
+                    }
+                    else
+                    {
+                        speed = 0;
+                        velocity = direction * speed;
+                    }
 
                     // Rotate towards player position
                     Quaternion xToY = Quaternion.LookRotation(Vector3.forward, Vector3.left);
@@ -136,7 +149,6 @@ namespace Ephymeral.EnemyNS
 
         public void TakeDamage(float damage)
         {
-            Debug.Log(gameObject.name + " Is taking damage: " + damage);
             state = EnemyState.Damage;
             attackState = AttackState.None;
             health -= damage;
@@ -152,8 +164,8 @@ namespace Ephymeral.EnemyNS
         private void Die()
         {
             enabled = false;
+            spawnerEvent.EnemyDeathEvent(gameObject);
             StopAllCoroutines();
-            Destroy(gameObject);
         }
 
         protected virtual IEnumerator Attack(float duration)

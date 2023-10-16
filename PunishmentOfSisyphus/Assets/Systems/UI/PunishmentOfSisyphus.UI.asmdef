@@ -1,3 +1,16 @@
 {
-	"name": "PunishmentOfSisyphus.UI"
+    "name": "PunishmentOfSisyphus.UI",
+    "rootNamespace": "",
+    "references": [
+        "GUID:4118dda52555b0440b6cfb84e6d1092d"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
 }

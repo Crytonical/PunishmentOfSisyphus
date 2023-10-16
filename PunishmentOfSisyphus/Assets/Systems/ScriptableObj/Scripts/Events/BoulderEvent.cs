@@ -1,8 +1,6 @@
 using UnityEngine.Events;
 using UnityEngine;
-using Codice.CM.Common;
 
-using Ephymeral.BoulderNS;
 
 namespace Ephymeral.Events
 {
@@ -10,7 +8,6 @@ namespace Ephymeral.Events
     public class BoulderEvent : ScriptableObject
     {
         #region FIELDS
-        private BoulderState state;
 
         #region EVENTS
         [System.NonSerialized]
@@ -22,7 +19,6 @@ namespace Ephymeral.Events
         #endregion
 
         #region PROPERTIES
-        public BoulderState State { get { return state; } set { state = value; } }
         #endregion
 
         private void OnEnable()

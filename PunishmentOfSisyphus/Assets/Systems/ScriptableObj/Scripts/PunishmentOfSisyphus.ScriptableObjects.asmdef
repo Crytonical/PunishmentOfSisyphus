@@ -1,10 +1,7 @@
 {
-    "name": "PunishmentOfSisyphus.Core",
-    "rootNamespace": "",
-    "references": [
-        "GUID:75469ad4d38634e559750d17036d5f7c",
-        "GUID:4118dda52555b0440b6cfb84e6d1092d"
-    ],
+    "name": "PunishmentOfSisyphus.ScriptableObjects",
+    "rootNamespace": "Ephymeral",
+    "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

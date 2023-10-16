@@ -2,8 +2,6 @@ using UnityEngine.Events;
 using UnityEngine;
 using UnityEditor;
 
-using Ephymeral.PlayerNS;
-
 namespace Ephymeral.Events
 {
     [CreateAssetMenu(fileName = "PlayerEvent", menuName = "EventObjects/PlayerEvent")]
@@ -11,16 +9,14 @@ namespace Ephymeral.Events
     {
         #region FIELDS
         private bool canThrow;
-        private float speed;
+        private float speed, health;
         private Vector2 direction, velocity, position;
-        private PlayerState state;
 
         #region EVENTS
         [System.NonSerialized]
         public UnityEvent dodgeEvent;
         public UnityEvent throwEvent;
         public UnityEvent<float> damageEvent;
-        public UnityEvent takeDamageEvent;
         public UnityEvent attackEvent;
         #endregion
         #endregion
@@ -28,10 +24,10 @@ namespace Ephymeral.Events
         #region PROPERTIES
         public float Speed { get { return speed; } set {  speed = value; } }
         public bool CanThrow { get {  return canThrow; } set {  canThrow = value; } }
+        public float Health { get { return health; } set { health = value; } }
         public Vector2 Direction { get { return direction; } set {  direction = value; } }
         public Vector2 Velocity { get { return velocity; } set { velocity = value; } }
         public Vector2 Position { get { return position; } set { position = value; } }
-        public PlayerState State { get { return state; } set { state = value; } }
         #endregion
 
         private void OnEnable()
@@ -44,10 +40,6 @@ namespace Ephymeral.Events
             if (attackEvent == null)
             {
                 attackEvent = new UnityEvent();
-            }
-            if (takeDamageEvent == null)
-            {
-                takeDamageEvent = new UnityEvent();
             }
             if (dodgeEvent == null)
             {

@@ -4,9 +4,9 @@ using UnityEngine;
 
 namespace Ephymeral.Data
 {
-    [CreateAssetMenu(fileName = "PlayerMovementData", menuName = "DataObjects/PlayerMovementData")]
+    [CreateAssetMenu(fileName = "PlayerData", menuName = "DataObjects/PlayerData")]
 
-    public class PlayerMovementData : ScriptableObject
+    public class PlayerData : ScriptableObject
     {
         [Header("Speeds")]
         public float CARRY_SPEED;
@@ -19,5 +19,8 @@ namespace Ephymeral.Data
         [Header("Attacking")]
         public float LUNGE_SPEED;
         public float LUNGE_DURATION;
+
+        [Header("Health")]
+        public float MAX_HP;
     }
 }

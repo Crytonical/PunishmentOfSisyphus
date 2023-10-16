@@ -9,16 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 693867210b6dc1143800920bf01df731, type: 3}
-  m_Name: SlowEnemyData
+  m_Script: {fileID: 11500000, guid: c275301886cd4f341aa1832409f4600f, type: 3}
+  m_Name: PlayerData
   m_EditorClassIdentifier: 
-  GRAVITY: 1
-  MOVE_SPEED: 1
-  DAMAGE: 25
-  HEALTH: 100
-  ATTACK_RANGE: 0.5
-  ATTACK_WIND_UP: 1
-  ATTACK_COOLDOWN: 4
-  ATTACK_DURATION: 1
-  DAMAGE_STUN_DURATION: 1
-  ATTACK_SPEED_MODIFIER: 2
+  CARRY_SPEED: 0.5
+  FREE_SPEED: 4
+  DODGE_SPEED: 10
+  DODGE_DURATION: 0.3
+  LUNGE_SPEED: 29
+  LUNGE_DURATION: 0.29
+  MAX_HP: 100
