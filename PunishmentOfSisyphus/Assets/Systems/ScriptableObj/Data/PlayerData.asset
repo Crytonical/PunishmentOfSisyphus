@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a6828b4708c81754ba4dc58908820462, type: 3}
-  m_Name: PlayerMovementData
+  m_Script: {fileID: 11500000, guid: c275301886cd4f341aa1832409f4600f, type: 3}
+  m_Name: PlayerData
   m_EditorClassIdentifier: 
   CARRY_SPEED: 0.5
   FREE_SPEED: 4
@@ -18,3 +18,4 @@ MonoBehaviour:
   DODGE_DURATION: 0.3
   LUNGE_SPEED: 29
   LUNGE_DURATION: 0.29
+  MAX_HP: 100

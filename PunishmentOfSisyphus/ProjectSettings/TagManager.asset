@@ -8,6 +8,8 @@ TagManager:
   - Boulder
   - Wall
   - EnemyWeapon
+  - ScreenBounds
+  - Bullet
   layers:
   - Default
   - TransparentFX
@@ -18,7 +20,7 @@ TagManager:
   - Boulder
   - Enemies
   - Walls
-  - 
+  - Bounds
   - 
   - 
   - 
@@ -44,4 +46,7 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Boulder
+    uniqueID: 2663064889
     locked: 0

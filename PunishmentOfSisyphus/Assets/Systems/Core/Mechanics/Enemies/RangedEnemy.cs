@@ -1,46 +1,53 @@
+using Ephymeral.EntityNS;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-using Ephymeral.EnemyNS;
-using Ephymeral.Data;
-using Ephymeral.Events;
-
 
 namespace Ephymeral.EnemyNS
 {
     public class RangedEnemy : Enemy
     {
         #region REFERENCES
+        [SerializeField] private GameObject bulletPrefab;
         #endregion
 
-        // COPIED FROM STRONG ENEMY
+        #region FIELDS
+        #endregion
+
+        #region PROPERTIES
+        #endregion
+
         protected override IEnumerator Attack(float duration)
         {
-            weaponHitbox.enabled = true;
+            // Get the direction of the attack (towards player)
+            direction = (playerEvent.Position - position).normalized;
+
+            // Spawn a bullet, get reference to its bullet script
+            GameObject bullet = Instantiate(bulletPrefab, transform);
+            Bullet bulletScript = bullet.GetComponent<Bullet>();
+
+            // Set its direction, set its velocity
+            bulletScript.Damage = damage;
+            bulletScript.Position = position;
+            bulletScript.Direction = direction;
+            bulletScript.Velocity = bulletScript.Direction * enemyData.ATTACK_SPEED_MODIFIER;
+
+            // Change its color while its attacking
             while (duration > 0)
             {
                 duration -= Time.deltaTime;
                 spriteRenderer.color = Color.yellow;
-                // lerp towards player
-                transform.Rotate(new Vector3(0.0f, 0.0f, 1.0f));
                 yield return null;
             }
 
             state = EnemyState.Seeking;
             attackState = AttackState.CoolingDown;
-            if (weaponHitbox)
-            {
-                weaponHitbox.enabled = false;
-            }
             StartCoroutine(AttackCooldown(attackCooldown));
         }
 
-        // COPIED FROM STRONG ENEMY
         protected override IEnumerator AttackWindUP(float time)
         {
             attackState = AttackState.WindingUp;
-            float tTime = time;
             while (time > 0)
             {
                 time -= Time.deltaTime;
@@ -58,7 +65,6 @@ namespace Ephymeral.EnemyNS
             StartCoroutine(Attack(attackDuration));
         }
 
-        // COPIED FROM STRONG ENEMY. Doesn't need changing
         protected override IEnumerator AttackCooldown(float time)
         {
             while (time > 0)
@@ -70,5 +76,6 @@ namespace Ephymeral.EnemyNS
 
             attackState = AttackState.None;
         }
+
     }
 }

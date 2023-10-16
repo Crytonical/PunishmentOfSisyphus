@@ -80,8 +80,11 @@ namespace Ephymeral.EnemyNS
             attackCooldown = enemyData.ATTACK_COOLDOWN;
 
             // Get a reference to the hitbox, disable it 
-            weaponHitbox = gameObject.transform.GetChild(0).GetComponent<BoxCollider2D>();
-            weaponHitbox.enabled = false;
+            if (gameObject.transform.childCount > 0)
+            {
+                weaponHitbox = gameObject.transform.GetChild(0).GetComponent<BoxCollider2D>();
+                weaponHitbox.enabled = false;
+            }
             spriteRenderer = GetComponent<SpriteRenderer>();
 
             state = EnemyState.Seeking;
@@ -102,8 +105,17 @@ namespace Ephymeral.EnemyNS
                 case EnemyState.Seeking:
                     //direction = ((playerEvent.Position - position).normalized) / 1000;
                     direction = (playerEvent.Position - position).normalized;
-                    speed = enemyData.MOVE_SPEED;
-                    velocity = direction * speed;
+
+                    if ((playerEvent.Position - position).magnitude > attackRange)
+                    {
+                        speed = enemyData.MOVE_SPEED;
+                        velocity = direction * speed;
+                    }
+                    else
+                    {
+                        speed = 0;
+                        velocity = direction * speed;
+                    }
 
                     // Rotate towards player position
                     Quaternion xToY = Quaternion.LookRotation(Vector3.forward, Vector3.left);
@@ -138,7 +150,6 @@ namespace Ephymeral.EnemyNS
 
         public void TakeDamage(float damage)
         {
-            Debug.Log(gameObject.name + " Is taking damage: " + damage);
             state = EnemyState.Damage;
             attackState = AttackState.None;
             health -= damage;

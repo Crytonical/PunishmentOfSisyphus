@@ -18,7 +18,7 @@ namespace Ephymeral.EnemyNS
                 duration -= Time.deltaTime;
                 spriteRenderer.color = Color.yellow;
                 // lerp towards player
-                transform.Rotate(new Vector3(0.0f, 0.0f, enemyData.ROTATE_SPEED));
+                transform.Rotate(new Vector3(0.0f, 0.0f, enemyData.ATTACK_SPEED_MODIFIER));
                 yield return null;
             }
 

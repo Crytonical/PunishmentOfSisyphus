@@ -9,7 +9,7 @@ namespace Ephymeral.Events
     {
         #region FIELDS
         private bool canThrow;
-        private float speed;
+        private float speed, health;
         private Vector2 direction, velocity, position;
 
         #region EVENTS
@@ -17,7 +17,6 @@ namespace Ephymeral.Events
         public UnityEvent dodgeEvent;
         public UnityEvent throwEvent;
         public UnityEvent<float> damageEvent;
-        public UnityEvent takeDamageEvent;
         public UnityEvent attackEvent;
         #endregion
         #endregion
@@ -25,6 +24,7 @@ namespace Ephymeral.Events
         #region PROPERTIES
         public float Speed { get { return speed; } set {  speed = value; } }
         public bool CanThrow { get {  return canThrow; } set {  canThrow = value; } }
+        public float Health { get { return health; } set { health = value; } }
         public Vector2 Direction { get { return direction; } set {  direction = value; } }
         public Vector2 Velocity { get { return velocity; } set { velocity = value; } }
         public Vector2 Position { get { return position; } set { position = value; } }
@@ -40,10 +40,6 @@ namespace Ephymeral.Events
             if (attackEvent == null)
             {
                 attackEvent = new UnityEvent();
-            }
-            if (takeDamageEvent == null)
-            {
-                takeDamageEvent = new UnityEvent();
             }
             if (dodgeEvent == null)
             {
