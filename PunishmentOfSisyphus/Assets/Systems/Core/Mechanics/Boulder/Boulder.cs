@@ -162,7 +162,6 @@ namespace Ephymeral.BoulderNS
             if (collision.CompareTag("Enemy") && state == BoulderState.Thrown)
             {
                 // Trigger damage event on enemy
-                Debug.Log("hit enemy");
                 collision.GetComponent<Enemy>().TakeDamage(damage);
 
                 // Call ricochet function
