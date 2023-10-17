@@ -1329,7 +1329,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   boulder: {fileID: 2018752732}
-  levelBounds: {fileID: 0}
+  levelBounds: {fileID: 276285823}
 --- !u!212 &1703308859
 SpriteRenderer:
   m_ObjectHideFlags: 0

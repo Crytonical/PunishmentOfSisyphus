@@ -183,7 +183,8 @@ namespace Ephymeral.BoulderNS
 
         private void OnTriggerEnter2D(Collider2D collision)
         {
-            if (collision.CompareTag("Enemy") && state == BoulderState.Thrown && Speed >= boulderData.HIT_SPEED_MIN)
+            // Changed "&& state == BoulderState.Thrown" so that will always hit when not held by the player
+            if (collision.CompareTag("Enemy") && state != BoulderState.Held && Speed >= boulderData.HIT_SPEED_MIN)
             {
                 // Trigger damage event on enemy
                 collision.GetComponent<Enemy>().TakeDamage(damage);
