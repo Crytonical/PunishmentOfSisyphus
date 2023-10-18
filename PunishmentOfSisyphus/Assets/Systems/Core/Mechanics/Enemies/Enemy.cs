@@ -98,7 +98,7 @@ namespace Ephymeral.EnemyNS
             position = new Vector2(Mathf.Cos(Random.Range(0.0f, 2f * Mathf.PI)) * 3.0f, Mathf.Sin(Random.Range(0.0f, 2f * Mathf.PI)) * 3.0f);
         }
 
-        private void FixedUpdate()
+        protected override void FixedUpdate()
         {
             switch(state)
             {

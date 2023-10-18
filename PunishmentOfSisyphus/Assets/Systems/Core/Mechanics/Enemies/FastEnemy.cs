@@ -24,6 +24,7 @@ namespace Ephymeral.EnemyNS
 
             state = EnemyState.Seeking;
             attackState = AttackState.CoolingDown;
+
             if (weaponHitbox)
             {
                 weaponHitbox.enabled = false;
