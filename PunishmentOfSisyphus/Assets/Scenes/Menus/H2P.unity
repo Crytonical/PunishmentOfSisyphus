@@ -612,7 +612,7 @@ MonoBehaviour:
     m_VerticalOverflow: 1
     m_LineSpacing: 1
   m_Text: "Dont let your boulder fall to the bottom of the hill! \n\nCarrying the
-    boulder makes you slower and unable to dodge. \n\nSurvive four waves to win!"
+    boulder makes you slower and unable to dodge. \n\nSurvive 7 waves to win!"
 --- !u!222 &1267903486
 CanvasRenderer:
   m_ObjectHideFlags: 0
