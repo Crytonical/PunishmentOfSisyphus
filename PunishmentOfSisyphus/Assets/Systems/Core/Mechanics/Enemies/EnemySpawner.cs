@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.UI;
 
 using Ephymeral.Events;
-using Codice.Client.Common.GameUI;
 
 namespace Ephymeral.EnemyNS
 {
