@@ -146,9 +146,9 @@ namespace Ephymeral.BoulderNS
 
                 case BoulderState.Rolling:
                     // Apply gravity while rolling
-                    if (Mathf.Sign(velocity.y) == -1 && Speed > boulderData.MAX_ROLL_SPEED) //TODO: This might calculate Speed an unnecessary amount of times. Find better logic
+                    if (Mathf.Sign(velocity.y) == -1 && velocity.y < -1 * boulderData.MAX_ROLL_SPEED) 
                     {
-                        velocity = velocity.normalized * boulderData.MAX_ROLL_SPEED;
+                        velocity = new Vector2( velocity.x, boulderData.MAX_ROLL_SPEED * -1) ;
                     }
                     else
                     {
