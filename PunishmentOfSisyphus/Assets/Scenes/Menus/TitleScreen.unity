@@ -396,8 +396,8 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 2064213537}
   - {fileID: 1597256565}
+  - {fileID: 2064213537}
   - {fileID: 2091390486}
   - {fileID: 1440145844}
   m_Father: {fileID: 599537933}
@@ -460,7 +460,7 @@ Canvas:
   m_RenderMode: 1
   m_Camera: {fileID: 599537932}
   m_PlaneDistance: 100
-  m_PixelPerfect: 0
+  m_PixelPerfect: 1
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
@@ -582,7 +582,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1440145844
 RectTransform:
   m_ObjectHideFlags: 0
