@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: BoulderData
   m_EditorClassIdentifier: 
   GRAVITY: 0.1
-  MAX_ROLL_SPEED: 2
+  MAX_ROLL_SPEED: 4.47
   INITIAL_ROLL_SPEED: 0
   AIR_TIME: 0.8
   INITIAL_RICOCHET_SPEED: 6
