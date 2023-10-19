@@ -134,7 +134,7 @@ namespace Ephymeral.PlayerNS
                 float clampedY = Mathf.Clamp(vector.y, rect.yMin, rect.yMax);
 
                 // Return the new vector with clamped components
-                position = new Vector2(clampedX, clampedY);
+                position = new Vector2(clampedX, clampedY); 
                 
             }
 
