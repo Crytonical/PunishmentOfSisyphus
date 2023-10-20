@@ -247,14 +247,20 @@ namespace Ephymeral.PlayerNS
             float startValue = playerData.LUNGE_SPEED;
             float endValue = playerData.FREE_SPEED;
 
-            float duration = playerData.LUNGE_DURATION;
+            float duration = playerData.SLAM_DURATION;
 
             while (timer < duration)
             {
-                //Slam on frame 10
-                if(timer == 10)
-                {
+                GameObject slamOne = new GameObject();
 
+                //Slam on frame 10
+                if (timer == 10)
+                {
+                    slamOne = (GameObject)Instantiate(slamHitbox, transform);
+                }
+                if(timer == 16)
+                {
+                    Destroy(slamOne);
                 }
 
                 timer += 1;
