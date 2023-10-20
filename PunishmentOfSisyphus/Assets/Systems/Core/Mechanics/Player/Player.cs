@@ -25,7 +25,7 @@ namespace Ephymeral.PlayerNS
         Dodge,
         Damage,
         Throwing,
-        Lunging
+        Slam
     }
 
     public class Player : Entity
@@ -36,6 +36,7 @@ namespace Ephymeral.PlayerNS
         [SerializeField] private PlayerData playerData;
         //[SerializeField] private SceneEvent sceneEvent;
         [SerializeField] private GameObject levelBounds;
+        [SerializeField] private GameObject slamHitbox;
         #endregion
 
         #region Fields
@@ -231,7 +232,7 @@ namespace Ephymeral.PlayerNS
                 }
                 else
                 {
-                    state = PlayerState.Lunging;
+                    state = PlayerState.Slam;
                     Vector2 lunchDir = ((Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition) - playerEvent.Position).normalized;
                     StartCoroutine(LunchCo(lunchDir));
 
@@ -248,27 +249,16 @@ namespace Ephymeral.PlayerNS
 
             float duration = playerData.LUNGE_DURATION;
 
-            float prog; //Easing Vars
-            float t;
-
             while (timer < duration)
             {
-                if (state == PlayerState.Lunging) //Cancel if the lunch is interupted.
+                //Slam on frame 10
+                if(timer == 10)
                 {
-                    t = timer / duration;
-                    prog = t*t;
 
-                    float currentValue = Mathf.Lerp(startValue, endValue, prog);
-
-                    velocity = lunchDir * currentValue * Time.deltaTime;
-
-                    timer += Time.deltaTime;
-                    yield return null;
                 }
-                else
-                {
-                    break;
-                }
+
+                timer += 1;
+                yield return new WaitForFixedUpdate();
             }
 
             if(timer >= duration)
