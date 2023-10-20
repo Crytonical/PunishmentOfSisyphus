@@ -187,7 +187,7 @@ namespace Ephymeral.BoulderNS
             if (collision.CompareTag("Enemy") && state != BoulderState.Held && Speed >= boulderData.HIT_SPEED_MIN)
             {
                 // Trigger damage event on enemy
-                collision.GetComponent<Enemy>().TakeDamage(damage);
+                collision.GetComponent<Enemy>().TakeDamage(damage, velocity);
 
                 // Call ricochet function
                 Ricochet(collision);
