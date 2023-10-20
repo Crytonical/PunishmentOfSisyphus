@@ -130,7 +130,7 @@ namespace Ephymeral.EnemyNS
 
             wavesText.text = $"Wave\r\n {waveNum + 1} / {maxWaves}";
 
-            enemiesText.text = $"{maxEnemiesInWave - enemiesAlive.Count} / {maxEnemiesInWave}\r\nEnemies Killed";
+            enemiesText.text = $"Enemies Killed\r\n{maxEnemiesInWave - enemiesAlive.Count} / {maxEnemiesInWave}";
         }
 
         private void LoadEnemyWaveFromFile()
