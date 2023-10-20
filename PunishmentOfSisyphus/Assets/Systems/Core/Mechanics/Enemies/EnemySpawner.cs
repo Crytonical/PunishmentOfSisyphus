@@ -49,6 +49,10 @@ namespace Ephymeral.EnemyNS
             levelWaves = new Dictionary<string, List<List<string>>>();
             enemiesAlive = new List<GameObject>();
 
+            // File IO/Level loading notes
+            // Need an array/list of possible levels that is loaded from a file
+            //  Each 
+
             // FOR TESTING, CHANGE WHEN WE HAVE FILE IO
             levelWaves["Level1"] = new List<List<string>>
             {
@@ -93,7 +97,6 @@ namespace Ephymeral.EnemyNS
 
         private void RemoveEnemy(GameObject enemy)
         {
-
             enemiesAlive.Remove(enemy);
             Destroy(enemy);
 
@@ -130,7 +133,7 @@ namespace Ephymeral.EnemyNS
 
             wavesText.text = $"Wave\r\n {waveNum + 1} / {maxWaves}";
 
-            enemiesText.text = $"{maxEnemiesInWave - enemiesAlive.Count} / {maxEnemiesInWave}\r\nEnemies Killed";
+            enemiesText.text = $"Enemies Killed\r\n{maxEnemiesInWave - enemiesAlive.Count} / {maxEnemiesInWave}";
         }
 
         private void LoadEnemyWaveFromFile()
@@ -141,6 +144,12 @@ namespace Ephymeral.EnemyNS
         private void IncrementLevel()
         {
             // Go to next level
+        }
+
+        private List<List<string>> GetRandomStartingLevel()
+        {
+            List<List<string>> level = new List<List<string>>();
+            return level;
         }
     }
 }

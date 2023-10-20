@@ -1153,7 +1153,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -897, y: -489.99997}
+  m_AnchoredPosition: {x: -790, y: -489.99997}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1503578546
@@ -1370,6 +1370,7 @@ MonoBehaviour:
   playerEvent: {fileID: 11400000, guid: ba01c3c52a41b424cac2f5bdeb8b4d89, type: 2}
   playerData: {fileID: 11400000, guid: 4a6ccf259fe08e44f9f68162b85ca0eb, type: 2}
   levelBounds: {fileID: 276285823}
+  slamHitbox: {fileID: 0}
   state: 0
 --- !u!212 &1650843782
 SpriteRenderer:
@@ -1412,8 +1413,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0, g: 0.8962264, b: 0.4259318, a: 1}
+  m_Sprite: {fileID: 21300000, guid: 8a859f533889b6e42a384702ee82464d, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -1431,7 +1432,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1650843779}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.01, y: -4.6, z: 0.33927}
+  m_LocalPosition: {x: 0.05, y: -4.36, z: 0.33927}
   m_LocalScale: {x: 0.3214693, y: 0.3214693, z: 0.3214693}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1474,7 +1475,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
+    oldSize: {x: 3.29, y: 3.36}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -1740,7 +1741,7 @@ GameObject:
   - component: {fileID: 1828470358}
   - component: {fileID: 1828470357}
   m_Layer: 0
-  m_Name: Play Btn
+  m_Name: Pause Btn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1764,7 +1765,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -1040, y: 459.06}
+  m_AnchoredPosition: {x: -885, y: 459.06}
   m_SizeDelta: {x: 30, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1828470357
@@ -2017,9 +2018,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: '0 / X
-
-    Enemies Killed '
+  m_Text: "Enemies Killed \n0 / X"
 --- !u!222 &1982187426
 CanvasRenderer:
   m_ObjectHideFlags: 0

@@ -94,8 +94,10 @@ namespace Ephymeral.EnemyNS
 
             acceleration = new Vector2(1.0f, 1.0f);
 
-            // In theory, this will give a random position on the circumference of a circle with radius 3
-            position = new Vector2(Mathf.Cos(Random.Range(0.0f, 2f * Mathf.PI)) * 3.0f, Mathf.Sin(Random.Range(0.0f, 2f * Mathf.PI)) * 3.0f);
+            // Spawn enemies in a random position between given constrictions
+            float enemyX = Random.Range(-4, 4);
+            float enemyY = Random.Range(-4, 3);
+            position = new Vector2(enemyX, enemyY);
         }
 
         protected override void FixedUpdate()
