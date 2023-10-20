@@ -42,6 +42,7 @@ namespace Ephymeral.PlayerNS
         #region Fields
 
         [SerializeField] private PlayerState state;
+        SlamScript slamScript;
 
         // Only exists so that directions input during roll are registered
         // When it ends. Otherwise, you'll need to press the key again
@@ -76,9 +77,13 @@ namespace Ephymeral.PlayerNS
             state = PlayerState.Free;
             //collision = getComponent(BoxCollider2D);
 
+            slamScript = slamHitbox.GetComponent<SlamScript>();
+            slamScript.DeactivateHitbox();
+
             // Run parent's awake method
             base.Awake();
         }
+
 
         // Update is called once per frame
         protected override void Update()
@@ -192,23 +197,6 @@ namespace Ephymeral.PlayerNS
             {
                 if (state != PlayerState.Dodge)
                 {
-                    //// Don't have them dodge when firing the boulder. JUST FOR NOW
-                    //if (state == PlayerState.CarryingBounder)
-                    //{
-                    //    boulderEvent.DropBoulder();
-                    //    speed = playerMovementData.FREE_SPEED;
-                    //    state = PlayerState.Free;
-                    //}
-
-                    //else
-                    //{
-                    //    state = PlayerState.Dodge;
-                    //    speed = playerMovementData.DODGE_SPEED;
-                    //    dodgeDirection = direction;
-                    //    velocity = dodgeDirection * playerMovementData.DODGE_SPEED;
-                    //}
-
-                    // Removed the "drop bouler if you try to dodge" thing because it felt clunky. -Avery
                     if (state == PlayerState.Free)
                     {
                         state = PlayerState.Dodge;
@@ -249,26 +237,30 @@ namespace Ephymeral.PlayerNS
 
             float duration = playerData.SLAM_DURATION;
 
+            Debug.Log("Start Slam");
+
             while (timer < duration)
             {
-                GameObject slamOne = new GameObject();
 
                 //Slam on frame 10
-                if (timer == 10)
+                if (timer == 3)
                 {
-                    slamOne = (GameObject)Instantiate(slamHitbox, transform);
+                    slamScript.ActivateHitbox();
                 }
-                if(timer == 16)
+                if(timer == duration - 3)
                 {
-                    Destroy(slamOne);
+                    slamScript.DeactivateHitbox();
                 }
 
                 timer += 1;
                 yield return new WaitForFixedUpdate();
             }
 
-            if(timer >= duration)
+            if(state == PlayerState.Slam)
+            {
                 state = PlayerState.Free;
+            }
+                
 
         }
 
