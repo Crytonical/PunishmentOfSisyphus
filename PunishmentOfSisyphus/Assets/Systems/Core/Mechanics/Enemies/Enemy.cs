@@ -150,17 +150,21 @@ namespace Ephymeral.EnemyNS
 
         public void TakeDamage(float damage, Vector2 knockback)
         {
-            state = EnemyState.Damage;
-            attackState = AttackState.None;
-            health -= damage;
+            if(state != EnemyState.Damage)
+                {
+                    state = EnemyState.Damage;
+                    attackState = AttackState.None;
+                    health -= damage;
 
+                    position += knockback;
 
-            FXManager.Instance.ShakeScreen(0.08f, 8);
+                    FXManager.Instance.ShakeScreen(0.08f, 8);
 
-            if (health <= 0)
-            {
-                Die();
-            }
+                    if (health <= 0)
+                    {
+                        Die();
+                    }
+                }
         }
 
         private void Die()

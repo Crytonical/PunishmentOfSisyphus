@@ -21,16 +21,5 @@ public class SlamScript : MonoBehaviour
             collision.GetComponent<Enemy>().TakeDamage(0, knockback);
 
         }
-
-        if (collision.CompareTag("Wall"))
-        {
-            direction *= -1;
-            velocity.x = velocity.x * -1;
-        }
-
-        if (collision.CompareTag("ScreenBounds"))
-        {
-            boulderEvent.BoulderFail();
-        }
     }
 }
