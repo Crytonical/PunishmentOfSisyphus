@@ -49,6 +49,10 @@ namespace Ephymeral.EnemyNS
             levelWaves = new Dictionary<string, List<List<string>>>();
             enemiesAlive = new List<GameObject>();
 
+            // File IO/Level loading notes
+            // Need an array/list of possible levels that is loaded from a file
+            //  Each 
+
             // FOR TESTING, CHANGE WHEN WE HAVE FILE IO
             levelWaves["Level1"] = new List<List<string>>
             {
