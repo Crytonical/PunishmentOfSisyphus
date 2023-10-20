@@ -53,7 +53,7 @@ namespace Ephymeral.EntityNS
             velocity += acceleration * Time.deltaTime;
             position += velocity * Time.deltaTime;
             transform.position = position;
-            UpdateScale();
+            // UpdateScale();
 
             acceleration = Vector2.zero;
         }
@@ -80,7 +80,7 @@ namespace Ephymeral.EntityNS
 
             scale.x = BASE_SCALE + scalar;
             scale.y = BASE_SCALE + scalar;
-            transform.localScale = scale;
+            //transform.localScale = scale;
         }
     }
 }
