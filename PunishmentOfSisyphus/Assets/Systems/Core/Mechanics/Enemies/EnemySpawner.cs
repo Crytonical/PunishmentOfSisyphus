@@ -93,7 +93,6 @@ namespace Ephymeral.EnemyNS
 
         private void RemoveEnemy(GameObject enemy)
         {
-
             enemiesAlive.Remove(enemy);
             Destroy(enemy);
 
@@ -141,6 +140,12 @@ namespace Ephymeral.EnemyNS
         private void IncrementLevel()
         {
             // Go to next level
+        }
+
+        private List<List<string>> GetRandomStartingLevel()
+        {
+            List<List<string>> level = new List<List<string>>();
+            return level;
         }
     }
 }
