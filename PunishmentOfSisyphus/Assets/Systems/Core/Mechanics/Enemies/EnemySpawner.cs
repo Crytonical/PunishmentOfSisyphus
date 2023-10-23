@@ -59,9 +59,9 @@ namespace Ephymeral.EnemyNS
             // FOR TESTING, CHANGE WHEN WE HAVE FILE IO
             levelWaves["Level1"] = new List<List<string>>
             {
-                new List<string>() {"f"},                          // Wave 1: 1 fast enemy
+                new List<string>() {"s", "s"},                          // Wave 1: 1 fast enemy
                 new List<string>() {"r"},                          // Wave 2: 1 ranged enemy
-                new List<string>() {"s"},                          // Wave 3: 1 strong enemy
+                new List<string>() {"s", "f"},                          // Wave 3: 1 strong enemy
                 new List<string>() {"s", "r"},                     // Wave 4: 2 enemies
                 new List<string>() {"s", "f", "r"},                // Wave 5: 3 enemies
                 new List<string>() {"s", "s", "f", "r"},           // Wave 6: 4 enemies

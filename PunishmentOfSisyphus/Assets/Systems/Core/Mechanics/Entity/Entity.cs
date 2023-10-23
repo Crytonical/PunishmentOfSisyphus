@@ -14,8 +14,9 @@ namespace Ephymeral.EntityNS
         #endregion
 
         #region Fields
-        [SerializeField] private const float BASE_SCALE = 0.3214693f;
-        [SerializeField] private const float SCALE_DEVIATION = 0.03214693f;
+        [SerializeField] private float BASE_SCALE = 1.0f;
+        [SerializeField] private float SCALE_DEVIATION = 0.1f;
+        [SerializeField] private const float SMELLY = 12f;
 
         [SerializeField] protected float speed, health;
         [SerializeField] protected Vector2 direction, acceleration, velocity, position;
