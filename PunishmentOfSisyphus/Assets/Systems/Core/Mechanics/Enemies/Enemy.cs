@@ -94,8 +94,10 @@ namespace Ephymeral.EnemyNS
 
             acceleration = new Vector2(1.0f, 1.0f);
 
-            // In theory, this will give a random position on the circumference of a circle with radius 3
-            position = new Vector2(Mathf.Cos(Random.Range(0.0f, 2f * Mathf.PI)) * 3.0f, Mathf.Sin(Random.Range(0.0f, 2f * Mathf.PI)) * 3.0f);
+            // Spawn enemies in a random position between given constrictions
+            float enemyX = Random.Range(-4, 4);
+            float enemyY = Random.Range(-4, 3);
+            position = new Vector2(enemyX, enemyY);
         }
 
         protected override void FixedUpdate()
@@ -132,6 +134,7 @@ namespace Ephymeral.EnemyNS
                         }
                     }
                     break;
+
                 case EnemyState.Attacking:
                     direction = Vector2.zero;
                     velocity = direction * speed;
@@ -141,6 +144,7 @@ namespace Ephymeral.EnemyNS
                         StartCoroutine(AttackWindUP(attackWindUp));
                     }
                     break;
+
                 case EnemyState.Damage:
                     spriteRenderer.color = Color.gray;
                     StartCoroutine(DamageStun(enemyData.DAMAGE_STUN_DURATION));
@@ -156,7 +160,7 @@ namespace Ephymeral.EnemyNS
                     attackState = AttackState.None;
                     health -= damage;
 
-                    position += knockback;
+                    //position += knockback;
 
                     FXManager.Instance.ShakeScreen(0.08f, 8);
 
@@ -164,6 +168,8 @@ namespace Ephymeral.EnemyNS
                     {
                         Die();
                     }
+
+                ApplyKnockback(knockback, 15);
                 }
         }
 
@@ -233,5 +239,26 @@ namespace Ephymeral.EnemyNS
             }
             state = EnemyState.Seeking;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="knockback"></param>
+        /// <param name="duration"></param>
+        public virtual void ApplyKnockback(Vector2 knockback, int durationFrames)
+        {
+            StartCoroutine(KnockbackCo(knockback, durationFrames));
+        }
+
+        protected virtual IEnumerator KnockbackCo(Vector2 knockback, int durationFrames) 
+        { 
+            while(durationFrames > 0)
+            {
+                durationFrames -= 1;
+                position += knockback;
+                yield return new WaitForFixedUpdate();
+            }
+        }
+
     }
 }

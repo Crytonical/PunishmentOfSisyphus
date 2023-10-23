@@ -6,6 +6,9 @@ public class BoulderIndicator : MonoBehaviour
 {
     [SerializeField] GameObject boulder;
     [SerializeField] GameObject levelBounds;
+    [SerializeField] private const float DEFAULT_SCALE = 1.838f;
+    [SerializeField] private const float scalingFactor = 0.14f;
+    [SerializeField] private const float MIN_SCALE = 0.5f;
 
     Rect bounds;
 
@@ -22,9 +25,8 @@ public class BoulderIndicator : MonoBehaviour
             transform.position = new Vector2(boulder.transform.position.x, bounds.yMax - 1.0f);
 
             float distance = boulder.transform.position.y - bounds.yMax;
-            float scalingFactor = 0.14f;
-            float newScale = 1.0f - scalingFactor * distance;
-            newScale = Mathf.Max(newScale, 0.1f);
+            float newScale = DEFAULT_SCALE - scalingFactor * distance;
+            newScale = Mathf.Max(newScale, MIN_SCALE);
             transform.localScale = new Vector3(newScale, newScale, 1.0f);
         }
         else
