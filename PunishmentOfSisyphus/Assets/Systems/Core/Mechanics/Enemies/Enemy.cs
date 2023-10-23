@@ -134,6 +134,7 @@ namespace Ephymeral.EnemyNS
                         }
                     }
                     break;
+
                 case EnemyState.Attacking:
                     direction = Vector2.zero;
                     velocity = direction * speed;
@@ -143,6 +144,7 @@ namespace Ephymeral.EnemyNS
                         StartCoroutine(AttackWindUP(attackWindUp));
                     }
                     break;
+
                 case EnemyState.Damage:
                     spriteRenderer.color = Color.gray;
                     StartCoroutine(DamageStun(enemyData.DAMAGE_STUN_DURATION));
@@ -158,7 +160,7 @@ namespace Ephymeral.EnemyNS
                     attackState = AttackState.None;
                     health -= damage;
 
-                    position += knockback;
+                    //position += knockback;
 
                     FXManager.Instance.ShakeScreen(0.08f, 8);
 
@@ -166,6 +168,8 @@ namespace Ephymeral.EnemyNS
                     {
                         Die();
                     }
+
+                ApplyKnockback(knockback, 15);
                 }
         }
 
@@ -235,5 +239,26 @@ namespace Ephymeral.EnemyNS
             }
             state = EnemyState.Seeking;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="knockback"></param>
+        /// <param name="duration"></param>
+        public virtual void ApplyKnockback(Vector2 knockback, int durationFrames)
+        {
+            StartCoroutine(KnockbackCo(knockback, durationFrames));
+        }
+
+        protected virtual IEnumerator KnockbackCo(Vector2 knockback, int durationFrames) 
+        { 
+            while(durationFrames > 0)
+            {
+                durationFrames -= 1;
+                position += knockback;
+                yield return new WaitForFixedUpdate();
+            }
+        }
+
     }
 }
