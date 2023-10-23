@@ -110,10 +110,10 @@ namespace Ephymeral.BoulderNS
             if (state != BoulderState.Held)
             {
                 //Kill the player if the boulder falls out of the screen
-                if (transform.position.y < bounds.yMin)
-                {
-                    playerEvent.TakeDamage(100);
-                }
+                //if (transform.position.y < bounds.yMin)
+                //{
+                //    playerEvent.TakeDamage(100);
+                //}
 
                 //Bounce against the wall
                 if (transform.position.x > bounds.xMax || transform.position.x < bounds.xMin)
@@ -205,7 +205,7 @@ namespace Ephymeral.BoulderNS
 
             if (collision.CompareTag("ScreenBounds"))
             {
-                boulderEvent.BoulderFail();
+                playerEvent.TakeDamage(100);
             }
         }
 

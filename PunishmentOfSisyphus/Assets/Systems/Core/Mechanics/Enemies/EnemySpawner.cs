@@ -51,7 +51,10 @@ namespace Ephymeral.EnemyNS
 
             // File IO/Level loading notes
             // Need an array/list of possible levels that is loaded from a file
-            //  Each 
+            //  Each level file will be titled 'LevelX.txt' where X is the level num
+            //  File format:
+            //  4 - # of waves
+            //  "r","f","s" - split each enemy type in a wave with a comma
 
             // FOR TESTING, CHANGE WHEN WE HAVE FILE IO
             levelWaves["Level1"] = new List<List<string>>
