@@ -94,8 +94,10 @@ namespace Ephymeral.EnemyNS
 
             acceleration = new Vector2(1.0f, 1.0f);
 
-            // In theory, this will give a random position on the circumference of a circle with radius 3
-            position = new Vector2(Mathf.Cos(Random.Range(0.0f, 2f * Mathf.PI)) * 3.0f, Mathf.Sin(Random.Range(0.0f, 2f * Mathf.PI)) * 3.0f);
+            // Spawn enemies in a random position between given constrictions
+            float enemyX = Random.Range(-4, 4);
+            float enemyY = Random.Range(-4, 3);
+            position = new Vector2(enemyX, enemyY);
         }
 
         protected override void FixedUpdate()
@@ -148,18 +150,23 @@ namespace Ephymeral.EnemyNS
             }
         }
 
-        public void TakeDamage(float damage)
+        public void TakeDamage(float damage, Vector2 knockback)
         {
-            state = EnemyState.Damage;
-            attackState = AttackState.None;
-            health -= damage;
+            if(state != EnemyState.Damage)
+                {
+                    state = EnemyState.Damage;
+                    attackState = AttackState.None;
+                    health -= damage;
 
-            FXManager.Instance.ScreenFreeze(7);
+                    position += knockback;
 
-            if (health <= 0)
-            {
-                Die();
-            }
+                    FXManager.Instance.ShakeScreen(0.08f, 8);
+
+                    if (health <= 0)
+                    {
+                        Die();
+                    }
+                }
         }
 
         private void Die()
@@ -193,6 +200,7 @@ namespace Ephymeral.EnemyNS
         {
             attackState = AttackState.WindingUp;
             float tTime = time;
+
             while (time > 0)
             {
                 time -= Time.deltaTime;

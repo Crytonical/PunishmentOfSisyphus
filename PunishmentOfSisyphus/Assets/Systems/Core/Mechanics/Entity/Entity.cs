@@ -40,7 +40,7 @@ namespace Ephymeral.EntityNS
             velocity = new Vector2(0, 0);
             position = new Vector2(0, 0);
 
-            scale = new Vector3(1.0f, 1.0f, 1.0f);
+            //scale = new Vector3(1.0f, 1.0f, 1.0f);
 
             // Get height of bounding box to manipulate scale
             levelBounds = GameObject.Find("LevelBounds");
@@ -54,7 +54,6 @@ namespace Ephymeral.EntityNS
             velocity += acceleration * Time.deltaTime;
             position += velocity * Time.deltaTime;
             transform.position = position;
-            UpdateScale();
 
             acceleration = Vector2.zero;
         }
@@ -66,7 +65,7 @@ namespace Ephymeral.EntityNS
             velocity += acceleration * Time.deltaTime;
             position += velocity * Time.deltaTime;
             transform.position = position;
-            UpdateScale();
+            //UpdateScale();
 
             acceleration = Vector2.zero;
         }

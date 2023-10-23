@@ -87,6 +87,7 @@ public class FXManager : MonoBehaviour
     #region Screen Shake
     public void ShakeScreen(float shakeIntensity, int duration)
     {
+        //Debug.Log("Start screen shake");
         StartCoroutine(ShakeScreenCo(shakeIntensity, duration));
     }
 
@@ -104,8 +105,9 @@ public class FXManager : MonoBehaviour
             Camera.main.transform.position = new Vector3(x, y, z);
 
             elapsed += 1;
-            yield return null;
+            yield return new WaitForFixedUpdate();
         }
+
 
         // Reset the camera position
         Camera.main.transform.position = originalPosition;

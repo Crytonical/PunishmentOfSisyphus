@@ -18,7 +18,7 @@ namespace Ephymeral.Data
 
         [Header("Attacking")]
         public float LUNGE_SPEED;
-        public float LUNGE_DURATION;
+        public int SLAM_DURATION;
 
         [Header("Health")]
         public float MAX_HP;

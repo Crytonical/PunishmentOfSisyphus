@@ -25,7 +25,7 @@ namespace Ephymeral.PlayerNS
         Dodge,
         Damage,
         Throwing,
-        Lunging
+        Slam
     }
 
     public class Player : Entity
@@ -36,11 +36,13 @@ namespace Ephymeral.PlayerNS
         [SerializeField] private PlayerData playerData;
         //[SerializeField] private SceneEvent sceneEvent;
         [SerializeField] private GameObject levelBounds;
+        [SerializeField] private GameObject slamHitbox;
         #endregion
 
         #region Fields
 
         [SerializeField] private PlayerState state;
+        SlamScript slamScript;
 
         // Only exists so that directions input during roll are registered
         // When it ends. Otherwise, you'll need to press the key again
@@ -75,9 +77,13 @@ namespace Ephymeral.PlayerNS
             state = PlayerState.Free;
             //collision = getComponent(BoxCollider2D);
 
+            slamScript = slamHitbox.GetComponent<SlamScript>();
+            slamScript.DeactivateHitbox();
+
             // Run parent's awake method
             base.Awake();
         }
+
 
         // Update is called once per frame
         protected override void Update()
@@ -191,23 +197,6 @@ namespace Ephymeral.PlayerNS
             {
                 if (state != PlayerState.Dodge)
                 {
-                    //// Don't have them dodge when firing the boulder. JUST FOR NOW
-                    //if (state == PlayerState.CarryingBounder)
-                    //{
-                    //    boulderEvent.DropBoulder();
-                    //    speed = playerMovementData.FREE_SPEED;
-                    //    state = PlayerState.Free;
-                    //}
-
-                    //else
-                    //{
-                    //    state = PlayerState.Dodge;
-                    //    speed = playerMovementData.DODGE_SPEED;
-                    //    dodgeDirection = direction;
-                    //    velocity = dodgeDirection * playerMovementData.DODGE_SPEED;
-                    //}
-
-                    // Removed the "drop bouler if you try to dodge" thing because it felt clunky. -Avery
                     if (state == PlayerState.Free)
                     {
                         state = PlayerState.Dodge;
@@ -231,7 +220,7 @@ namespace Ephymeral.PlayerNS
                 }
                 else
                 {
-                    state = PlayerState.Lunging;
+                    state = PlayerState.Slam;
                     Vector2 lunchDir = ((Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition) - playerEvent.Position).normalized;
                     StartCoroutine(LunchCo(lunchDir));
 
@@ -246,33 +235,32 @@ namespace Ephymeral.PlayerNS
             float startValue = playerData.LUNGE_SPEED;
             float endValue = playerData.FREE_SPEED;
 
-            float duration = playerData.LUNGE_DURATION;
+            float duration = playerData.SLAM_DURATION;
 
-            float prog; //Easing Vars
-            float t;
+            Debug.Log("Start Slam");
 
             while (timer < duration)
             {
-                if (state == PlayerState.Lunging) //Cancel if the lunch is interupted.
+
+                //Slam on frame 10
+                if (timer == 3)
                 {
-                    t = timer / duration;
-                    prog = t*t;
-
-                    float currentValue = Mathf.Lerp(startValue, endValue, prog);
-
-                    velocity = lunchDir * currentValue * Time.deltaTime;
-
-                    timer += Time.deltaTime;
-                    yield return null;
+                    slamScript.ActivateHitbox();
                 }
-                else
+                if(timer == duration - 3)
                 {
-                    break;
+                    slamScript.DeactivateHitbox();
                 }
+
+                timer += 1;
+                yield return new WaitForFixedUpdate();
             }
 
-            if(timer >= duration)
+            if(state == PlayerState.Slam)
+            {
                 state = PlayerState.Free;
+            }
+                
 
         }
 
