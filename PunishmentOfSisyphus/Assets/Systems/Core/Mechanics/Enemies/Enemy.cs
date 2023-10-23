@@ -255,7 +255,7 @@ namespace Ephymeral.EnemyNS
             while(durationFrames > 0)
             {
                 durationFrames -= 1;
-                velocity += knockback;
+                position += knockback;
                 yield return new WaitForFixedUpdate();
             }
         }
