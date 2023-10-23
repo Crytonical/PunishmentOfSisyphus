@@ -186,8 +186,8 @@ namespace Ephymeral.BoulderNS
             // Changed "&& state == BoulderState.Thrown" so that will always hit when not held by the player
             if (collision.CompareTag("Enemy") && state != BoulderState.Held && Speed >= boulderData.HIT_SPEED_MIN)
             {
-                //Temporary knockback var
-                float knockVar = 1.2f;
+                //Temporary knockback var (How far the enemy will move per frame
+                float knockVar = 0.3f;
 
 
                 // Trigger damage event on enemy

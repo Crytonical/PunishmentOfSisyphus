@@ -160,11 +160,13 @@ namespace Ephymeral.EnemyNS
                     attackState = AttackState.None;
                     health -= damage;
 
-                    //position += knockback;
+                //position += knockback;
 
-                    FXManager.Instance.ShakeScreen(0.08f, 8);
+                //FXManager.Instance.ShakeScreen(0.08f, 8);
+                FXManager.Instance.ShakeScreen(0.18f, 10);
 
-                    if (health <= 0)
+
+                if (health <= 0)
                     {
                         Die();
                     }
@@ -256,6 +258,7 @@ namespace Ephymeral.EnemyNS
             {
                 durationFrames -= 1;
                 position += knockback;
+                knockback *= 0.9f;
                 yield return new WaitForFixedUpdate();
             }
         }
