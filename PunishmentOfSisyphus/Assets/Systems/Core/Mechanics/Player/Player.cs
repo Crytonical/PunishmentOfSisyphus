@@ -211,13 +211,42 @@ namespace Ephymeral.PlayerNS
 
         public void OnThrow(InputAction.CallbackContext context)
         {
+            //// Handle boulder throw (reticle on press, throw on release)
+            //if (state == PlayerState.CarryingBounder)
+            //{
+            //    if(context.started)
+            //    {
+            //        // TO-DO: SHOW PREVIEW FOR BOULDER THROW
+            //    }
+
+            //    // Throw the boulder
+            //    else if(context.canceled)
+            //    {
+            //        state = PlayerState.Throwing;
+            //        boulderEvent.Throw();
+            //    }
+            //}
+
+            //// Attack with an AOE slam attack
+            //else
+            //{
+            //    state = PlayerState.Slam;
+            //    Vector2 lunchDir = ((Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition) - playerEvent.Position).normalized;
+            //    StartCoroutine(LunchCo(lunchDir));
+            //}
+
             if (context.started)
             {
+                Debug.Log("Throw processed");
+
+                // Boulder throw
                 if (state == PlayerState.CarryingBounder)
                 {
                     state = PlayerState.Throwing;
                     boulderEvent.Throw();
                 }
+
+                // Slam attack
                 else
                 {
                     state = PlayerState.Slam;
