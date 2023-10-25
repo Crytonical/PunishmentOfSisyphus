@@ -63,11 +63,6 @@ namespace Ephymeral.Events
             thrownEvent.Invoke();
         }
 
-        public void BoulderFail()
-        {
-            boulderFail.Invoke();
-        }
-
         // --- Events List ---
         // Picked up
         // Dropped

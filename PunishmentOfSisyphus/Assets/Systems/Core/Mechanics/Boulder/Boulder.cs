@@ -110,10 +110,10 @@ namespace Ephymeral.BoulderNS
             if (state != BoulderState.Held)
             {
                 //Kill the player if the boulder falls out of the screen
-                if (transform.position.y < bounds.yMin)
-                {
-                    playerEvent.TakeDamage(100);
-                }
+                //if (transform.position.y < bounds.yMin)
+                //{
+                //    playerEvent.TakeDamage(100);
+                //}
 
                 //Bounce against the wall
                 if (transform.position.x > bounds.xMax || transform.position.x < bounds.xMin)
@@ -186,8 +186,12 @@ namespace Ephymeral.BoulderNS
             // Changed "&& state == BoulderState.Thrown" so that will always hit when not held by the player
             if (collision.CompareTag("Enemy") && state != BoulderState.Held && Speed >= boulderData.HIT_SPEED_MIN)
             {
+                //Temporary knockback var (How far the enemy will move per frame
+                float knockVar = 0.3f;
+
+
                 // Trigger damage event on enemy
-                collision.GetComponent<Enemy>().TakeDamage(damage);
+                collision.GetComponent<Enemy>().TakeDamage(damage, velocity.normalized*knockVar);
 
                 // Call ricochet function
                 Ricochet(collision);
@@ -201,7 +205,7 @@ namespace Ephymeral.BoulderNS
 
             if (collision.CompareTag("ScreenBounds"))
             {
-                boulderEvent.BoulderFail();
+                playerEvent.TakeDamage(100);
             }
         }
 
