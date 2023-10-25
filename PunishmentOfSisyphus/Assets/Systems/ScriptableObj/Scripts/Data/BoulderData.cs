@@ -19,6 +19,7 @@ namespace Ephymeral.Data
         public float AIR_TIME;
         public float INITIAL_RICOCHET_SPEED;
         public float RICOCHET_ACCELERATION;
+        public float BOUNCE_COEFFICIENT;
 
         [Header("Throwing")]
         public float INITIAL_THROW_SPEED;
@@ -26,5 +27,6 @@ namespace Ephymeral.Data
 
         [Header("Combat")]
         public float DAMAGE;
+        public float HIT_SPEED_MIN;
     }
 }

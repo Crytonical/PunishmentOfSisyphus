@@ -10,6 +10,7 @@ using Ephymeral.Events;
 using Ephymeral.Data;
 using Ephymeral.EnemyNS;
 using UnityEngine.SceneManagement;
+//using System.Numerics;
 
 // INPUTSYSTEM INS'T WORKING FOR SOME REASON DUE TO DIRECTORY
 
@@ -24,7 +25,7 @@ namespace Ephymeral.PlayerNS
         Dodge,
         Damage,
         Throwing,
-        Lunging
+        Slam
     }
 
     public class Player : Entity
@@ -34,15 +35,19 @@ namespace Ephymeral.PlayerNS
         [SerializeField] private PlayerEvent playerEvent;
         [SerializeField] private PlayerData playerData;
         //[SerializeField] private SceneEvent sceneEvent;
+        [SerializeField] private GameObject levelBounds;
+        [SerializeField] private GameObject slamHitbox;
         #endregion
 
         #region Fields
 
         [SerializeField] private PlayerState state;
+        SlamScript slamScript;
 
         // Only exists so that directions input during roll are registered
         // When it ends. Otherwise, you'll need to press the key again
-        private Vector2 dodgeDirection;
+        private UnityEngine.Vector2 dodgeDirection;
+        private float dodgeCooldown;
         #endregion
 
         #region Properties
@@ -73,17 +78,25 @@ namespace Ephymeral.PlayerNS
             state = PlayerState.Free;
             //collision = getComponent(BoxCollider2D);
 
+            slamScript = slamHitbox.GetComponent<SlamScript>();
+            slamScript.DeactivateHitbox();
+
             // Run parent's awake method
             base.Awake();
         }
 
+
         // Update is called once per frame
         protected override void Update()
         {
+            //Death
             if (health <= 0)
             {
                 Die();
             }
+
+            if (dodgeCooldown > 0)
+                dodgeCooldown -= Time.deltaTime;
 
             switch (state)
             {
@@ -115,8 +128,25 @@ namespace Ephymeral.PlayerNS
 
             UpdateEventObject();
 
-            // Run parent's update for position and scale change
             base.Update();
+
+            //Keep in bounds
+            if (!levelBounds.GetComponent<RectTransform>().rect.Contains(transform.position))
+            {
+                Rect rect = levelBounds.GetComponent<RectTransform>().rect;
+                Vector2 vector = position;
+
+                // Clamp the x component to be within the rectangle's x boundaries
+                float clampedX = Mathf.Clamp(vector.x, rect.xMin, rect.xMax);
+
+                // Clamp the y component to be within the rectangle's y boundaries
+                float clampedY = Mathf.Clamp(vector.y, rect.yMin, rect.yMax);
+
+                // Return the new vector with clamped components
+                position = new Vector2(clampedX, clampedY);
+
+            }
+
         }
 
         private void UpdateEventObject()
@@ -168,49 +198,58 @@ namespace Ephymeral.PlayerNS
         {
             if (context.started)
             {
-                if (state != PlayerState.Dodge)
+                if (state == PlayerState.Free && dodgeCooldown <= 0)
                 {
-                    //// Don't have them dodge when firing the boulder. JUST FOR NOW
-                    //if (state == PlayerState.CarryingBounder)
-                    //{
-                    //    boulderEvent.DropBoulder();
-                    //    speed = playerMovementData.FREE_SPEED;
-                    //    state = PlayerState.Free;
-                    //}
-
-                    //else
-                    //{
-                    //    state = PlayerState.Dodge;
-                    //    speed = playerMovementData.DODGE_SPEED;
-                    //    dodgeDirection = direction;
-                    //    velocity = dodgeDirection * playerMovementData.DODGE_SPEED;
-                    //}
-
-                    // Removed the "drop bouler if you try to dodge" thing because it felt clunky. -Avery
-                    if (state == PlayerState.Free)
-                    {
-                        state = PlayerState.Dodge;
-                        speed = playerData.DODGE_SPEED;
-                        dodgeDirection = direction;
-                        velocity = dodgeDirection * playerData.DODGE_SPEED;
-                    }
-                    
+                    state = PlayerState.Dodge;
+                    speed = playerData.DODGE_SPEED;
+                    dodgeDirection = direction;
+                    velocity = dodgeDirection * playerData.DODGE_SPEED;
+                    dodgeCooldown = playerData.DODGE_COOLDOWN;
                 }
             }
         }
 
         public void OnThrow(InputAction.CallbackContext context)
         {
+            //// Handle boulder throw (reticle on press, throw on release)
+            //if (state == PlayerState.CarryingBounder)
+            //{
+            //    if(context.started)
+            //    {
+            //        // TO-DO: SHOW PREVIEW FOR BOULDER THROW
+            //    }
+
+            //    // Throw the boulder
+            //    else if(context.canceled)
+            //    {
+            //        state = PlayerState.Throwing;
+            //        boulderEvent.Throw();
+            //    }
+            //}
+
+            //// Attack with an AOE slam attack
+            //else
+            //{
+            //    state = PlayerState.Slam;
+            //    Vector2 lunchDir = ((Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition) - playerEvent.Position).normalized;
+            //    StartCoroutine(LunchCo(lunchDir));
+            //}
+
             if (context.started)
             {
+                Debug.Log("Throw processed");
+
+                // Boulder throw
                 if (state == PlayerState.CarryingBounder)
                 {
                     state = PlayerState.Throwing;
                     boulderEvent.Throw();
                 }
+
+                // Slam attack
                 else
                 {
-                    state = PlayerState.Lunging;
+                    state = PlayerState.Slam;
                     Vector2 lunchDir = ((Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition) - playerEvent.Position).normalized;
                     StartCoroutine(LunchCo(lunchDir));
 
@@ -225,33 +264,32 @@ namespace Ephymeral.PlayerNS
             float startValue = playerData.LUNGE_SPEED;
             float endValue = playerData.FREE_SPEED;
 
-            float duration = playerData.LUNGE_DURATION;
+            float duration = playerData.SLAM_DURATION;
 
-            float prog; //Easing Vars
-            float t;
+            Debug.Log("Start Slam");
 
             while (timer < duration)
             {
-                if (state == PlayerState.Lunging) //Cancel if the lunch is interupted.
+
+                //Slam on frame 10
+                if (timer == 3)
                 {
-                    t = timer / duration;
-                    prog = t*t;
-
-                    float currentValue = Mathf.Lerp(startValue, endValue, prog);
-
-                    velocity = lunchDir * currentValue * Time.deltaTime;
-
-                    timer += Time.deltaTime;
-                    yield return null;
+                    slamScript.ActivateHitbox();
                 }
-                else
+                if (timer == duration - 3)
                 {
-                    break;
+                    slamScript.DeactivateHitbox();
                 }
+
+                timer += 1;
+                yield return new WaitForFixedUpdate();
             }
 
-            if(timer >= duration)
+            if (state == PlayerState.Slam)
+            {
                 state = PlayerState.Free;
+            }
+
 
         }
 

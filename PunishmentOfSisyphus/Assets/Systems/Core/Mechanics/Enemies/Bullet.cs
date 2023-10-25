@@ -36,7 +36,6 @@ namespace Ephymeral.EnemyNS
 
             if (collision.CompareTag("Player"))
             {
-                Debug.Log("Player hit!");
                 playerEvent.TakeDamage(damage);
                 Destroy(gameObject);
             }

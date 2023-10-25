@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 693867210b6dc1143800920bf01df731, type: 3}
   m_Name: RangedEnemyData
   m_EditorClassIdentifier: 
-  GRAVITY: 2
-  MOVE_SPEED: 2
-  DAMAGE: 10
+  GRAVITY: 4
+  MOVE_SPEED: 4
+  DAMAGE: 15
   HEALTH: 25
   ATTACK_RANGE: 15
   ATTACK_WIND_UP: 1
