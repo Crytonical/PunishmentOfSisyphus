@@ -237,8 +237,6 @@ namespace Ephymeral.PlayerNS
 
             if (context.started)
             {
-                Debug.Log("Throw processed");
-
                 // Boulder throw
                 if (state == PlayerState.CarryingBounder)
                 {
