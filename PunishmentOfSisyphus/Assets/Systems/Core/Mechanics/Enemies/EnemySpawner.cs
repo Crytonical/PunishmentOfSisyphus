@@ -2,8 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
 using Ephymeral.Events;
+using Ephymeral.FileLoading;
+using System.Linq;
 
 namespace Ephymeral.EnemyNS
 {
@@ -15,6 +16,7 @@ namespace Ephymeral.EnemyNS
         [SerializeField] private GameObject rangedPrefab;
         [SerializeField] private GameObject fastPrefab;
         [SerializeField] private GameObject strongPrefab;
+        [SerializeField] private EnemySpawnerFileHandler enemyFileData;
         private Text wavesText;
         private Text enemiesText;
         #endregion
@@ -56,17 +58,9 @@ namespace Ephymeral.EnemyNS
             //  "r","f","s" - split each enemy type in a wave with a comma
 
             // FOR TESTING, CHANGE WHEN WE HAVE FILE IO
-            levelWaves["Level1"] = new List<List<string>>
-            {
-                new List<string>() {"s", "s"},                     // Wave 1: 1 fast enemy
-                new List<string>() {"r"},                          // Wave 2: 1 ranged enemy
-                new List<string>() {"s", "f"},                     // Wave 3: 1 strong enemy
-                new List<string>() {"s", "r"},                     // Wave 4: 2 enemies
-                new List<string>() {"s", "f", "r"},                // Wave 5: 3 enemies
-                new List<string>() {"s", "s", "f", "r"},           // Wave 6: 4 enemies
-                new List<string>() {"s", "s", "f", "f", "r", "r"}  // Wave 7: 6 enemies
-            };
+            levelWaves["Level1"] = null;
 
+            LoadEnemyWaveFromFile(0);
 
             // Fill levelWaves with information from a file
             // Initialize default wave info
@@ -138,9 +132,14 @@ namespace Ephymeral.EnemyNS
             enemiesText.text = $"Enemies Killed\r\n{maxEnemiesInWave - enemiesAlive.Count} / {maxEnemiesInWave}";
         }
 
-        private void LoadEnemyWaveFromFile()
+        private List<List<string>> LoadEnemyWaveFromFile(int index)
         {
             // Will get enemy wave from file
+            string[] enemyFileLines = enemyFileData.EnemyLevelFiles[index].Split(",");
+            int waveCount = int.Parse(enemyFileLines[0]);
+            Debug.Log(waveCount);
+
+            return new List<List<string>>();
         }
 
         private void IncrementLevel()

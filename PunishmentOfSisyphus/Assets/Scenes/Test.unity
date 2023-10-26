@@ -948,7 +948,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1270424831}
   m_LocalRotation: {x: -0, y: -0, z: 0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: -1.5860001, y: -9.03, z: -0.046583563}
+  m_LocalPosition: {x: -1.59, y: -9.4, z: -0.046583563}
   m_LocalScale: {x: 1, y: -0.092780486, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6726,6 +6726,7 @@ MonoBehaviour:
   rangedPrefab: {fileID: 6654809712982780285, guid: 04d83a0524d81214ca21d436d77c9069, type: 3}
   fastPrefab: {fileID: 3030512484931649770, guid: 5b8311dc7632b124cadc0bc3f3085916, type: 3}
   strongPrefab: {fileID: 3030512484931649770, guid: fe01ddfebe18a7641bdaaee7e6448577, type: 3}
+  enemyFileData: {fileID: 11400000, guid: 169f2d4c78764e249802a47b76437402, type: 2}
 --- !u!1 &1826594502
 GameObject:
   m_ObjectHideFlags: 0
