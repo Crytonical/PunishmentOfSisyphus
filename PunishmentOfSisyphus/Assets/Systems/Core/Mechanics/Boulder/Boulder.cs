@@ -180,12 +180,8 @@ namespace Ephymeral.BoulderNS
             // Changed "&& state == BoulderState.Thrown" so that will always hit when not held by the player
             if (collision.CompareTag("Enemy") && state != BoulderState.Held && Speed >= boulderData.HIT_SPEED_MIN)
             {
-                //Temporary knockback var (How far the enemy will move per frame
-                float knockVar = 0.3f;
-
-
                 // Trigger damage event on enemy
-                collision.GetComponent<Enemy>().TakeDamage(damage, velocity.normalized*knockVar);
+                collision.GetComponent<Enemy>().BoulderHit(damage, velocity.normalized*boulderData.KNOCKBACK);
 
                 // Call ricochet function
                 Ricochet(collision);

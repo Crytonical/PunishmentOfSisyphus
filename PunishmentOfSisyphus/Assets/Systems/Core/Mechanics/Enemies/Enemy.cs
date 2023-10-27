@@ -44,6 +44,7 @@ namespace Ephymeral.EnemyNS
         // Inhereted data
         protected float damage, attackRange, attackWindUp, attackDuration, attackCooldown;
         protected bool canAttack;
+        protected Vector2 goal;
 
         // State
         [SerializeField] protected EnemyState state;
@@ -53,6 +54,9 @@ namespace Ephymeral.EnemyNS
         #region PROPERTIES
         public EnemyEvent EnemyEvent {  get { return enemyEvent; } }
         public float Damage { get { return damage; } }
+
+        float boulderInvulSec;
+        float boulderInvul;
         #endregion
 
         private void OnEnable()
@@ -97,6 +101,15 @@ namespace Ephymeral.EnemyNS
             float enemyX = Random.Range(-4, 4);
             float enemyY = Random.Range(-4, 3);
             position = new Vector2(enemyX, enemyY);
+        }
+
+        protected override void Update()
+        {
+            base.Update();
+            if (boulderInvul < boulderInvulSec)
+            {
+                boulderInvul += Time.deltaTime;
+            }
         }
 
         protected override void FixedUpdate()
@@ -149,29 +162,6 @@ namespace Ephymeral.EnemyNS
                     StartCoroutine(DamageStun(enemyData.DAMAGE_STUN_DURATION));
                     break;
             }
-        }
-
-        public void TakeDamage(float damage, Vector2 knockback)
-        {
-            if(state != EnemyState.Damage)
-                {
-                    state = EnemyState.Damage;
-                    attackState = AttackState.None;
-                    health -= damage;
-
-                //position += knockback;
-
-                //FXManager.Instance.ShakeScreen(0.08f, 8);
-                FXManager.Instance.ShakeScreen(0.18f, 10);
-
-
-                if (health <= 0)
-                    {
-                        Die();
-                    }
-
-                ApplyKnockback(knockback, 15);
-                }
         }
 
         private void Die()
@@ -240,6 +230,44 @@ namespace Ephymeral.EnemyNS
             }
             state = EnemyState.Seeking;
         }
+
+        public void BoulderHit(float damage, Vector2 knockback)
+        {
+            if(boulderInvul >= boulderInvulSec)
+            {
+                TakeDamage(damage, knockback);
+                boulderInvul = 0;
+            }
+        }
+
+        /// <summary>
+        /// Called when the Enemy 
+        /// </summary>
+        /// <param name="damage"></param>
+        /// <param name="knockback"></param>
+        public void TakeDamage(float damage, Vector2 knockback)
+        {
+            if (state != EnemyState.Damage)
+            {
+                state = EnemyState.Damage;
+                attackState = AttackState.None;
+                health -= damage;
+
+                //position += knockback;
+
+                //FXManager.Instance.ShakeScreen(0.08f, 8);
+                FXManager.Instance.ShakeScreen(0.18f, 10);
+
+
+                if (health <= 0)
+                {
+                    Die();
+                }
+
+                ApplyKnockback(knockback, 15);
+            }
+        }
+
 
         /// <summary>
         /// 
