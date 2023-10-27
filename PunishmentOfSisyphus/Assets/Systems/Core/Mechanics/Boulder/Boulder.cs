@@ -248,7 +248,7 @@ namespace Ephymeral.BoulderNS
             bounceDirection += new Vector2(dotProduct * boulderData.BOUNCE_COEFFICIENT * Mathf.Sign(velocity.x), 0);
 
             velocity = bounceDirection;
-
+             
             UpdatePhysicsValues();
         }
 
