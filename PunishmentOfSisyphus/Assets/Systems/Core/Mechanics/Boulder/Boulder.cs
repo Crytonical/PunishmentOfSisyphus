@@ -135,8 +135,6 @@ namespace Ephymeral.BoulderNS
 
         protected override void FixedUpdate()
         {
-            Debug.Log(state);
-
             switch (state)
             {
                 // Implement prediction
