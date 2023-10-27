@@ -1,6 +1,5 @@
 using UnityEngine.Events;
 using UnityEngine;
-using Codice.CM.Common;
 
 
 namespace Ephymeral.Events
@@ -62,11 +61,6 @@ namespace Ephymeral.Events
         public void Throw()
         {
             thrownEvent.Invoke();
-        }
-
-        public void BoulderFail()
-        {
-            boulderFail.Invoke();
         }
 
         // --- Events List ---

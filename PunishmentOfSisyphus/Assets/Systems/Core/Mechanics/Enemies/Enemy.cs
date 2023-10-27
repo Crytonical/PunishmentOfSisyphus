@@ -4,7 +4,6 @@ using Ephymeral.Events;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static Codice.Client.Commands.WkTree.WorkspaceTreeNode;
 
 using Ephymeral.EntityNS;
 

@@ -14,6 +14,7 @@ namespace Ephymeral.BoulderNS
     public enum BoulderState
     {
         Held,
+        Throwing,
         Thrown,
         Rolling,
         Ricocheting
@@ -26,6 +27,7 @@ namespace Ephymeral.BoulderNS
         [SerializeField] private BoulderData boulderData;
         [SerializeField] private PlayerEvent playerEvent;
         [SerializeField] private CircleCollider2D hitbox;
+        [SerializeField] BoulderPrediction futureBoulder;
         [SerializeField] GameObject levelBounds;
         #endregion
 
@@ -110,10 +112,10 @@ namespace Ephymeral.BoulderNS
             if (state != BoulderState.Held)
             {
                 //Kill the player if the boulder falls out of the screen
-                if (transform.position.y < bounds.yMin)
-                {
-                    playerEvent.TakeDamage(100);
-                }
+                //if (transform.position.y < bounds.yMin)
+                //{
+                //    playerEvent.TakeDamage(100);
+                //}
 
                 //Bounce against the wall
                 if (transform.position.x > bounds.xMax || transform.position.x < bounds.xMin)
@@ -133,6 +135,11 @@ namespace Ephymeral.BoulderNS
         {
             switch (state)
             {
+                // Implement prediction
+                case BoulderState.Throwing:
+                    futureBoulder.PredictFuturePosition(0.0f);
+                    break;
+
                 case BoulderState.Thrown:
                     elapsedTime += Time.deltaTime;
 
@@ -158,19 +165,6 @@ namespace Ephymeral.BoulderNS
                     //TODO: Might feel better to have gravity ramp up a little bit over time to increase "hang time"
 
                     break;
-
-                //case BoulderState.Ricocheting:
-                //    ricochetTime += Time.deltaTime;
-                //    //acceleration += direction * boulderData.RICOCHET_ACCELERATION;
-                //    speed = boulderData.INITIAL_RICOCHET_SPEED + (boulderData.RICOCHET_ACCELERATION * ricochetTime);
-                //    velocity = direction * speed;
-
-                //    if (ricochetTime >= boulderData.AIR_TIME)
-                //    {
-                //        DropBoulder();
-                //        ricochetTime = 0;
-                //    }
-                //    break;
 
                 case BoulderState.Held:
                     //acceleration += Vector2.down * boulderData.GRAVITY;
@@ -205,7 +199,7 @@ namespace Ephymeral.BoulderNS
 
             if (collision.CompareTag("ScreenBounds"))
             {
-                boulderEvent.BoulderFail();
+                playerEvent.TakeDamage(100);
             }
         }
 

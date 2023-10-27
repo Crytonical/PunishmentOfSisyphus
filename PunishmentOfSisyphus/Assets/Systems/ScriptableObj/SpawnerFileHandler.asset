@@ -9,14 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c275301886cd4f341aa1832409f4600f, type: 3}
-  m_Name: PlayerData
+  m_Script: {fileID: 11500000, guid: 09d0db2cee8afe245ae353b559db519e, type: 3}
+  m_Name: SpawnerFileHandler
   m_EditorClassIdentifier: 
-  CARRY_SPEED: 3.9
-  FREE_SPEED: 6.16
-  DODGE_SPEED: 20
-  DODGE_DURATION: 0.3
-  DODGE_COOLDOWN: 1
-  LUNGE_SPEED: 29
-  SLAM_DURATION: 8
-  MAX_HP: 100
+  enemyLevelFilesLoaded: 1
