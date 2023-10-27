@@ -235,9 +235,9 @@ namespace Ephymeral.BoulderNS
             state = BoulderState.Rolling;
             Vector2 bounceDirection = new Vector2(0, boulderData.INITIAL_RICOCHET_SPEED);
 
-            float dotProduct = Vector2.Dot(Vector2.up, velocity);
+            float dotProduct = Mathf.Abs(Vector2.Dot(Vector2.up, velocity) );
 
-            bounceDirection += new Vector2(dotProduct * boulderData.BOUNCE_COEFFICIENT, 0);
+            bounceDirection += new Vector2(dotProduct * boulderData.BOUNCE_COEFFICIENT * Mathf.Sign(velocity.x), 0);
 
             velocity = bounceDirection;
 
