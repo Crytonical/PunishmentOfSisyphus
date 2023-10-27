@@ -62,7 +62,15 @@ namespace Ephymeral.BoulderNS
         /// <param name="time">Seconds into the future</param>
         public void PredictFuturePosition(float time)
         {
-            //velocity = 
+            velocity = boulderData.INITIAL_THROW_SPEED * direction;
+            acceleration = boulderData.GRAVITY * Vector2.down;
+
+            for(int a = 0; a < time * 60; a++)
+            {
+                velocity += acceleration * 1.0f / 60;
+                position += velocity * 1.0f / 60;
+                transform.position = position;
+            }
         }
     }
 }

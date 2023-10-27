@@ -137,7 +137,10 @@ namespace Ephymeral.BoulderNS
             {
                 // Implement prediction
                 case BoulderState.Throwing:
-                    futureBoulder.PredictFuturePosition(0.0f);
+                    // Assign position and direction based on the boulder
+                    futureBoulder.Position = position;
+                    futureBoulder.Direction = direction;
+                    futureBoulder.PredictFuturePosition(boulderData.FUTURE_PREDICTION);
                     break;
 
                 case BoulderState.Thrown:
