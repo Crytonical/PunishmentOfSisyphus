@@ -47,6 +47,7 @@ namespace Ephymeral.PlayerNS
         // Only exists so that directions input during roll are registered
         // When it ends. Otherwise, you'll need to press the key again
         private UnityEngine.Vector2 dodgeDirection;
+        private float dodgeCooldown;
         #endregion
 
         #region Properties
@@ -94,6 +95,8 @@ namespace Ephymeral.PlayerNS
                 Die();
             }
 
+            if (dodgeCooldown > 0)
+                dodgeCooldown -= Time.deltaTime;
 
             switch (state)
             {
@@ -128,7 +131,7 @@ namespace Ephymeral.PlayerNS
             base.Update();
 
             //Keep in bounds
-            if (!levelBounds.GetComponent<RectTransform>().rect.Contains(transform.position) )
+            if (!levelBounds.GetComponent<RectTransform>().rect.Contains(transform.position))
             {
                 Rect rect = levelBounds.GetComponent<RectTransform>().rect;
                 Vector2 vector = position;
@@ -141,7 +144,6 @@ namespace Ephymeral.PlayerNS
 
                 // Return the new vector with clamped components
                 position = new Vector2(clampedX, clampedY);
-                
             }
 
         }
@@ -195,37 +197,65 @@ namespace Ephymeral.PlayerNS
         {
             if (context.started)
             {
-                if (state != PlayerState.Dodge)
+                if (state == PlayerState.Free && dodgeCooldown <= 0)
                 {
-                    if (state == PlayerState.Free)
-                    {
-                        state = PlayerState.Dodge;
-                        speed = playerData.DODGE_SPEED;
-                        dodgeDirection = direction;
-                        velocity = dodgeDirection * playerData.DODGE_SPEED;
-                    }
-                    
+                    state = PlayerState.Dodge;
+                    speed = playerData.DODGE_SPEED;
+                    dodgeDirection = direction;
+                    velocity = dodgeDirection * playerData.DODGE_SPEED;
+                    dodgeCooldown = playerData.DODGE_COOLDOWN;
                 }
             }
         }
 
         public void OnThrow(InputAction.CallbackContext context)
         {
-            if (context.started)
+            // Handle boulder throw (prediction on hold, throw on release)
+            if (state == PlayerState.CarryingBounder)
             {
-                if (state == PlayerState.CarryingBounder)
+                if (context.started)
+                {
+                    // TO-DO: SHOW PREVIEW FOR BOULDER THROW
+                    Debug.Log("Holding Mouse button");
+                    boulderEvent.Predict();
+                }
+
+                // Throw the boulder
+                else if (context.canceled)
                 {
                     state = PlayerState.Throwing;
                     boulderEvent.Throw();
                 }
-                else
-                {
-                    state = PlayerState.Slam;
-                    Vector2 lunchDir = ((Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition) - playerEvent.Position).normalized;
-                    StartCoroutine(LunchCo(lunchDir));
-
-                }
             }
+
+            // Attack with an AOE slam attack
+            else
+            {
+                state = PlayerState.Slam;
+                Vector2 lunchDir = ((Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition) - playerEvent.Position).normalized;
+                StartCoroutine(LunchCo(lunchDir));
+            }
+
+            //if (context.started)
+            //{
+            //    Debug.Log("Throw processed");
+
+            //    // Boulder throw
+            //    if (state == PlayerState.CarryingBounder)
+            //    {
+            //        state = PlayerState.Throwing;
+            //        boulderEvent.Throw();
+            //    }
+
+            //    // Slam attack
+            //    else
+            //    {
+            //        state = PlayerState.Slam;
+            //        Vector2 lunchDir = ((Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition) - playerEvent.Position).normalized;
+            //        StartCoroutine(LunchCo(lunchDir));
+
+            //    }
+            //}
         }
 
         IEnumerator LunchCo(Vector2 lunchDir)
@@ -247,7 +277,7 @@ namespace Ephymeral.PlayerNS
                 {
                     slamScript.ActivateHitbox();
                 }
-                if(timer == duration - 3)
+                if (timer == duration - 3)
                 {
                     slamScript.DeactivateHitbox();
                 }
@@ -256,11 +286,11 @@ namespace Ephymeral.PlayerNS
                 yield return new WaitForFixedUpdate();
             }
 
-            if(state == PlayerState.Slam)
+            if (state == PlayerState.Slam)
             {
                 state = PlayerState.Free;
             }
-                
+
 
         }
 

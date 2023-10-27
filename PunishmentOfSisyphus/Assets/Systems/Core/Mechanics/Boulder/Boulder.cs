@@ -14,6 +14,7 @@ namespace Ephymeral.BoulderNS
     public enum BoulderState
     {
         Held,
+        Aiming,
         Thrown,
         Rolling,
         Ricocheting
@@ -26,6 +27,7 @@ namespace Ephymeral.BoulderNS
         [SerializeField] private BoulderData boulderData;
         [SerializeField] private PlayerEvent playerEvent;
         [SerializeField] private CircleCollider2D hitbox;
+        [SerializeField] BoulderPrediction futureBoulder;
         [SerializeField] GameObject levelBounds;
         #endregion
 
@@ -71,6 +73,7 @@ namespace Ephymeral.BoulderNS
             boulderEvent.thrownEvent.AddListener(ThrowBoulder);
             boulderEvent.dropEvent.AddListener(DropBoulder);
             boulderEvent.pickupEvent.AddListener(PickedUp);
+            boulderEvent.predictionEvent.AddListener(EnablePrediction);
         }
 
         private void OnDisable()
@@ -78,6 +81,7 @@ namespace Ephymeral.BoulderNS
             boulderEvent.thrownEvent.RemoveListener(ThrowBoulder);
             boulderEvent.dropEvent.RemoveListener(DropBoulder);
             boulderEvent.pickupEvent.RemoveListener(PickedUp);
+            boulderEvent.predictionEvent.RemoveListener(EnablePrediction);
         }
 
         // Update is called once per frame
@@ -110,10 +114,10 @@ namespace Ephymeral.BoulderNS
             if (state != BoulderState.Held)
             {
                 //Kill the player if the boulder falls out of the screen
-                if (transform.position.y < bounds.yMin)
-                {
-                    playerEvent.TakeDamage(100);
-                }
+                //if (transform.position.y < bounds.yMin)
+                //{
+                //    playerEvent.TakeDamage(100);
+                //}
 
                 //Bounce against the wall
                 if (transform.position.x > bounds.xMax || transform.position.x < bounds.xMin)
@@ -131,10 +135,22 @@ namespace Ephymeral.BoulderNS
 
         protected override void FixedUpdate()
         {
+            Debug.Log(state);
+
             switch (state)
             {
+                // Implement prediction
+                case BoulderState.Aiming:
+                    //Debug.Log("Running Aim Prediction");
+                    //// TO-DO: Implement dotted line indicating future position of boulder
+                    //futureBoulder.Direction = ((Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition) - playerEvent.Position).normalized;
+                    //futureBoulder.Position = position;
+                    //futureBoulder.PredictFuturePosition(boulderData.FUTURE_PREDICTION);
+                    break;
+
                 case BoulderState.Thrown:
                     elapsedTime += Time.deltaTime;
+                    futureBoulder.Visible = false;
 
                     if(elapsedTime >= boulderData.AIR_TIME)
                     {
@@ -159,19 +175,6 @@ namespace Ephymeral.BoulderNS
 
                     break;
 
-                //case BoulderState.Ricocheting:
-                //    ricochetTime += Time.deltaTime;
-                //    //acceleration += direction * boulderData.RICOCHET_ACCELERATION;
-                //    speed = boulderData.INITIAL_RICOCHET_SPEED + (boulderData.RICOCHET_ACCELERATION * ricochetTime);
-                //    velocity = direction * speed;
-
-                //    if (ricochetTime >= boulderData.AIR_TIME)
-                //    {
-                //        DropBoulder();
-                //        ricochetTime = 0;
-                //    }
-                //    break;
-
                 case BoulderState.Held:
                     //acceleration += Vector2.down * boulderData.GRAVITY;
                     break;
@@ -186,12 +189,8 @@ namespace Ephymeral.BoulderNS
             // Changed "&& state == BoulderState.Thrown" so that will always hit when not held by the player
             if (collision.CompareTag("Enemy") && state != BoulderState.Held && Speed >= boulderData.HIT_SPEED_MIN)
             {
-                //Temporary knockback var
-                float knockVar = 1.2f;
-
-
                 // Trigger damage event on enemy
-                collision.GetComponent<Enemy>().TakeDamage(damage, velocity.normalized*knockVar);
+                collision.GetComponent<Enemy>().BoulderHit(damage, velocity.normalized*boulderData.KNOCKBACK);
 
                 // Call ricochet function
                 Ricochet(collision);
@@ -205,8 +204,14 @@ namespace Ephymeral.BoulderNS
 
             if (collision.CompareTag("ScreenBounds"))
             {
-                boulderEvent.BoulderFail();
+                playerEvent.TakeDamage(100);
             }
+        }
+
+        private void EnablePrediction()
+        {
+            state = BoulderState.Aiming;
+            futureBoulder.Visible = true;
         }
 
         private void ThrowBoulder()
@@ -238,9 +243,9 @@ namespace Ephymeral.BoulderNS
             state = BoulderState.Rolling;
             Vector2 bounceDirection = new Vector2(0, boulderData.INITIAL_RICOCHET_SPEED);
 
-            float dotProduct = Vector2.Dot(Vector2.up, velocity);
+            float dotProduct = Mathf.Abs(Vector2.Dot(Vector2.up, velocity) );
 
-            bounceDirection += new Vector2(dotProduct * boulderData.BOUNCE_COEFFICIENT, 0);
+            bounceDirection += new Vector2(dotProduct * boulderData.BOUNCE_COEFFICIENT * Mathf.Sign(velocity.x), 0);
 
             velocity = bounceDirection;
 
