@@ -82,6 +82,8 @@ namespace Ephymeral.EnemyNS
             attackDuration = enemyData.ATTACK_DURATION;
             attackCooldown = enemyData.ATTACK_COOLDOWN;
 
+            boulderInvulSec = 0.5f;
+
             // Get a reference to the hitbox, disable it 
             if (gameObject.transform.childCount > 0)
             {

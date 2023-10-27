@@ -275,7 +275,7 @@ namespace Ephymeral.PlayerNS
                 //Slam on frame 10
                 if (timer == 3)
                 {
-                    slamScript.ActivateHitbox();
+                    slamScript.ActivateHitbox( ((Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition) - playerEvent.Position).normalized );
                 }
                 if (timer == duration - 3)
                 {
