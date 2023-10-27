@@ -37,7 +37,8 @@ namespace Ephymeral.FileLoading
             Debug.Log("Loading In Enemy Level Files");
 
             // Get the directory path
-            directoryPath = Application.persistentDataPath;
+            directoryPath = Application.dataPath + "/LevelData";
+            Debug.LogError("Directory Path: " + directoryPath);
 
             // Get the starting level index (lvl 1)
             int levelNameIndex = 1;
@@ -52,18 +53,19 @@ namespace Ephymeral.FileLoading
             // Loop while there is a file of the complete path, theoretically should stop once there is no more files of 'LevelX.txt'
             while (File.Exists(completePath))
             {
+                Debug.LogError("Level Path: " + completePath);
                 try
                 {
-                    levelFileName = $"Level{levelNameIndex}.txt";
-                    completePath = Path.Combine(directoryPath, levelFileName);
-
                     using (FileStream fileStream = new FileStream(completePath, FileMode.Open))
                     {
                         using (StreamReader reader = new StreamReader(fileStream))
-                        {
+                        {   
                             enemyLevelFiles.Add(reader.ReadToEnd());
                         }
                     }
+
+                    levelFileName = $"Level{levelNameIndex}.txt";
+                    completePath = Path.Combine(directoryPath, levelFileName);
                 }
                 catch (Exception e)
                 {

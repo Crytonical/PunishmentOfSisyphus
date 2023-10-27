@@ -29,7 +29,7 @@ public class SceneManagerScript : MonoBehaviour
 
     public void exitGame()
     {
-        UnityEditor.EditorApplication.isPlaying = false;
+        //UnityEditor.EditorApplication.isPlaying = false;
         Application.Quit();
     }
 
