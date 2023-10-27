@@ -25,7 +25,7 @@ namespace Ephymeral.FileLoading
 
         private void OnEnable()
         {
-            if (!enemyLevelFilesLoaded)
+            if (!enemyLevelFilesLoaded || enemyLevelFiles == null || enemyLevelFiles.Count == 0)
             {
                 enemyLevelFiles = new List<string>();
                 LoadEnemyLevelFiles();
@@ -38,7 +38,6 @@ namespace Ephymeral.FileLoading
 
             // Get the directory path
             directoryPath = Application.dataPath + "/LevelData";
-            Debug.LogError("Directory Path: " + directoryPath);
 
             // Get the starting level index (lvl 1)
             int levelNameIndex = 1;
@@ -48,7 +47,9 @@ namespace Ephymeral.FileLoading
 
             // Save the initial complete path to the first level
             string completePath = Path.Combine(directoryPath, levelFileName);
-            Debug.Log("Path: " + completePath);
+            Debug.LogError("Level Path: " + completePath);
+
+            // Create 
 
             // Loop while there is a file of the complete path, theoretically should stop once there is no more files of 'LevelX.txt'
             while (File.Exists(completePath))
@@ -61,6 +62,7 @@ namespace Ephymeral.FileLoading
                         using (StreamReader reader = new StreamReader(fileStream))
                         {   
                             enemyLevelFiles.Add(reader.ReadToEnd());
+                            Debug.LogError("Adding Enemy Level FIles");
                         }
                     }
 

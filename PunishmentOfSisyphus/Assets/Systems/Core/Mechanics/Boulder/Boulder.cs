@@ -150,7 +150,7 @@ namespace Ephymeral.BoulderNS
 
                 case BoulderState.Thrown:
                     elapsedTime += Time.deltaTime;
-                    futureBoulder.Visible = false;
+                    //futureBoulder.Visible = false;
 
                     if(elapsedTime >= boulderData.AIR_TIME)
                     {
@@ -211,7 +211,7 @@ namespace Ephymeral.BoulderNS
         private void EnablePrediction()
         {
             state = BoulderState.Aiming;
-            futureBoulder.Visible = true;
+            //futureBoulder.Visible = true;
         }
 
         private void ThrowBoulder()
@@ -248,7 +248,7 @@ namespace Ephymeral.BoulderNS
             bounceDirection += new Vector2(dotProduct * boulderData.BOUNCE_COEFFICIENT * Mathf.Sign(velocity.x), 0);
 
             velocity = bounceDirection;
-
+             
             UpdatePhysicsValues();
         }
 
