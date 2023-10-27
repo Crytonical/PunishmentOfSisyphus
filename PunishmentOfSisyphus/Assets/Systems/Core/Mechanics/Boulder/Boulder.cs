@@ -14,7 +14,7 @@ namespace Ephymeral.BoulderNS
     public enum BoulderState
     {
         Held,
-        Throwing,
+        Aiming,
         Thrown,
         Rolling,
         Ricocheting
@@ -73,6 +73,7 @@ namespace Ephymeral.BoulderNS
             boulderEvent.thrownEvent.AddListener(ThrowBoulder);
             boulderEvent.dropEvent.AddListener(DropBoulder);
             boulderEvent.pickupEvent.AddListener(PickedUp);
+            boulderEvent.predictionEvent.AddListener(EnablePrediction);
         }
 
         private void OnDisable()
@@ -80,6 +81,7 @@ namespace Ephymeral.BoulderNS
             boulderEvent.thrownEvent.RemoveListener(ThrowBoulder);
             boulderEvent.dropEvent.RemoveListener(DropBoulder);
             boulderEvent.pickupEvent.RemoveListener(PickedUp);
+            boulderEvent.predictionEvent.RemoveListener(EnablePrediction);
         }
 
         // Update is called once per frame
@@ -133,18 +135,22 @@ namespace Ephymeral.BoulderNS
 
         protected override void FixedUpdate()
         {
+            Debug.Log(state);
+
             switch (state)
             {
                 // Implement prediction
-                case BoulderState.Throwing:
-                    // Assign position and direction based on the boulder
+                case BoulderState.Aiming:
+                    Debug.Log("Running Aim Prediction");
+                    // TO-DO: Implement dotted line indicating future position of boulder
+                    futureBoulder.Direction = ((Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition) - playerEvent.Position).normalized;
                     futureBoulder.Position = position;
-                    futureBoulder.Direction = direction;
                     futureBoulder.PredictFuturePosition(boulderData.FUTURE_PREDICTION);
                     break;
 
                 case BoulderState.Thrown:
                     elapsedTime += Time.deltaTime;
+                    futureBoulder.Visible = false;
 
                     if(elapsedTime >= boulderData.AIR_TIME)
                     {
@@ -204,6 +210,12 @@ namespace Ephymeral.BoulderNS
             {
                 playerEvent.TakeDamage(100);
             }
+        }
+
+        private void EnablePrediction()
+        {
+            state = BoulderState.Aiming;
+            futureBoulder.Visible = true;
         }
 
         private void ThrowBoulder()

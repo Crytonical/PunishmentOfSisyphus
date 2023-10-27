@@ -218,6 +218,7 @@ namespace Ephymeral.PlayerNS
                 {
                     // TO-DO: SHOW PREVIEW FOR BOULDER THROW
                     Debug.Log("Holding Mouse button");
+                    boulderEvent.Predict();
                 }
 
                 // Throw the boulder

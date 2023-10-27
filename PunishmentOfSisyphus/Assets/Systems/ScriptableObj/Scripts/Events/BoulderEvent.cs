@@ -16,6 +16,7 @@ namespace Ephymeral.Events
         public UnityEvent dropEvent;
         public UnityEvent ricochetEvent;
         public UnityEvent boulderFail;
+        public UnityEvent predictionEvent;
         #endregion
         #endregion
 
@@ -45,6 +46,10 @@ namespace Ephymeral.Events
             {
                 boulderFail = new UnityEvent();
             }
+            if (predictionEvent == null)
+            {
+                predictionEvent = new UnityEvent();
+            }
             #endregion
         }
 
@@ -61,6 +66,12 @@ namespace Ephymeral.Events
         public void Throw()
         {
             thrownEvent.Invoke();
+        }
+
+        // Predict future position of boulder
+        public void Predict()
+        {
+            predictionEvent.Invoke();
         }
 
         // --- Events List ---

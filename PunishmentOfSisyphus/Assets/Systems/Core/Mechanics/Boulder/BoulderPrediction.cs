@@ -44,6 +44,7 @@ namespace Ephymeral.BoulderNS
         {
             // Assign SpriteRenderer to manipulate opacity
             spriteColor = GetComponent<SpriteRenderer>().color;
+            visible = false;
 
             base.Awake();
         }
@@ -52,8 +53,9 @@ namespace Ephymeral.BoulderNS
         protected override void FixedUpdate()
         {
             // Only show prediction when throwing boulder
-            spriteColor.a = (visible ? OPACITY : 0f);
-            base.FixedUpdate();
+            //spriteColor.a = (visible ? OPACITY : 0f);
+            //spriteColor.a = 0.0f;
+            spriteColor = Color.blue;
         }
 
         /// <summary>
@@ -69,8 +71,9 @@ namespace Ephymeral.BoulderNS
             {
                 velocity += acceleration * 1.0f / 60;
                 position += velocity * 1.0f / 60;
-                transform.position = position;
             }
+
+            transform.position = position;
         }
     }
 }
