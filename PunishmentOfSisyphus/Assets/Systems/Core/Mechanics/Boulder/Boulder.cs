@@ -141,11 +141,11 @@ namespace Ephymeral.BoulderNS
             {
                 // Implement prediction
                 case BoulderState.Aiming:
-                    Debug.Log("Running Aim Prediction");
-                    // TO-DO: Implement dotted line indicating future position of boulder
-                    futureBoulder.Direction = ((Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition) - playerEvent.Position).normalized;
-                    futureBoulder.Position = position;
-                    futureBoulder.PredictFuturePosition(boulderData.FUTURE_PREDICTION);
+                    //Debug.Log("Running Aim Prediction");
+                    //// TO-DO: Implement dotted line indicating future position of boulder
+                    //futureBoulder.Direction = ((Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition) - playerEvent.Position).normalized;
+                    //futureBoulder.Position = position;
+                    //futureBoulder.PredictFuturePosition(boulderData.FUTURE_PREDICTION);
                     break;
 
                 case BoulderState.Thrown:
