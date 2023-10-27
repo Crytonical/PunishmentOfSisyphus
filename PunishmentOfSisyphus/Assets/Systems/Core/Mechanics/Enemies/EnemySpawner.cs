@@ -2,9 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
 using Ephymeral.Events;
-using Codice.Client.Common.GameUI;
+using Ephymeral.FileLoading;
+using System.Linq;
+using System;
 
 namespace Ephymeral.EnemyNS
 {
@@ -16,6 +17,7 @@ namespace Ephymeral.EnemyNS
         [SerializeField] private GameObject rangedPrefab;
         [SerializeField] private GameObject fastPrefab;
         [SerializeField] private GameObject strongPrefab;
+        [SerializeField] private EnemySpawnerFileHandler enemyFileData;
         private Text wavesText;
         private Text enemiesText;
         #endregion
@@ -49,20 +51,29 @@ namespace Ephymeral.EnemyNS
             levelWaves = new Dictionary<string, List<List<string>>>();
             enemiesAlive = new List<GameObject>();
 
+            // File IO/Level loading notes
+            // Need an array/list of possible levels that is loaded from a file
+            //  Each level file will be titled 'LevelX.txt' where X is the level num
+            //  File format:
+            //  4 - # of waves
+            //  "r","f","s" - split each enemy type in a wave with a comma
+
             // FOR TESTING, CHANGE WHEN WE HAVE FILE IO
-            levelWaves["Level1"] = new List<List<string>>
+            if (enemyFileData.EnemyLevelFiles.Count != 0)
             {
-                new List<string>() {"f"},                          // Wave 1: 1 fast enemy
-                new List<string>() {"r"},                          // Wave 2: 1 ranged enemy
-                new List<string>() {"s"},                          // Wave 3: 1 strong enemy
-                new List<string>() {"s", "r"},                     // Wave 4: 2 enemies
-                new List<string>() {"s", "f", "r"},                // Wave 5: 3 enemies
-                new List<string>() {"s", "s", "f", "r"},           // Wave 6: 4 enemies
-                new List<string>() {"s", "s", "f", "f", "r", "r"}  // Wave 7: 6 enemies
-            };
+                int randomLevelIndex = UnityEngine.Random.Range(0, enemyFileData.EnemyLevelFiles.Count);
 
+                levelWaves["Level1"] = LoadEnemyWaveFromFile(randomLevelIndex);
+            }
+            else // Default loaded wave
+            {
+                levelWaves["Level1"] = new List<List<string>> 
+                { 
+                    new List<string> { "s" }
+                };
+            }
 
-            // Fill levelWaves with information from a file
+            // Fill levelWaves with information from a file 
             // Initialize default wave info
             waveNum = 0; // 1
             levelNum = 1;
@@ -93,7 +104,6 @@ namespace Ephymeral.EnemyNS
 
         private void RemoveEnemy(GameObject enemy)
         {
-
             enemiesAlive.Remove(enemy);
             Destroy(enemy);
 
@@ -102,7 +112,7 @@ namespace Ephymeral.EnemyNS
                 enemySpawnEvent.EndWave();
             }
 
-            enemiesText.text = $"{maxEnemiesInWave - enemiesAlive.Count} / {maxEnemiesInWave}\r\nEnemies Killed";
+            enemiesText.text = $"Enemies Killed\r\n{maxEnemiesInWave - enemiesAlive.Count} / {maxEnemiesInWave}";
         }
 
         private void SpawnWave()
@@ -110,18 +120,22 @@ namespace Ephymeral.EnemyNS
             string levelKey = "Level" + levelNum;
             for (int i = 0; i < levelWaves[levelKey][waveNum].Count; i++)
             {
-                switch (levelWaves[levelKey][waveNum][i])
+                string enemyChar = levelWaves[levelKey][waveNum][i];
+                switch (enemyChar.ToString().ToLower().Trim())
                 {
                     case "r":
                         enemiesAlive.Add(Instantiate(rangedPrefab, new Vector2(0.0f, 0.0f), Quaternion.identity));
+                        Debug.Log("Ranged Enemy Spawned");
                         break;
 
                     case "s":
                         enemiesAlive.Add(Instantiate(strongPrefab, new Vector2(0.0f, 0.0f), Quaternion.identity));
+                        Debug.Log("Strong Enemy Spawned");
                         break;
 
                     case "f":
                         enemiesAlive.Add(Instantiate(fastPrefab, new Vector2(0.0f, 0.0f), Quaternion.identity));
+                        Debug.Log("Fast Enemy Spawned");
                         break;
                 }
             }
@@ -130,17 +144,39 @@ namespace Ephymeral.EnemyNS
 
             wavesText.text = $"Wave\r\n {waveNum + 1} / {maxWaves}";
 
-            enemiesText.text = $"{maxEnemiesInWave - enemiesAlive.Count} / {maxEnemiesInWave}\r\nEnemies Killed";
+            enemiesText.text = $"Enemies Killed\r\n{maxEnemiesInWave - enemiesAlive.Count} / {maxEnemiesInWave}";
         }
 
-        private void LoadEnemyWaveFromFile()
+        private List<List<string>> LoadEnemyWaveFromFile(int index)
         {
             // Will get enemy wave from file
+            string[] enemyFileLines = enemyFileData.EnemyLevelFiles[index].Split("|");
+            int waveCount = int.Parse(enemyFileLines[0]);
+            List<List<string>> waves = new List<List<string>>();
+
+            for (int i = 0; i < waveCount; i++)
+            {
+                List<string> wave = new List<string>();
+                // Add 1 to skip first line
+                wave.AddRange(enemyFileLines[i + 1].Split(","));
+                waves.Add(wave);
+            }
+
+            // Remove file data from the list so it isnt used again
+            enemyFileData.EnemyLevelFiles.RemoveAt(index);
+
+            return waves;
         }
 
         private void IncrementLevel()
         {
             // Go to next level
+        }
+
+        private List<List<string>> GetRandomStartingLevel()
+        {
+            List<List<string>> level = new List<List<string>>();
+            return level;
         }
     }
 }

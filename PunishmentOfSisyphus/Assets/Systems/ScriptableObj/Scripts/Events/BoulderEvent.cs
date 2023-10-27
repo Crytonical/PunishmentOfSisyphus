@@ -1,6 +1,5 @@
 using UnityEngine.Events;
 using UnityEngine;
-using Codice.CM.Common;
 
 
 namespace Ephymeral.Events
@@ -17,6 +16,7 @@ namespace Ephymeral.Events
         public UnityEvent dropEvent;
         public UnityEvent ricochetEvent;
         public UnityEvent boulderFail;
+        public UnityEvent predictionEvent;
         #endregion
         #endregion
 
@@ -46,6 +46,10 @@ namespace Ephymeral.Events
             {
                 boulderFail = new UnityEvent();
             }
+            if (predictionEvent == null)
+            {
+                predictionEvent = new UnityEvent();
+            }
             #endregion
         }
 
@@ -64,9 +68,10 @@ namespace Ephymeral.Events
             thrownEvent.Invoke();
         }
 
-        public void BoulderFail()
+        // Predict future position of boulder
+        public void Predict()
         {
-            boulderFail.Invoke();
+            predictionEvent.Invoke();
         }
 
         // --- Events List ---
