@@ -211,51 +211,51 @@ namespace Ephymeral.PlayerNS
         public void OnThrow(InputAction.CallbackContext context)
         {
             // Handle boulder throw (prediction on hold, throw on release)
-            if (state == PlayerState.CarryingBounder)
-            {
-                if (context.started)
-                {
-                    // TO-DO: SHOW PREVIEW FOR BOULDER THROW
-                    Debug.Log("Holding Mouse button");
-                    boulderEvent.Predict();
-                }
-
-                // Throw the boulder
-                else if (context.canceled)
-                {
-                    state = PlayerState.Throwing;
-                    boulderEvent.Throw();
-                }
-            }
-
-            // Attack with an AOE slam attack
-            else
-            {
-                state = PlayerState.Slam;
-                Vector2 lunchDir = ((Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition) - playerEvent.Position).normalized;
-                StartCoroutine(LunchCo(lunchDir));
-            }
-
-            //if (context.started)
+            //if (state == PlayerState.CarryingBounder)
             //{
-            //    Debug.Log("Throw processed");
+            //    if (context.started)
+            //    {
+            //        // TO-DO: SHOW PREVIEW FOR BOULDER THROW
+            //        Debug.Log("Holding Mouse button");
+            //        boulderEvent.Predict();
+            //    }
 
-            //    // Boulder throw
-            //    if (state == PlayerState.CarryingBounder)
+            //    // Throw the boulder
+            //    else if (context.canceled)
             //    {
             //        state = PlayerState.Throwing;
             //        boulderEvent.Throw();
             //    }
-
-            //    // Slam attack
-            //    else
-            //    {
-            //        state = PlayerState.Slam;
-            //        Vector2 lunchDir = ((Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition) - playerEvent.Position).normalized;
-            //        StartCoroutine(LunchCo(lunchDir));
-
-            //    }
             //}
+
+            //// Attack with an AOE slam attack
+            //else
+            //{
+            //    state = PlayerState.Slam;
+            //    Vector2 lunchDir = ((Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition) - playerEvent.Position).normalized;
+            //    StartCoroutine(LunchCo(lunchDir));
+            //}
+
+            if (context.started)
+            {
+                Debug.Log("Throw processed");
+
+                // Boulder throw
+                if (state == PlayerState.CarryingBounder)
+                {
+                    state = PlayerState.Throwing;
+                    boulderEvent.Throw();
+                }
+
+                // Slam attack
+                else
+                {
+                    state = PlayerState.Slam;
+                    Vector2 lunchDir = ((Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition) - playerEvent.Position).normalized;
+                    StartCoroutine(LunchCo(lunchDir));
+
+                }
+            }
         }
 
         IEnumerator LunchCo(Vector2 lunchDir)
