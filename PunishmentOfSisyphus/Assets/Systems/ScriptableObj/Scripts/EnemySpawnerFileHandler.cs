@@ -4,6 +4,7 @@ using UnityEngine;
 using System;
 using System.IO;
 using System.Security.Cryptography;
+using Ephymeral.Events;
 
 namespace Ephymeral.FileLoading
 {
@@ -15,6 +16,7 @@ namespace Ephymeral.FileLoading
         private List<string> enemyLevelFiles;
         private string directoryPath = "";
         private string levelFileName = "";
+        [SerializeField] private bool enemyLevelFilesLoaded;
         #endregion
 
         #region PROPERTIES
@@ -23,17 +25,17 @@ namespace Ephymeral.FileLoading
 
         private void OnEnable()
         {
-            Debug.Log("Enable Enemey Spawner ");
-            if (enemyLevelFiles.Count == 0)
+            if (!enemyLevelFilesLoaded)
             {
                 enemyLevelFiles = new List<string>();
                 LoadEnemyLevelFiles();
-                Debug.Log(enemyLevelFiles.Count);
             }
         }
 
         private void LoadEnemyLevelFiles()
         {
+            Debug.Log("Loading In Enemy Level Files");
+
             // Get the directory path
             directoryPath = Application.persistentDataPath;
 
@@ -48,27 +50,30 @@ namespace Ephymeral.FileLoading
             Debug.Log("Path: " + completePath);
 
             // Loop while there is a file of the complete path, theoretically should stop once there is no more files of 'LevelX.txt'
-            //while (File.Exists(completePath))
-            //{
-            //}
-            try
+            while (File.Exists(completePath))
             {
-                levelFileName = $"Level{levelNameIndex}.txt";
-                completePath = Path.Combine(directoryPath, levelFileName);
-
-                using (FileStream fileStream = new FileStream(completePath, FileMode.Open))
+                try
                 {
-                    using (StreamReader reader = new StreamReader(fileStream))
+                    levelFileName = $"Level{levelNameIndex}.txt";
+                    completePath = Path.Combine(directoryPath, levelFileName);
+
+                    using (FileStream fileStream = new FileStream(completePath, FileMode.Open))
                     {
-                        enemyLevelFiles.Add(reader.ReadToEnd());
+                        using (StreamReader reader = new StreamReader(fileStream))
+                        {
+                            enemyLevelFiles.Add(reader.ReadToEnd());
+                        }
                     }
                 }
+                catch (Exception e)
+                {
+                    Debug.LogWarning(e.Message);
+                    completePath = "";
+                }
+                levelNameIndex++;
             }
-            catch (Exception e)
-            {
-                Debug.LogWarning(e.Message);
-                completePath = "";
-            }
+
+            enemyLevelFilesLoaded = true;
         }
     }
 }

@@ -137,7 +137,7 @@ namespace Ephymeral.BoulderNS
             {
                 // Implement prediction
                 case BoulderState.Throwing:
-                    futureBoulder.PredictFuturePosition();
+                    futureBoulder.PredictFuturePosition(0.0f);
                     break;
 
                 case BoulderState.Thrown:
