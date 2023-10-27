@@ -18,6 +18,7 @@ namespace Ephymeral.Events
         public UnityEvent throwEvent;
         public UnityEvent<float> damageEvent;
         public UnityEvent attackEvent;
+        public UnityEvent levelChangeEvent;
         #endregion
         #endregion
 
@@ -48,6 +49,10 @@ namespace Ephymeral.Events
             if (damageEvent == null) 
             { 
                 damageEvent = new UnityEvent<float>();
+            }
+            if(levelChangeEvent == null)
+            {
+                levelChangeEvent = new UnityEvent();
             }
             #endregion
         }

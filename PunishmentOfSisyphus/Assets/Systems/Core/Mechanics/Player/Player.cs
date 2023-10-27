@@ -144,7 +144,6 @@ namespace Ephymeral.PlayerNS
 
                 // Return the new vector with clamped components
                 position = new Vector2(clampedX, clampedY);
-
             }
 
         }

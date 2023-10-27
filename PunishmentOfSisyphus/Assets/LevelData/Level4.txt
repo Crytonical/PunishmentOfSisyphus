@@ -1,0 +1,4 @@
+1|
+f,r,f,s,r|
+r,r,r,r,f|
+s,s,s,f,f,f

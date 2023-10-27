@@ -28,6 +28,7 @@ namespace Ephymeral.Data
 
         [Header("Combat")]
         public float DAMAGE;
+        public float KNOCKBACK;
         public float HIT_SPEED_MIN;
     }
 }
