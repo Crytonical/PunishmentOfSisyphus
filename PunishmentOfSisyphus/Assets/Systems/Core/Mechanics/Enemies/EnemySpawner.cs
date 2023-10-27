@@ -73,7 +73,7 @@ namespace Ephymeral.EnemyNS
                 };
             }
 
-            // Fill levelWaves with information from a file
+            // Fill levelWaves with information from a file 
             // Initialize default wave info
             waveNum = 0; // 1
             levelNum = 1;
