@@ -1,4 +1,4 @@
-1|
-f,r,r,r,r,r,r,r,r,r,r,r
-f,f,f,f,s
+3|
+f,r,r,r,r,r,r,r,r,r,r,r|
+f,f,f,f,s|
 s,s,s,s,s,f

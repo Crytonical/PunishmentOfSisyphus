@@ -61,11 +61,12 @@ namespace Ephymeral.EnemyNS
             //  "r","f","s" - split each enemy type in a wave with a comma
 
             // FOR TESTING, CHANGE WHEN WE HAVE FILE IO
-            if (enemyFileData.EnemyLevelFiles.Count != 0)
+            if (enemyFileData.LevelFileStrings.Count != 0)
             {
-                int randomLevelIndex = UnityEngine.Random.Range(0, enemyFileData.EnemyLevelFiles.Count);
+                int randomLevelIndex = UnityEngine.Random.Range(0, enemyFileData.LevelFileStrings.Count);
 
                 levelWaves["Level1"] = LoadEnemyWaveFromFile(randomLevelIndex);
+                Debug.Log(levelWaves["Level1"].Count);
             }
             else // Default loaded wave
             {
@@ -151,7 +152,7 @@ namespace Ephymeral.EnemyNS
         private List<List<string>> LoadEnemyWaveFromFile(int index)
         {
             // Will get enemy wave from file
-            string[] enemyFileLines = enemyFileData.EnemyLevelFiles[index].Split("|");
+            string[] enemyFileLines = enemyFileData.LevelFileStrings[index].Split("|");
             int waveCount = int.Parse(enemyFileLines[0]);
             List<List<string>> waves = new List<List<string>>();
 
@@ -163,8 +164,10 @@ namespace Ephymeral.EnemyNS
                 waves.Add(wave);
             }
 
+            Debug.Log(waves.Count);
+
             // Remove file data from the list so it isnt used again
-            enemyFileData.EnemyLevelFiles.RemoveAt(index);
+            enemyFileData.LevelFileStrings.RemoveAt(index);
 
             return waves;
         }
@@ -184,9 +187,9 @@ namespace Ephymeral.EnemyNS
             //  "r","f","s" - split each enemy type in a wave with a comma
 
             // FOR TESTING, CHANGE WHEN WE HAVE FILE IO
-            if (enemyFileData.EnemyLevelFiles.Count != 0)
+            if (enemyFileData.LevelFileStrings.Count != 0)
             {
-                int randomLevelIndex = UnityEngine.Random.Range(0, enemyFileData.EnemyLevelFiles.Count);
+                int randomLevelIndex = UnityEngine.Random.Range(0, enemyFileData.LevelFileStrings.Count);
 
                 levelWaves["Level1"] = LoadEnemyWaveFromFile(randomLevelIndex);
             }
