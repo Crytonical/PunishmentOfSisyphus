@@ -247,7 +247,7 @@ namespace Ephymeral.EnemyNS
         /// </summary>
         /// <param name="damage"></param>
         /// <param name="knockback"></param>
-        public void TakeDamage(float damage, Vector2 knockback)
+        public virtual void TakeDamage(float damage, Vector2 knockback)
         {
             if (state != EnemyState.Damage)
             {
