@@ -25,7 +25,7 @@ namespace Ephymeral.PlayerNS
         Dodge,
         Damage,
         Throwing,
-        Slam
+        Slam,
     }
 
     public class Player : Entity
@@ -43,12 +43,14 @@ namespace Ephymeral.PlayerNS
 
         [SerializeField] private PlayerState state;
         SlamScript slamScript;
+        private GameObject enemyInfo;
 
         // Only exists so that directions input during roll are registered
         // When it ends. Otherwise, you'll need to press the key again
         private UnityEngine.Vector2 dodgeDirection;
         private float dodgeCooldown;
         #endregion
+
 
         #region Properties
         #endregion
@@ -81,6 +83,7 @@ namespace Ephymeral.PlayerNS
             slamScript = slamHitbox.GetComponent<SlamScript>();
             slamScript.DeactivateHitbox();
 
+            enemyInfo = GameObject.Find("EnemySpawner");
             // Run parent's awake method
             base.Awake();
         }
@@ -171,6 +174,11 @@ namespace Ephymeral.PlayerNS
             {
                 // Taking Damage
                 playerEvent.TakeDamage(collision.GetComponentInParent<Enemy>().Damage);
+            }
+
+            if (collision.CompareTag("Wall"))
+            {
+                
             }
         }
 
