@@ -197,7 +197,7 @@ namespace Ephymeral.BoulderNS
             if (collision.CompareTag("Wall"))
             {
                 direction *= -1;
-                velocity.x = velocity.x * -1;
+                //velocity.x = velocity.x * -1;
             }
 
             if (collision.CompareTag("ScreenBounds"))

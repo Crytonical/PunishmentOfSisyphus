@@ -16,7 +16,7 @@ namespace Ephymeral.EnemyNS
         Attacking,
         Damage
     }
-    
+
     // State of enemy when attacking
     public enum AttackState
     {
@@ -52,7 +52,7 @@ namespace Ephymeral.EnemyNS
         #endregion
 
         #region PROPERTIES
-        public EnemyEvent EnemyEvent {  get { return enemyEvent; } }
+        public EnemyEvent EnemyEvent { get { return enemyEvent; } }
         public float Damage { get { return damage; } }
 
         float boulderInvulSec;
@@ -116,7 +116,7 @@ namespace Ephymeral.EnemyNS
 
         protected override void FixedUpdate()
         {
-            switch(state)
+            switch (state)
             {
                 case EnemyState.Seeking:
                     //direction = ((playerEvent.Position - position).normalized) / 1000;
@@ -164,6 +164,13 @@ namespace Ephymeral.EnemyNS
                     StartCoroutine(DamageStun(enemyData.DAMAGE_STUN_DURATION));
                     break;
             }
+
+            base.FixedUpdate();
+        }
+
+        private void OnTriggerEnter2D(Collider2D collision)
+        {
+            //Debug.Log("Enemy Collision run");
         }
 
         private void Die()
@@ -235,7 +242,7 @@ namespace Ephymeral.EnemyNS
 
         public void BoulderHit(float damage, Vector2 knockback)
         {
-            if(boulderInvul >= boulderInvulSec)
+            if (boulderInvul >= boulderInvulSec)
             {
                 TakeDamage(damage, knockback);
                 boulderInvul = 0;
@@ -281,9 +288,9 @@ namespace Ephymeral.EnemyNS
             StartCoroutine(KnockbackCo(knockback, durationFrames));
         }
 
-        protected virtual IEnumerator KnockbackCo(Vector2 knockback, int durationFrames) 
-        { 
-            while(durationFrames > 0)
+        protected virtual IEnumerator KnockbackCo(Vector2 knockback, int durationFrames)
+        {
+            while (durationFrames > 0)
             {
                 durationFrames -= 1;
                 position += knockback;
