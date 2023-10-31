@@ -5,7 +5,6 @@ using System;
 using System.IO;
 using System.Security.Cryptography;
 using Ephymeral.Events;
-using Codice.CM.Client.Differences;
 
 namespace Ephymeral.FileLoading
 {
@@ -43,6 +42,7 @@ namespace Ephymeral.FileLoading
             }
 
             enemyLevelFilesLoaded = true;
+            Debug.Log(levelFileStrings.Count);
         }
     }
 }

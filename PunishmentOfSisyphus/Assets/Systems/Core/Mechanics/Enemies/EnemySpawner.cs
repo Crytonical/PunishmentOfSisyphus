@@ -63,10 +63,12 @@ namespace Ephymeral.EnemyNS
             // FOR TESTING, CHANGE WHEN WE HAVE FILE IO
             if (enemyFileData.LevelFileStrings.Count != 0)
             {
-                int randomLevelIndex = UnityEngine.Random.Range(0, enemyFileData.LevelFileStrings.Count);
-
-                levelWaves["Level1"] = LoadEnemyWaveFromFile(randomLevelIndex);
-                Debug.Log(levelWaves["Level1"].Count);
+                for (int i = 0; i < enemyFileData.LevelFileStrings.Count; i++)
+                {
+                    int randomLevelIndex = UnityEngine.Random.Range(0, enemyFileData.LevelFileStrings.Count);
+                    levelWaves["Level" + (i + 1)] = LoadEnemyWaveFromFile(randomLevelIndex);
+                }
+                Debug.Log(levelWaves.Count);
             }
             else // Default loaded wave
             {
@@ -97,9 +99,9 @@ namespace Ephymeral.EnemyNS
             else
             {
                 // For right now.
-                wavesText.text = "You win!";
+                wavesText.text = "Level Complete";
                 Debug.Log("Going to next stage");
-                // IncrementLevel();
+                IncrementLevel();
                 return;
             }
         }
@@ -166,58 +168,18 @@ namespace Ephymeral.EnemyNS
 
             Debug.Log(waves.Count);
 
-            // Remove file data from the list so it isnt used again
-            enemyFileData.LevelFileStrings.RemoveAt(index);
-
             return waves;
         }
 
         private void IncrementLevel()
         {
-            enemiesText = GameObject.Find("Enemies Killed Text").GetComponent<Text>();
-            wavesText = GameObject.Find("Enemy Waves Text").GetComponent<Text>();
-            levelWaves = new Dictionary<string, List<List<string>>>();
-            enemiesAlive = new List<GameObject>();
-
-            // File IO/Level loading notes
-            // Need an array/list of possible levels that is loaded from a file
-            //  Each level file will be titled 'LevelX.txt' where X is the level num
-            //  File format:
-            //  4 - # of waves
-            //  "r","f","s" - split each enemy type in a wave with a comma
-
-            // FOR TESTING, CHANGE WHEN WE HAVE FILE IO
-            if (enemyFileData.LevelFileStrings.Count != 0)
-            {
-                int randomLevelIndex = UnityEngine.Random.Range(0, enemyFileData.LevelFileStrings.Count);
-
-                levelWaves["Level1"] = LoadEnemyWaveFromFile(randomLevelIndex);
-            }
-            else // Default loaded wave
-            {
-                levelWaves["Level1"] = new List<List<string>>
-                {
-                    new List<string> { "s" }
-                };
-            }
-
-            // Fill levelWaves with information from a file 
-            // Initialize default wave info
-            waveNum = 0; // 1
-            levelNum = 1;
+            levelNum++;
+            waveNum = 0;
             maxWaves = levelWaves["Level" + levelNum].Count;
             maxEnemiesInWave = levelWaves["Level" + levelNum][waveNum].Count;
 
             // Spawn initial wave
             SpawnWave();
-        }
-
-
-
-        private List<List<string>> GetRandomStartingLevel()
-        {
-            List<List<string>> level = new List<List<string>>();
-            return level;
         }
     }
 }
