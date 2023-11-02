@@ -11,6 +11,7 @@ TagManager:
   - ScreenBounds
   - Bullet
   - BoulderFail
+  - LevelChng
   layers:
   - Default
   - TransparentFX
