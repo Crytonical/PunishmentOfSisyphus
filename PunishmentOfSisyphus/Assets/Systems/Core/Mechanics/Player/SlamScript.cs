@@ -30,6 +30,10 @@ public class SlamScript : MonoBehaviour
             collision.GetComponent<Enemy>().TakeDamage(playerData.SLAM_DAMAGE, knockback);
             collisions.Add(collision);
         }
+        if (collision.CompareTag("Bullet"))
+        {
+            Destroy(collision.gameObject);
+        }
     }
 
     public void ActivateHitbox(Vector2 dir)

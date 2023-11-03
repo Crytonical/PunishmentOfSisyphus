@@ -577,6 +577,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3782233897089038461, guid: 40a75d6050589d84986b1b70d7fb7ba6, type: 3}
+      propertyPath: m_TagString
+      value: Slam Hitbox
+      objectReference: {fileID: 0}
     - target: {fileID: 4368996838548584723, guid: 40a75d6050589d84986b1b70d7fb7ba6, type: 3}
       propertyPath: knockbackVal
       value: 0.6

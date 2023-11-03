@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c275301886cd4f341aa1832409f4600f, type: 3}
   m_Name: PlayerData
   m_EditorClassIdentifier: 
-  CARRY_SPEED: 3.9
+  CARRY_SPEED: 3
   FREE_SPEED: 6.16
   DODGE_SPEED: 20
   DODGE_DURATION: 0.3

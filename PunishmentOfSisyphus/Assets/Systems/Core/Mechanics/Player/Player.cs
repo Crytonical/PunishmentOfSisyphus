@@ -220,7 +220,7 @@ namespace Ephymeral.PlayerNS
 
         public void OnThrow(InputAction.CallbackContext context)
         {
-            if (context.started)
+            if (context.started && state != PlayerState.Dodge)
             {
                 //Debug.Log("Throw processed");
 
