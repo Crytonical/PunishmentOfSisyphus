@@ -19,6 +19,7 @@ namespace Ephymeral.Events
         public UnityEvent<float> damageEvent;
         public UnityEvent attackEvent;
         public UnityEvent levelChangeEvent;
+        public UnityEvent<float> incrementScoreEvent;
         #endregion
         #endregion
 
@@ -54,12 +55,21 @@ namespace Ephymeral.Events
             {
                 levelChangeEvent = new UnityEvent();
             }
+            if (incrementScoreEvent == null)
+            {
+                incrementScoreEvent = new UnityEvent<float>();
+            }
             #endregion
         }
 
         public void TakeDamage(float damage)
         {
             damageEvent.Invoke(damage);
+        }
+
+        public void IncrementScore (float scoreIncrease)
+        {
+            incrementScoreEvent.Invoke(scoreIncrease);
         }
 
         // Event list

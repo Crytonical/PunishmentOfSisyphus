@@ -32,17 +32,20 @@ namespace Ephymeral.FileLoading
             }
         }
 
+        /// <summary>
+        /// Loads in enemy level file strings from the level text files in LevelFiles
+        /// </summary>
         private void LoadEnemyLevelFiles()
         {
-            Debug.Log("Loading In Enemy Level Files");
-
+            // Loops throuh the level files list
             for (int i = 0; i < levelFiles.Count; i++)
             {
+                // Adds the string at the current index i to the levelFileStrings list
                 levelFileStrings.Add(levelFiles[i].text);
             }
 
+            // Sets enemy level files loaded to true so we dont reload the files
             enemyLevelFilesLoaded = true;
-            Debug.Log(levelFileStrings.Count);
         }
     }
 }

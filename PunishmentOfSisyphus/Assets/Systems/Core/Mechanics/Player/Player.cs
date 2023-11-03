@@ -178,7 +178,8 @@ namespace Ephymeral.PlayerNS
         // Collision Methods
         private void OnTriggerEnter2D(Collider2D collision)
         {
-            if (collision.CompareTag("Boulder"))
+            // Check boulder collision
+            if (collision.CompareTag("Boulder") && collision is CircleCollider2D)
             {
                 state = PlayerState.CarryingBounder;
                 speed = playerData.CARRY_SPEED;
@@ -191,10 +192,10 @@ namespace Ephymeral.PlayerNS
                 playerEvent.TakeDamage(collision.GetComponentInParent<Enemy>().Damage);
             }
 
-            if (collision.CompareTag("Wall"))
-            {
+            //if (collision.CompareTag("Wall"))
+            //{
 
-            }
+            //}
         }
 
         private void TakeDamage(float damage)
