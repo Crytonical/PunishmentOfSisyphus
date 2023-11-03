@@ -218,26 +218,52 @@ namespace Ephymeral.PlayerNS
 
         public void OnThrow(InputAction.CallbackContext context)
         {
-            if (context.started)
+            if (state == PlayerState.CarryingBounder)
             {
-                //Debug.Log("Throw processed");
+                // Show the dotted prediction line while mouse is held
+                if(context.started)
+                {
+                    boulderEvent.Predict();
+                    boulderEvent.UpdatePosition = true;
+                }
 
-                // Boulder throw
-                if (state == PlayerState.CarryingBounder)
+                // Throw the boulder when mouse is released
+                else if(context.canceled)
                 {
                     state = PlayerState.Throwing;
+                    boulderEvent.UpdatePosition = false;
                     boulderEvent.Throw();
                 }
-
-                // Slam attack
-                else
-                {
-                    state = PlayerState.Slam;
-                    Vector2 lunchDir = ((Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition) - playerEvent.Position).normalized;
-                    StartCoroutine(LunchCo(lunchDir));
-
-                }
             }
+
+            // Perform a slam attack when not holding the boulder
+            else if(context.started)
+            {
+                state = PlayerState.Slam;
+                Vector2 lunchDir = ((Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition) - playerEvent.Position).normalized;
+                StartCoroutine(LunchCo(lunchDir));
+            }
+
+            //if (context.started)
+            //{
+            //    //Debug.Log("Throw processed");
+
+            //    // Boulder throw
+            //    if (state == PlayerState.CarryingBounder)
+            //    {
+            //        state = PlayerState.Throwing;
+            //        boulderEvent.Throw();
+            //    }
+
+            //    // Slam attack
+            //    else
+            //    {
+            //        state = PlayerState.Slam;
+            //        Vector2 lunchDir = ((Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition) - playerEvent.Position).normalized;
+            //        StartCoroutine(LunchCo(lunchDir));
+
+            //    }
+            //}
         }
 
         IEnumerator LunchCo(Vector2 lunchDir)
