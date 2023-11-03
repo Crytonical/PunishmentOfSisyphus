@@ -32,6 +32,12 @@ namespace Ephymeral.EnemyNS
 
         #endregion
 
+        public int EnemiesCnt
+        {
+            get { return enemiesAlive.Count; }
+
+        }
+
         private void OnEnable()
         {
             enemySpawnEvent.enemyDeathEvent.AddListener(RemoveEnemy);
@@ -100,8 +106,7 @@ namespace Ephymeral.EnemyNS
             {
                 // For right now.
                 wavesText.text = "Level Complete";
-                Debug.Log("Going to next stage");
-                IncrementLevel();
+                Debug.Log("Move up to travel to the next stage!");
                 return;
             }
         }
@@ -171,7 +176,7 @@ namespace Ephymeral.EnemyNS
             return waves;
         }
 
-        private void IncrementLevel()
+        public void IncrementLevel()
         {
             levelNum++;
             waveNum = 0;

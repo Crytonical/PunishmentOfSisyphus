@@ -83,7 +83,9 @@ namespace Ephymeral.PlayerNS
             slamScript = slamHitbox.GetComponent<SlamScript>();
             slamScript.DeactivateHitbox();
 
-            enemyInfo = GameObject.Find("EnemySpawner");
+            //Unused
+            //enemyInfo = GameObject.Find("EnemySpawner");
+            
             // Run parent's awake method
             base.Awake();
         }

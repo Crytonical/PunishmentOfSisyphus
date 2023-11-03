@@ -9,6 +9,7 @@ using UnityEngine;
 public class SlamScript : MonoBehaviour
 {
     [SerializeField] float knockbackVal;
+    [SerializeField] PlayerData playerData;
     List<Collider2D> collisions;
     Vector2 direction;
 
@@ -26,8 +27,12 @@ public class SlamScript : MonoBehaviour
             Vector2 knockback = knockbackDir * knockbackVal;
 
             // Trigger damage event on enemy (no damage, just knockback)
-            collision.GetComponent<Enemy>().TakeDamage(0, knockback);
+            collision.GetComponent<Enemy>().TakeDamage(playerData.SLAM_DAMAGE, knockback);
             collisions.Add(collision);
+        }
+        if (collision.CompareTag("Bullet"))
+        {
+            Destroy(collision.gameObject);
         }
     }
 

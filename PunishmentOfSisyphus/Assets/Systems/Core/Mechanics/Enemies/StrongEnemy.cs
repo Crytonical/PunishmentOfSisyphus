@@ -34,7 +34,6 @@ namespace Ephymeral.EnemyNS
         protected override IEnumerator AttackWindUP(float time)
         {
             attackState = AttackState.WindingUp;
-            float tTime = time;
             while (time > 0)
             {
                 time -= Time.deltaTime;
