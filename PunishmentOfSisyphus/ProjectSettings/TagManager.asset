@@ -11,6 +11,9 @@ TagManager:
   - ScreenBounds
   - Bullet
   - BoulderFail
+  - LevelChng
+  - Enemy HP Bar
+  - Slam Hitbox
   layers:
   - Default
   - TransparentFX

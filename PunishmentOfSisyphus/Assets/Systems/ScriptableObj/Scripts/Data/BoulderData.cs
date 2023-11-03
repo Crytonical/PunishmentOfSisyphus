@@ -10,7 +10,10 @@ namespace Ephymeral.Data
     {
         [Header("General")]
         public float GRAVITY;
-        public float FUTURE_PREDICTION;
+
+        [Header("Prediction")]
+        public float FUTURE_DURATION;
+        public float FUTURE_INTERVALS;
 
         [Header("Rolling")]
         public float MAX_ROLL_SPEED;

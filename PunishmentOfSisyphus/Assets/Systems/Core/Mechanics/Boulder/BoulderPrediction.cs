@@ -8,72 +8,190 @@ using Ephymeral.EntityNS;
 
 namespace Ephymeral.BoulderNS
 {
-    public class BoulderPrediction : Entity
+    // Dot implementation taken from https://medium.com/@kunaltandon.kt/creating-a-dotted-line-in-unity-ca044d02c3e2
+    public class BoulderPrediction : MonoBehaviour
     {
         #region REFERENCES
+        [SerializeField] private Sprite dot;
         [SerializeField] private BoulderData boulderData;
+        [SerializeField] private BoulderEvent boulderEvent;
+        [SerializeField] private GameObject levelBoundsGO; 
+        private Bounds bounds;
+        private Rect screenBounds;
         #endregion
 
         #region FIELDS
-        [SerializeField] private const float OPACITY = 0.5f;
-        private Color spriteColor;
-        private bool visible;
+        // PLACEHOLDER, until I can figure out what's going on with the scriptable object
+        [SerializeField] private const float PREDICTION_DURATION = 1.5f;
+        [SerializeField] private const float INTERVAL = 1.0f / 15; // PLACEHOLDER
+        [SerializeField] private const float COLLIDER_DISTANCE = 1.0f;
+
+        [SerializeField] private float dotSize;
+
+        private bool prediction;
+        private Vector2 direction, position, velocity, acceleration;
+
+        private List<Vector2> positions;
+        private List<GameObject> dots;
         #endregion
 
         #region PROPERTIES
-        public bool Visible
-        {
-            get { return visible; }
-            set { visible = value; }
-        }
-
-        public Vector2 Position
-        { 
-            get { return position; }
-            set { position = value; }
-        }
-
-        public Vector2 Direction
-        {
-            get { return direction; }
-            set { direction = value; }
-        }
         #endregion
 
-        protected override void Awake()
+        /// <summary>
+        /// Initialize the values used by this class
+        /// </summary>
+        private void Awake()
         {
-            // Assign SpriteRenderer to manipulate opacity
-            spriteColor = GetComponent<SpriteRenderer>().color;
-            visible = false;
+            // Defaults to not predicting position
+            prediction = false;
+            acceleration = new Vector2();
+            velocity = new Vector2();
+            position = new Vector2();
+            direction = new Vector2();
+            positions = new List<Vector2>();
+            dots = new List<GameObject>();
 
-            base.Awake();
+            bounds = GetComponent<Collider2D>().bounds;
+            screenBounds = levelBoundsGO.GetComponent<RectTransform>().rect;
+        }
+
+        private void OnEnable()
+        {
+            boulderEvent.predictionEvent.AddListener(EnablePrediction);
+        }
+
+        private void OnDisable()
+        {
+            boulderEvent.predictionEvent.RemoveListener(EnablePrediction);
         }
 
         // Runs 60 frames per second
-        protected override void FixedUpdate()
+        private void FixedUpdate()
         {
-            // Only show prediction when throwing boulder
-            //spriteColor.a = (visible ? OPACITY : 0f);
-            //spriteColor.a = 0.0f;
-            spriteColor = Color.blue;
+            // Reduce stuff happening when not throwing the boulder
+            if (boulderEvent.UpdatePosition)
+            {
+                DestroyAllDots();
+                positions.Clear();
+                position = boulderEvent.Position;
+                direction = ((Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition) - position).normalized;
+                PredictFuturePath();
+            }
+
+            else if (dots.Count > 0)
+                DestroyAllDots();
         }
 
         /// <summary>
-        /// Predict the future position of the boulder based on time
+        /// Enables the prediction of the boulder
         /// </summary>
-        /// <param name="time">Seconds into the future</param>
-        public void PredictFuturePosition(float time)
+        private void EnablePrediction()
         {
-            velocity = boulderData.INITIAL_THROW_SPEED * direction;
-            acceleration = boulderData.GRAVITY * Vector2.down;
+            prediction = true;
+        }
 
-            for(int a = 0; a < time * 60; a++)
+        /// <summary>
+        /// Predicts the future position of the boulder within a certain time frame
+        /// </summary>
+        private void PredictFuturePath()
+        {
+            float elapsedTime = 0.0f;
+
+            velocity = boulderData.INITIAL_THROW_SPEED * direction;
+
+            // Predict the path of the boulder a certain amount into the future
+            while (elapsedTime < PREDICTION_DURATION)
             {
-                velocity += acceleration * 1.0f / 60;
-                position += velocity * 1.0f / 60;
+                if (elapsedTime >= boulderData.AIR_TIME)
+                {
+                    if (Mathf.Sign(velocity.y) == -1 && velocity.y < -1 * boulderData.MAX_ROLL_SPEED)
+                        velocity = new Vector2(velocity.x, boulderData.MAX_ROLL_SPEED * -1);
+
+                    else
+                        acceleration += boulderData.GRAVITY * Vector2.down;
+                }
+
+                //Handle collision checks for enemies
+                foreach (GameObject go in Resources.FindObjectsOfTypeAll(typeof(GameObject)) as GameObject[])
+                {
+                    if (go.tag == "Enemy")
+                    {
+                        // Handle ricochet
+                        if (bounds.Intersects(go.GetComponent<Collider2D>().bounds))
+                        {
+                            Vector2 bounceDirection = new Vector2(0, boulderData.INITIAL_RICOCHET_SPEED);
+
+                            float dotProduct = Mathf.Abs(Vector2.Dot(Vector2.up, velocity));
+
+                            bounceDirection += new Vector2(dotProduct * boulderData.BOUNCE_COEFFICIENT * Mathf.Sign(velocity.x), 0);
+
+                            velocity = bounceDirection;
+                        }
+                    }
+                }
+
+                // Handle collision check for wall
+                if (position.x > screenBounds.xMax || position.x < screenBounds.xMin)
+                {
+                    position = new Vector2(Mathf.Clamp(position.x, screenBounds.xMin, screenBounds.xMax), position.y);
+                    direction *= -1;
+                    velocity.x *= -1;
+                }
+
+
+                velocity += acceleration * INTERVAL;
+                position += velocity * INTERVAL;
+                transform.position = position;
+                bounds.center = position;
+                elapsedTime += INTERVAL;
+                positions.Add(position);
+
+                acceleration = Vector2.zero;
             }
 
-            transform.position = position;
+            Render();
+        }
+
+        /// <summary>
+        /// Generates one of the dots for the dotted prediction line
+        /// </summary>
+        /// <returns>A single dot</returns>
+        private GameObject GetOneDot()
+        {
+            GameObject gameObject = new GameObject();
+            gameObject.transform.localScale = Vector3.one * dotSize;
+            gameObject.transform.parent = transform;
+
+            SpriteRenderer sr = gameObject.AddComponent<SpriteRenderer>();
+            sr.sprite = dot;
+            return gameObject;
+        }
+
+        /// <summary>
+        /// Deletes all dots
+        /// </summary>
+        private void DestroyAllDots()
+        {
+            foreach (GameObject dot in dots)
+            {
+                Destroy(dot);
+            }
+
+            dots.Clear();
+        }
+
+        /// <summary>
+        /// Creates each dot for every position predicted
+        /// </summary>
+        private void Render()
+        {
+            foreach (Vector2 position in positions)
+            {
+                GameObject g = GetOneDot();
+                g.transform.position = position;
+                dots.Add(g);
+            }
         }
     }
 }

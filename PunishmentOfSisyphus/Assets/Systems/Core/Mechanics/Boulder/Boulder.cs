@@ -14,7 +14,6 @@ namespace Ephymeral.BoulderNS
     public enum BoulderState
     {
         Held,
-        Aiming,
         Thrown,
         Rolling,
         Ricocheting
@@ -27,7 +26,6 @@ namespace Ephymeral.BoulderNS
         [SerializeField] private BoulderData boulderData;
         [SerializeField] private PlayerEvent playerEvent;
         [SerializeField] private CircleCollider2D hitbox;
-        [SerializeField] BoulderPrediction futureBoulder;
         [SerializeField] GameObject levelBounds;
         #endregion
 
@@ -73,7 +71,6 @@ namespace Ephymeral.BoulderNS
             boulderEvent.thrownEvent.AddListener(ThrowBoulder);
             boulderEvent.dropEvent.AddListener(DropBoulder);
             boulderEvent.pickupEvent.AddListener(PickedUp);
-            boulderEvent.predictionEvent.AddListener(EnablePrediction);
         }
 
         private void OnDisable()
@@ -81,7 +78,6 @@ namespace Ephymeral.BoulderNS
             boulderEvent.thrownEvent.RemoveListener(ThrowBoulder);
             boulderEvent.dropEvent.RemoveListener(DropBoulder);
             boulderEvent.pickupEvent.RemoveListener(PickedUp);
-            boulderEvent.predictionEvent.RemoveListener(EnablePrediction);
         }
 
         // Update is called once per frame
@@ -93,6 +89,9 @@ namespace Ephymeral.BoulderNS
                 // Held
                 case BoulderState.Held:
                     position = playerEvent.Position;
+
+                    if (boulderEvent.UpdatePosition)
+                        boulderEvent.Position = position;
                     break;
 
                 // Throwing
@@ -135,22 +134,10 @@ namespace Ephymeral.BoulderNS
 
         protected override void FixedUpdate()
         {
-            Debug.Log(state);
-
             switch (state)
             {
-                // Implement prediction
-                case BoulderState.Aiming:
-                    //Debug.Log("Running Aim Prediction");
-                    //// TO-DO: Implement dotted line indicating future position of boulder
-                    //futureBoulder.Direction = ((Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition) - playerEvent.Position).normalized;
-                    //futureBoulder.Position = position;
-                    //futureBoulder.PredictFuturePosition(boulderData.FUTURE_PREDICTION);
-                    break;
-
                 case BoulderState.Thrown:
                     elapsedTime += Time.deltaTime;
-                    //futureBoulder.Visible = false;
 
                     if(elapsedTime >= boulderData.AIR_TIME)
                     {
@@ -168,7 +155,8 @@ namespace Ephymeral.BoulderNS
                     }
                     else
                     {
-                        velocity += boulderData.GRAVITY * Vector2.down;
+                        //velocity += boulderData.GRAVITY * Vector2.down;
+                        acceleration += boulderData.GRAVITY * Vector2.down;
                     }
 
                     //TODO: Might feel better to have gravity ramp up a little bit over time to increase "hang time"
@@ -198,20 +186,15 @@ namespace Ephymeral.BoulderNS
 
             if (collision.CompareTag("Wall"))
             {
+                Debug.Log("Wall collision with boulder");
                 direction *= -1;
-                velocity.x = velocity.x * -1;
+                //velocity.x = velocity.x * -1;
             }
 
             if (collision.CompareTag("ScreenBounds"))
             {
                 playerEvent.TakeDamage(100);
             }
-        }
-
-        private void EnablePrediction()
-        {
-            state = BoulderState.Aiming;
-            //futureBoulder.Visible = true;
         }
 
         private void ThrowBoulder()

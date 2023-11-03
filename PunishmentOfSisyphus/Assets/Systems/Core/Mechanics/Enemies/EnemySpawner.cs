@@ -32,16 +32,24 @@ namespace Ephymeral.EnemyNS
 
         #endregion
 
+        public int EnemiesCnt
+        {
+            get { return enemiesAlive.Count; }
+
+        }
+
         private void OnEnable()
         {
             enemySpawnEvent.enemyDeathEvent.AddListener(RemoveEnemy);
             enemySpawnEvent.waveEnd.AddListener(IncrementWave);
+            enemySpawnEvent.levelEnd.AddListener(IncrementLevel);
         }
 
         private void OnDisable()
         {
             enemySpawnEvent.enemyDeathEvent.RemoveAllListeners();
             enemySpawnEvent.waveEnd.RemoveAllListeners();
+            enemySpawnEvent.levelEnd.RemoveAllListeners();
         }
 
         private void Awake()
@@ -59,11 +67,14 @@ namespace Ephymeral.EnemyNS
             //  "r","f","s" - split each enemy type in a wave with a comma
 
             // FOR TESTING, CHANGE WHEN WE HAVE FILE IO
-            if (enemyFileData.EnemyLevelFiles.Count != 0)
+            if (enemyFileData.LevelFileStrings.Count != 0)
             {
-                int randomLevelIndex = UnityEngine.Random.Range(0, enemyFileData.EnemyLevelFiles.Count);
-
-                levelWaves["Level1"] = LoadEnemyWaveFromFile(randomLevelIndex);
+                for (int i = 0; i < enemyFileData.LevelFileStrings.Count; i++)
+                {
+                    int randomLevelIndex = UnityEngine.Random.Range(0, enemyFileData.LevelFileStrings.Count);
+                    levelWaves["Level" + (i + 1)] = LoadEnemyWaveFromFile(randomLevelIndex);
+                }
+                Debug.Log(levelWaves.Count);
             }
             else // Default loaded wave
             {
@@ -93,11 +104,9 @@ namespace Ephymeral.EnemyNS
             }
             else
             {
-                // IncrementLevel();
-
                 // For right now.
-                wavesText.text = "You win!";
-                Debug.Log("Going to next stage");
+                wavesText.text = "Level Complete";
+                Debug.Log("Move up to travel to the next stage!");
                 return;
             }
         }
@@ -150,7 +159,7 @@ namespace Ephymeral.EnemyNS
         private List<List<string>> LoadEnemyWaveFromFile(int index)
         {
             // Will get enemy wave from file
-            string[] enemyFileLines = enemyFileData.EnemyLevelFiles[index].Split("|");
+            string[] enemyFileLines = enemyFileData.LevelFileStrings[index].Split("|");
             int waveCount = int.Parse(enemyFileLines[0]);
             List<List<string>> waves = new List<List<string>>();
 
@@ -162,21 +171,20 @@ namespace Ephymeral.EnemyNS
                 waves.Add(wave);
             }
 
-            // Remove file data from the list so it isnt used again
-            enemyFileData.EnemyLevelFiles.RemoveAt(index);
+            Debug.Log(waves.Count);
 
             return waves;
         }
 
-        private void IncrementLevel()
+        public void IncrementLevel()
         {
-            // Go to next level
-        }
+            levelNum++;
+            waveNum = 0;
+            maxWaves = levelWaves["Level" + levelNum].Count;
+            maxEnemiesInWave = levelWaves["Level" + levelNum][waveNum].Count;
 
-        private List<List<string>> GetRandomStartingLevel()
-        {
-            List<List<string>> level = new List<List<string>>();
-            return level;
+            // Spawn initial wave
+            SpawnWave();
         }
     }
 }

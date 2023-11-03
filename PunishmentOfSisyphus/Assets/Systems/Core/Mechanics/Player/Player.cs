@@ -25,7 +25,7 @@ namespace Ephymeral.PlayerNS
         Dodge,
         Damage,
         Throwing,
-        Slam
+        Slam,
     }
 
     public class Player : Entity
@@ -43,12 +43,14 @@ namespace Ephymeral.PlayerNS
 
         [SerializeField] private PlayerState state;
         SlamScript slamScript;
+        private GameObject enemyInfo;
 
         // Only exists so that directions input during roll are registered
         // When it ends. Otherwise, you'll need to press the key again
         private UnityEngine.Vector2 dodgeDirection;
         private float dodgeCooldown;
         #endregion
+
 
         #region Properties
         #endregion
@@ -81,6 +83,9 @@ namespace Ephymeral.PlayerNS
             slamScript = slamHitbox.GetComponent<SlamScript>();
             slamScript.DeactivateHitbox();
 
+            //Unused
+            //enemyInfo = GameObject.Find("EnemySpawner");
+
             // Run parent's awake method
             base.Awake();
         }
@@ -100,6 +105,16 @@ namespace Ephymeral.PlayerNS
 
             switch (state)
             {
+                case PlayerState.CarryingBounder:
+                    // Always predict boulder position when carrying
+                    if (!boulderEvent.UpdatePosition)
+                    {
+                        boulderEvent.Predict();
+                        boulderEvent.UpdatePosition = true;
+                    }
+
+                    break;
+
                 case PlayerState.Dodge:
                     // Dodge roll has ended. ONLY FOR TESTING
                     if (speed <= 0)
@@ -172,6 +187,11 @@ namespace Ephymeral.PlayerNS
                 // Taking Damage
                 playerEvent.TakeDamage(collision.GetComponentInParent<Enemy>().Damage);
             }
+
+            if (collision.CompareTag("Wall"))
+            {
+
+            }
         }
 
         private void TakeDamage(float damage)
@@ -210,52 +230,62 @@ namespace Ephymeral.PlayerNS
 
         public void OnThrow(InputAction.CallbackContext context)
         {
-            // Handle boulder throw (prediction on hold, throw on release)
             //if (state == PlayerState.CarryingBounder)
             //{
+            //    //Show the dotted prediction line while mouse is held
             //    if (context.started)
             //    {
-            //        // TO-DO: SHOW PREVIEW FOR BOULDER THROW
-            //        Debug.Log("Holding Mouse button");
             //        boulderEvent.Predict();
+            //        boulderEvent.UpdatePosition = true;
             //    }
 
-            //    // Throw the boulder
+            //    // Throw the boulder when mouse is released
             //    else if (context.canceled)
             //    {
             //        state = PlayerState.Throwing;
+            //        boulderEvent.UpdatePosition = false;
             //        boulderEvent.Throw();
             //    }
             //}
 
-            //// Attack with an AOE slam attack
-            //else
-            //{
-            //    state = PlayerState.Slam;
-            //    Vector2 lunchDir = ((Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition) - playerEvent.Position).normalized;
-            //    StartCoroutine(LunchCo(lunchDir));
-            //}
-
-            if (context.started)
+            if (state == PlayerState.CarryingBounder)
             {
-                Debug.Log("Throw processed");
-
-                // Boulder throw
-                if (state == PlayerState.CarryingBounder)
+                if(context.started)
                 {
                     state = PlayerState.Throwing;
+                    boulderEvent.UpdatePosition = false;
                     boulderEvent.Throw();
                 }
-
-                // Slam attack
-                else
-                {
-                    state = PlayerState.Slam;
-                    Vector2 lunchDir = ((Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition) - playerEvent.Position).normalized;
-                    StartCoroutine(LunchCo(lunchDir));
-
-                }
             }
+
+            // Perform a slam attack when not holding the boulder
+            else if (context.started && state != PlayerState.Dodge)
+            {
+                state = PlayerState.Slam;
+                Vector2 lunchDir = ((Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition) - playerEvent.Position).normalized;
+                StartCoroutine(LunchCo(lunchDir));
+            }
+
+            //if (context.started)
+            //{
+            //    //Debug.Log("Throw processed");
+
+            //    // Boulder throw
+            //    if (state == PlayerState.CarryingBounder)
+            //    {
+            //        state = PlayerState.Throwing;
+            //        boulderEvent.Throw();
+            //    }
+
+            //    // Slam attack
+            //    else
+            //    {
+            //        state = PlayerState.Slam;
+            //        Vector2 lunchDir = ((Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition) - playerEvent.Position).normalized;
+            //        StartCoroutine(LunchCo(lunchDir));
+
+            //    }
+            //}
         }
 
         IEnumerator LunchCo(Vector2 lunchDir)
@@ -267,7 +297,7 @@ namespace Ephymeral.PlayerNS
 
             float duration = playerData.SLAM_DURATION;
 
-            Debug.Log("Start Slam");
+            //Debug.Log("Start Slam");
 
             while (timer < duration)
             {
@@ -275,7 +305,7 @@ namespace Ephymeral.PlayerNS
                 //Slam on frame 10
                 if (timer == 3)
                 {
-                    slamScript.ActivateHitbox();
+                    slamScript.ActivateHitbox(((Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition) - playerEvent.Position).normalized);
                 }
                 if (timer == duration - 3)
                 {
@@ -309,6 +339,11 @@ namespace Ephymeral.PlayerNS
             p += ttt * p3; // t^3 * P3
 
             return p;
+        }
+
+        public void resetPlayer()
+        {
+            this.position.y = -8.5f;
         }
     }
 }

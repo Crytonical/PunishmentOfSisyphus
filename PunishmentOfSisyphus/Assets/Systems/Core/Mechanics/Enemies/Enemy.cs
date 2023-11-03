@@ -4,6 +4,7 @@ using Ephymeral.Events;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 using Ephymeral.EntityNS;
 
@@ -16,7 +17,7 @@ namespace Ephymeral.EnemyNS
         Attacking,
         Damage
     }
-    
+
     // State of enemy when attacking
     public enum AttackState
     {
@@ -36,8 +37,10 @@ namespace Ephymeral.EnemyNS
         [SerializeField] protected EnemyEvent enemyEvent;
         [SerializeField] protected CircleCollider2D hitbox;
         [SerializeField] protected EnemySpawnerEvent spawnerEvent;
+        [SerializeField] private Image hpBar;
         protected BoxCollider2D weaponHitbox;
         protected SpriteRenderer spriteRenderer;
+        private GameObject levelBounds;
         #endregion
 
         #region FIELDS
@@ -45,6 +48,7 @@ namespace Ephymeral.EnemyNS
         protected float damage, attackRange, attackWindUp, attackDuration, attackCooldown;
         protected bool canAttack;
         protected Vector2 goal;
+        [SerializeField] protected Vector3 hpBarOffset;
 
         // State
         [SerializeField] protected EnemyState state;
@@ -52,7 +56,7 @@ namespace Ephymeral.EnemyNS
         #endregion
 
         #region PROPERTIES
-        public EnemyEvent EnemyEvent {  get { return enemyEvent; } }
+        public EnemyEvent EnemyEvent { get { return enemyEvent; } }
         public float Damage { get { return damage; } }
 
         float boulderInvulSec;
@@ -82,10 +86,12 @@ namespace Ephymeral.EnemyNS
             attackDuration = enemyData.ATTACK_DURATION;
             attackCooldown = enemyData.ATTACK_COOLDOWN;
 
+            boulderInvulSec = 0.5f;
+
             // Get a reference to the hitbox, disable it 
-            if (gameObject.transform.childCount > 0)
+            if (weaponHitbox = gameObject.transform.GetChild(0).GetComponent<BoxCollider2D>())
             {
-                weaponHitbox = gameObject.transform.GetChild(0).GetComponent<BoxCollider2D>();
+                Debug.Log(weaponHitbox);
                 weaponHitbox.enabled = false;
             }
             spriteRenderer = GetComponent<SpriteRenderer>();
@@ -98,9 +104,14 @@ namespace Ephymeral.EnemyNS
             acceleration = new Vector2(1.0f, 1.0f);
 
             // Spawn enemies in a random position between given constrictions
-            float enemyX = Random.Range(-4, 4);
-            float enemyY = Random.Range(-4, 3);
+            float enemyX = Random.Range(-8, 8);
+            float enemyY = Random.Range(-4, 7);
             position = new Vector2(enemyX, enemyY);
+
+            hpBar.fillAmount = health / enemyData.HEALTH;
+
+            // Find better way to get this
+            levelBounds = GameObject.Find("LevelBounds");
         }
 
         protected override void Update()
@@ -110,11 +121,33 @@ namespace Ephymeral.EnemyNS
             {
                 boulderInvul += Time.deltaTime;
             }
+
+            // Update hp bar
+            // Counteract parent rotation
+            hpBar.transform.rotation = Quaternion.Euler(transform.rotation.x, transform.rotation.y, transform.rotation.z * -1.0f);
+            // Keep position 'above' enemy
+            hpBar.transform.position = transform.position + hpBarOffset;
+
+            // Should force enemies inside the bounds of the level
+            if (!levelBounds.GetComponent<RectTransform>().rect.Contains(transform.position))
+            {
+                Rect rect = levelBounds.GetComponent<RectTransform>().rect;
+                Vector2 vector = position;
+
+                // Clamp the x component to be within the rectangle's x boundaries
+                float clampedX = Mathf.Clamp(vector.x, rect.xMin, rect.xMax);
+
+                // Clamp the y component to be within the rectangle's y boundaries
+                float clampedY = Mathf.Clamp(vector.y, rect.yMin, rect.yMax);
+
+                // Return the new vector with clamped components
+                position = new Vector2(clampedX, clampedY);
+            }
         }
 
         protected override void FixedUpdate()
         {
-            switch(state)
+            switch (state)
             {
                 case EnemyState.Seeking:
                     //direction = ((playerEvent.Position - position).normalized) / 1000;
@@ -162,6 +195,13 @@ namespace Ephymeral.EnemyNS
                     StartCoroutine(DamageStun(enemyData.DAMAGE_STUN_DURATION));
                     break;
             }
+
+            base.FixedUpdate();
+        }
+
+        private void OnTriggerEnter2D(Collider2D collision)
+        {
+            //Debug.Log("Enemy Collision run");
         }
 
         private void Die()
@@ -233,7 +273,7 @@ namespace Ephymeral.EnemyNS
 
         public void BoulderHit(float damage, Vector2 knockback)
         {
-            if(boulderInvul >= boulderInvulSec)
+            if (boulderInvul >= boulderInvulSec)
             {
                 TakeDamage(damage, knockback);
                 boulderInvul = 0;
@@ -245,13 +285,15 @@ namespace Ephymeral.EnemyNS
         /// </summary>
         /// <param name="damage"></param>
         /// <param name="knockback"></param>
-        public void TakeDamage(float damage, Vector2 knockback)
+        public virtual void TakeDamage(float damage, Vector2 knockback)
         {
             if (state != EnemyState.Damage)
             {
                 state = EnemyState.Damage;
                 attackState = AttackState.None;
                 health -= damage;
+
+                hpBar.fillAmount = health / enemyData.HEALTH;
 
                 //position += knockback;
 
@@ -279,9 +321,9 @@ namespace Ephymeral.EnemyNS
             StartCoroutine(KnockbackCo(knockback, durationFrames));
         }
 
-        protected virtual IEnumerator KnockbackCo(Vector2 knockback, int durationFrames) 
-        { 
-            while(durationFrames > 0)
+        protected virtual IEnumerator KnockbackCo(Vector2 knockback, int durationFrames)
+        {
+            while (durationFrames > 0)
             {
                 durationFrames -= 1;
                 position += knockback;

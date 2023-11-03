@@ -8,6 +8,9 @@ namespace Ephymeral.Events
     public class BoulderEvent : ScriptableObject
     {
         #region FIELDS
+        private Vector2 position;
+        private bool updatePosition;
+        #endregion
 
         #region EVENTS
         [System.NonSerialized]
@@ -18,13 +21,18 @@ namespace Ephymeral.Events
         public UnityEvent boulderFail;
         public UnityEvent predictionEvent;
         #endregion
-        #endregion
 
         #region PROPERTIES
+        public Vector2 Position { get { return position; } set { position = value; } }
+        public bool UpdatePosition { get { return updatePosition; } set { updatePosition = value; } }
         #endregion
 
         private void OnEnable()
         {
+            // Initialize fields
+            position = new Vector2();
+            updatePosition = false;
+
             #region CREATE EVENTS
             if (thrownEvent == null)
             {
