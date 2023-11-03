@@ -181,11 +181,10 @@ namespace Ephymeral.EnemyNS
                     break;
 
                 case EnemyState.Attacking:
-                    direction = Vector2.zero;
-                    velocity = direction * speed;
-
                     if (attackState == AttackState.None)
                     {
+                        direction = Vector2.zero;
+                        velocity = direction * speed;
                         StartCoroutine(AttackWindUP(attackWindUp));
                     }
                     break;

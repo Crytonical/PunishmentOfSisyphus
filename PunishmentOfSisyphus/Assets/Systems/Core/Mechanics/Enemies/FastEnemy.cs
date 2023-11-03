@@ -21,7 +21,7 @@ namespace Ephymeral.EnemyNS
             base.Awake();
             attackRadius = 5f;
             attackDelay = 2;
-            chargeSpeed = 20.0f;
+            chargeSpeed = 10.0f;
         }
 
         //protected override void FixedUpdate()
@@ -90,6 +90,7 @@ namespace Ephymeral.EnemyNS
             while (duration > 0)
             {
                 Debug.Log("Fast enemy attacking!");
+                spriteRenderer.color = Color.yellow;
                 duration -= Time.deltaTime;
                 velocity = chargeSpeed * direction;
                 position += velocity * Time.deltaTime;
