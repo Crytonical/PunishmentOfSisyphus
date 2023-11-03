@@ -134,3 +134,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   knockbackVal: 1.69
+  playerData: {fileID: 11400000, guid: 4a6ccf259fe08e44f9f68162b85ca0eb, type: 2}
