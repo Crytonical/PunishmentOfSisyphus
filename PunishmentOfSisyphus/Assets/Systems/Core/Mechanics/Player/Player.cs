@@ -85,7 +85,7 @@ namespace Ephymeral.PlayerNS
 
             //Unused
             //enemyInfo = GameObject.Find("EnemySpawner");
-            
+
             // Run parent's awake method
             base.Awake();
         }
@@ -105,6 +105,16 @@ namespace Ephymeral.PlayerNS
 
             switch (state)
             {
+                case PlayerState.CarryingBounder:
+                    // Always predict boulder position when carrying
+                    if (!boulderEvent.UpdatePosition)
+                    {
+                        boulderEvent.Predict();
+                        boulderEvent.UpdatePosition = true;
+                    }
+
+                    break;
+
                 case PlayerState.Dodge:
                     // Dodge roll has ended. ONLY FOR TESTING
                     if (speed <= 0)
@@ -180,7 +190,7 @@ namespace Ephymeral.PlayerNS
 
             if (collision.CompareTag("Wall"))
             {
-                
+
             }
         }
 
@@ -220,17 +230,27 @@ namespace Ephymeral.PlayerNS
 
         public void OnThrow(InputAction.CallbackContext context)
         {
+            //if (state == PlayerState.CarryingBounder)
+            //{
+            //    //Show the dotted prediction line while mouse is held
+            //    if (context.started)
+            //    {
+            //        boulderEvent.Predict();
+            //        boulderEvent.UpdatePosition = true;
+            //    }
+
+            //    // Throw the boulder when mouse is released
+            //    else if (context.canceled)
+            //    {
+            //        state = PlayerState.Throwing;
+            //        boulderEvent.UpdatePosition = false;
+            //        boulderEvent.Throw();
+            //    }
+            //}
+
             if (state == PlayerState.CarryingBounder)
             {
-                // Show the dotted prediction line while mouse is held
                 if(context.started)
-                {
-                    boulderEvent.Predict();
-                    boulderEvent.UpdatePosition = true;
-                }
-
-                // Throw the boulder when mouse is released
-                else if(context.canceled)
                 {
                     state = PlayerState.Throwing;
                     boulderEvent.UpdatePosition = false;
@@ -239,7 +259,7 @@ namespace Ephymeral.PlayerNS
             }
 
             // Perform a slam attack when not holding the boulder
-            else if(context.started)
+            else if (context.started && state != PlayerState.Dodge)
             {
                 state = PlayerState.Slam;
                 Vector2 lunchDir = ((Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition) - playerEvent.Position).normalized;
@@ -285,7 +305,7 @@ namespace Ephymeral.PlayerNS
                 //Slam on frame 10
                 if (timer == 3)
                 {
-                    slamScript.ActivateHitbox( ((Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition) - playerEvent.Position).normalized );
+                    slamScript.ActivateHitbox(((Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition) - playerEvent.Position).normalized);
                 }
                 if (timer == duration - 3)
                 {
