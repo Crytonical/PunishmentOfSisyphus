@@ -11,7 +11,7 @@ TagManager:
   - ScreenBounds
   - Bullet
   - BoulderFail
-  - Enemy HP Bar
+  - LevelChng
   layers:
   - Default
   - TransparentFX
