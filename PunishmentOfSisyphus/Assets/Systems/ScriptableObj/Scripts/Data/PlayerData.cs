@@ -24,5 +24,6 @@ namespace Ephymeral.Data
 
         [Header("Health")]
         public float MAX_HP;
+        public int I_FRAMES;
     }
 }

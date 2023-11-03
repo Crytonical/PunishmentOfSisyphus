@@ -25,7 +25,7 @@ namespace Ephymeral.FileLoading
 
         private void OnEnable()
         {
-            if (!enemyLevelFilesLoaded || enemyLevelFiles == null || enemyLevelFiles.Count == 0)
+            if (!enemyLevelFilesLoaded || levelFileStrings == null || levelFileStrings.Count == 0)
             {
                 levelFileStrings = new List<string>();
                 LoadEnemyLevelFiles();

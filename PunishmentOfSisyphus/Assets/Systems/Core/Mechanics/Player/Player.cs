@@ -44,6 +44,7 @@ namespace Ephymeral.PlayerNS
         [SerializeField] private PlayerState state;
         SlamScript slamScript;
         private GameObject enemyInfo;
+        private int invincibilityFrames;
 
         // Only exists so that directions input during roll are registered
         // When it ends. Otherwise, you'll need to press the key again
@@ -85,6 +86,8 @@ namespace Ephymeral.PlayerNS
 
             //Unused
             //enemyInfo = GameObject.Find("EnemySpawner");
+
+            invincibilityFrames = playerData.I_FRAMES;
 
             // Run parent's awake method
             base.Awake();
