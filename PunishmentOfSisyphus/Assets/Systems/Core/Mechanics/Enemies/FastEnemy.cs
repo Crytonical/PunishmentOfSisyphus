@@ -21,70 +21,88 @@ namespace Ephymeral.EnemyNS
             base.Awake();
             attackRadius = 5f;
             attackDelay = 2;
+            chargeSpeed = 20.0f;
         }
 
-        protected override void FixedUpdate()
-        {
-            //Enemy state logic
-            switch (state)
-            {
-                case EnemyState.Seeking:
-                    direction = (playerEvent.Position - position).normalized;
+        //protected override void FixedUpdate()
+        //{
+        //    //Enemy state logic
+        //    switch (state)
+        //    {
+        //        case EnemyState.Seeking:
+        //            direction = (playerEvent.Position - position).normalized;
 
-                    // Rotate towards player position
-                    Quaternion xToY = Quaternion.LookRotation(Vector3.forward, Vector3.left);
-                    Quaternion targetRotation = Quaternion.LookRotation(transform.forward, direction);
-                    transform.rotation = targetRotation * xToY;
+        //            // Rotate towards player position
+        //            Quaternion xToY = Quaternion.LookRotation(Vector3.forward, Vector3.left);
+        //            Quaternion targetRotation = Quaternion.LookRotation(transform.forward, direction);
+        //            transform.rotation = targetRotation * xToY;
 
-                    if ( (position - playerEvent.Position).magnitude <= attackRadius)
-                    {
-                        StartCoroutine(Attack(0));
-                        state = EnemyState.Attacking;
-                    }
-                    break;
+        //            if ( (position - playerEvent.Position).magnitude <= attackRadius)
+        //            {
+        //                StartCoroutine(Attack(0));
+        //                state = EnemyState.Attacking;
+        //            }
+        //            break;
 
-                case EnemyState.Attacking:
+        //        case EnemyState.Attacking:
 
-                    break;
+        //            break;
 
-                case EnemyState.Damage:
-                    spriteRenderer.color = Color.gray;
-                    StartCoroutine(DamageStun(enemyData.DAMAGE_STUN_DURATION));
-                    break;
-            }
+        //        case EnemyState.Damage:
+        //            spriteRenderer.color = Color.gray;
+        //            StartCoroutine(DamageStun(enemyData.DAMAGE_STUN_DURATION));
+        //            break;
+        //    }
             
-        }
+        //}
 
         protected override IEnumerator Attack(float duration)
         {
-            while (duration < 16)
-            {
-                duration++;
-                direction = (playerEvent.Position - position).normalized;
+            //while (duration < 16)
+            //{
+            //    duration++;
+            //    direction = (playerEvent.Position - position).normalized;
 
-                // Rotate towards player position
-                Quaternion xToY = Quaternion.LookRotation(Vector3.forward, Vector3.left);
-                Quaternion targetRotation = Quaternion.LookRotation(transform.forward, direction);
-                transform.rotation = targetRotation * xToY;
-                yield return new WaitForFixedUpdate();
-            }
-            while (duration >= 16 && duration <= 24)
+            //    // Rotate towards player position
+            //    Quaternion xToY = Quaternion.LookRotation(Vector3.forward, Vector3.left);
+            //    Quaternion targetRotation = Quaternion.LookRotation(transform.forward, direction);
+            //    transform.rotation = targetRotation * xToY;
+            //    yield return new WaitForFixedUpdate();
+            //}
+            //while (duration >= 16 && duration <= 24)
+            //{
+            //    duration++;
+            //    velocity = chargeSpeed * direction;
+            //    //position += velocity;
+            //    yield return new WaitForFixedUpdate();
+            //}
+
+            //state = EnemyState.Seeking;
+            //attackState = AttackState.CoolingDown;
+
+            //if (weaponHitbox)
+            //{
+            //    weaponHitbox.enabled = false;
+            //}
+            //StartCoroutine(AttackCooldown(attackCooldown));
+
+            weaponHitbox.enabled = true;
+            while (duration > 0)
             {
-                duration++;
+                Debug.Log("Fast enemy attacking!");
+                duration -= Time.deltaTime;
                 velocity = chargeSpeed * direction;
-                position += velocity;
-                yield return new WaitForFixedUpdate();
+                position += velocity * Time.deltaTime;
+                yield return null;
             }
 
             state = EnemyState.Seeking;
             attackState = AttackState.CoolingDown;
-
             if (weaponHitbox)
             {
                 weaponHitbox.enabled = false;
             }
             StartCoroutine(AttackCooldown(attackCooldown));
-            
         }
 
         protected override IEnumerator AttackWindUP(float time)
