@@ -320,5 +320,10 @@ namespace Ephymeral.PlayerNS
 
             return p;
         }
+
+        public void resetPlayer()
+        {
+            this.position.y = -8.5f;
+        }
     }
 }
