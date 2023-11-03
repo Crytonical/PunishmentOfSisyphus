@@ -152,11 +152,5 @@ namespace Ephymeral.EnemyNS
         {
             Gizmos.DrawWireSphere(position, attackRadius);
         }
-
-        private void OnTriggerEnter2D(Collider2D collision)
-        {
-            if (collision.CompareTag("Player"))
-                weaponHitbox.enabled = false;
-        }
     }
 }
