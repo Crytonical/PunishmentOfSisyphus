@@ -21,6 +21,7 @@ public class LevelChng : MonoBehaviour
     private void Awake()
     {
         enemySpawner = (EnemySpawner)FindObjectOfType(typeof(EnemySpawner));
+        player = (Player)FindObjectOfType(typeof(Player));
     }
 
 
@@ -31,6 +32,7 @@ public class LevelChng : MonoBehaviour
         {
             if(enemySpawner.EnemiesCnt == 0)
             {
+                player.resetPlayer();
                 enemySpawner.IncrementLevel();
             }
         }
