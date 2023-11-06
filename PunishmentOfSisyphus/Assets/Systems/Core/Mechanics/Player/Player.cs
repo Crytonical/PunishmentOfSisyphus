@@ -37,6 +37,7 @@ namespace Ephymeral.PlayerNS
         //[SerializeField] private SceneEvent sceneEvent;
         [SerializeField] private GameObject levelBounds;
         [SerializeField] private GameObject slamHitbox;
+        private SpriteRenderer spriteRenderer;
         #endregion
 
         #region Fields
@@ -44,7 +45,7 @@ namespace Ephymeral.PlayerNS
         [SerializeField] private PlayerState state;
         SlamScript slamScript;
         private GameObject enemyInfo;
-        private int invincibilityFrames;
+        private int invincibilityFrames, currentActiveIFrames;
 
         // Only exists so that directions input during roll are registered
         // When it ends. Otherwise, you'll need to press the key again
@@ -81,6 +82,9 @@ namespace Ephymeral.PlayerNS
             state = PlayerState.Free;
             //collision = getComponent(BoxCollider2D);
 
+            // Gets spriterenderer
+            spriteRenderer = GetComponent<SpriteRenderer>();
+
             slamScript = slamHitbox.GetComponent<SlamScript>();
             slamScript.DeactivateHitbox();
 
@@ -88,6 +92,7 @@ namespace Ephymeral.PlayerNS
             //enemyInfo = GameObject.Find("EnemySpawner");
 
             invincibilityFrames = playerData.I_FRAMES;
+
 
             // Run parent's awake method
             base.Awake();
@@ -166,6 +171,21 @@ namespace Ephymeral.PlayerNS
 
         }
 
+        protected override void FixedUpdate()
+        {
+            if (currentActiveIFrames > 0)
+            {
+                currentActiveIFrames--;
+                Debug.Log(currentActiveIFrames);
+                spriteRenderer.color = Color.yellow;
+            }
+            else
+            {
+                spriteRenderer.color = Color.white;
+            }
+            base.FixedUpdate();
+        }
+
         private void UpdateEventObject()
         {
             playerEvent.Direction = direction;
@@ -199,7 +219,11 @@ namespace Ephymeral.PlayerNS
 
         private void TakeDamage(float damage)
         {
-            health -= damage;
+            if(currentActiveIFrames <= 0)
+            {
+                health -= damage;
+                currentActiveIFrames = invincibilityFrames;
+            }
         }
 
         private void Die()
