@@ -137,7 +137,7 @@ namespace Ephymeral.BoulderNS
 
                             velocity = bounceDirection;
 
-                            objectsColChecked[a] += INTERVAL;
+                            objectsColChecked[a] += INTERVAL * 2;
                         }
                     }
                 }

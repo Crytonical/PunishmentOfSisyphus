@@ -29,14 +29,12 @@ namespace Ephymeral.EnemyNS
         #endregion
 
         #region PROPERTIES
-
-        #endregion
-
         public int EnemiesCnt
         {
             get { return enemiesAlive.Count; }
 
         }
+        #endregion
 
         private void OnEnable()
         {
