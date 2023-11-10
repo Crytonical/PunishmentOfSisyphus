@@ -53,7 +53,7 @@ namespace Ephymeral.EnemyNS
         //            StartCoroutine(DamageStun(enemyData.DAMAGE_STUN_DURATION));
         //            break;
         //    }
-            
+
         //}
 
         protected override IEnumerator Attack(float duration)
@@ -89,7 +89,6 @@ namespace Ephymeral.EnemyNS
             weaponHitbox.enabled = true;
             while (duration > 0)
             {
-                Debug.Log("Fast enemy attacking!");
                 spriteRenderer.color = Color.yellow;
                 duration -= Time.deltaTime;
                 velocity = chargeSpeed * direction;

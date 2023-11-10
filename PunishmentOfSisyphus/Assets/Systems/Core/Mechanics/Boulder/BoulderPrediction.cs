@@ -16,8 +16,6 @@ namespace Ephymeral.BoulderNS
         [SerializeField] private BoulderData boulderData;
         [SerializeField] private BoulderEvent boulderEvent;
         [SerializeField] private GameObject levelBoundsGO; 
-        private Bounds bounds;
-        private Rect screenBounds;
         #endregion
 
         #region FIELDS
@@ -25,11 +23,15 @@ namespace Ephymeral.BoulderNS
         [SerializeField] private const float PREDICTION_DURATION = 1.5f;
         [SerializeField] private const float INTERVAL = 1.0f / 15; // PLACEHOLDER
         [SerializeField] private const float COLLIDER_DISTANCE = 1.0f;
-
         [SerializeField] private float dotSize;
 
         private bool prediction;
         private Vector2 direction, position, velocity, acceleration;
+
+        private Bounds bounds;
+        private Rect screenBounds;
+        private GameObject[] objects;
+        private float[] objectsColChecked;
 
         private List<Vector2> positions;
         private List<GameObject> dots;
@@ -76,6 +78,11 @@ namespace Ephymeral.BoulderNS
                 positions.Clear();
                 position = boulderEvent.Position;
                 direction = ((Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition) - position).normalized;
+
+                // Set up arrays for enemy collision (here due to inconsistency between boulder prediction and actual outcome)
+                objects = Resources.FindObjectsOfTypeAll(typeof(GameObject)) as GameObject[];
+                objectsColChecked = new float[objects.Length];
+
                 PredictFuturePath();
             }
 
@@ -112,13 +119,15 @@ namespace Ephymeral.BoulderNS
                         acceleration += boulderData.GRAVITY * Vector2.down;
                 }
 
-                //Handle collision checks for enemies
-                foreach (GameObject go in Resources.FindObjectsOfTypeAll(typeof(GameObject)) as GameObject[])
+                for(int a = 0; a < objects.Length; a++)
                 {
-                    if (go.tag == "Enemy")
+                    if (objects[a].tag == "Enemy")
                     {
-                        // Handle ricochet
-                        if (bounds.Intersects(go.GetComponent<Collider2D>().bounds))
+                        if (objectsColChecked[a] > 0.0f)
+                            objectsColChecked[a] -= INTERVAL;
+
+                        // Handle ricochet. Second conditional is to prevent constant checking of enemy
+                        if (bounds.Intersects(objects[a].GetComponent<Collider2D>().bounds) && objectsColChecked[a] <= 0.0f)
                         {
                             Vector2 bounceDirection = new Vector2(0, boulderData.INITIAL_RICOCHET_SPEED);
 
@@ -127,9 +136,30 @@ namespace Ephymeral.BoulderNS
                             bounceDirection += new Vector2(dotProduct * boulderData.BOUNCE_COEFFICIENT * Mathf.Sign(velocity.x), 0);
 
                             velocity = bounceDirection;
+
+                            objectsColChecked[a] += INTERVAL;
                         }
                     }
                 }
+
+                //Handle collision checks for enemies
+                //foreach (GameObject go in Resources.FindObjectsOfTypeAll(typeof(GameObject)) as GameObject[])
+                //{
+                //    if (go.tag == "Enemy")
+                //    {
+                //        // Handle ricochet
+                //        if (bounds.Intersects(go.GetComponent<Collider2D>().bounds))
+                //        {
+                //            Vector2 bounceDirection = new Vector2(0, boulderData.INITIAL_RICOCHET_SPEED);
+
+                //            float dotProduct = Mathf.Abs(Vector2.Dot(Vector2.up, velocity));
+
+                //            bounceDirection += new Vector2(dotProduct * boulderData.BOUNCE_COEFFICIENT * Mathf.Sign(velocity.x), 0);
+
+                //            velocity = bounceDirection;
+                //        }
+                //    }
+                //}
 
                 // Handle collision check for wall
                 if (position.x > screenBounds.xMax || position.x < screenBounds.xMin)
