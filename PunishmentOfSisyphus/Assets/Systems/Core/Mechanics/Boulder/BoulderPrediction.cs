@@ -80,8 +80,8 @@ namespace Ephymeral.BoulderNS
                 direction = ((Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition) - position).normalized;
 
                 // Set up arrays for enemy collision (here due to inconsistency between boulder prediction and actual outcome)
-                objects = Resources.FindObjectsOfTypeAll(typeof(GameObject)) as GameObject[];
-                objectsColChecked = new float[objects.Length];
+                //objects = Resources.FindObjectsOfTypeAll(typeof(GameObject)) as GameObject[];
+                //objectsColChecked = new float[objects.Length];
 
                 PredictFuturePath();
             }
@@ -104,13 +104,14 @@ namespace Ephymeral.BoulderNS
         private void PredictFuturePath()
         {
             float elapsedTime = 0.0f;
+            bool rolling = false;
 
             velocity = boulderData.INITIAL_THROW_SPEED * direction;
 
             // Predict the path of the boulder a certain amount into the future
             while (elapsedTime < PREDICTION_DURATION)
             {
-                if (elapsedTime >= boulderData.AIR_TIME)
+                if (rolling)
                 {
                     if (Mathf.Sign(velocity.y) == -1 && velocity.y < -1 * boulderData.MAX_ROLL_SPEED)
                         velocity = new Vector2(velocity.x, boulderData.MAX_ROLL_SPEED * -1);
@@ -119,36 +120,18 @@ namespace Ephymeral.BoulderNS
                         acceleration += boulderData.GRAVITY * Vector2.down;
                 }
 
-                for(int a = 0; a < objects.Length; a++)
-                {
-                    if (objects[a].tag == "Enemy")
-                    {
-                        if (objectsColChecked[a] > 0.0f)
-                            objectsColChecked[a] -= INTERVAL;
+                if (!rolling && elapsedTime >= boulderData.AIR_TIME)
+                    rolling = true;
 
-                        // Handle ricochet. Second conditional is to prevent constant checking of enemy
-                        if (bounds.Intersects(objects[a].GetComponent<Collider2D>().bounds) && objectsColChecked[a] <= 0.0f)
-                        {
-                            Vector2 bounceDirection = new Vector2(0, boulderData.INITIAL_RICOCHET_SPEED);
-
-                            float dotProduct = Mathf.Abs(Vector2.Dot(Vector2.up, velocity));
-
-                            bounceDirection += new Vector2(dotProduct * boulderData.BOUNCE_COEFFICIENT * Mathf.Sign(velocity.x), 0);
-
-                            velocity = bounceDirection;
-
-                            objectsColChecked[a] += INTERVAL * 2;
-                        }
-                    }
-                }
-
-                //Handle collision checks for enemies
-                //foreach (GameObject go in Resources.FindObjectsOfTypeAll(typeof(GameObject)) as GameObject[])
+                //for(int a = 0; a < objects.Length; a++)
                 //{
-                //    if (go.tag == "Enemy")
+                //    if (objects[a].tag == "Enemy")
                 //    {
-                //        // Handle ricochet
-                //        if (bounds.Intersects(go.GetComponent<Collider2D>().bounds))
+                //        if (objectsColChecked[a] > 0.0f)
+                //            objectsColChecked[a] -= INTERVAL;
+
+                //        // Handle ricochet. Second conditional is to prevent constant checking of enemy
+                //        if (bounds.Intersects(objects[a].GetComponent<Collider2D>().bounds) && objectsColChecked[a] <= 0.0f)
                 //        {
                 //            Vector2 bounceDirection = new Vector2(0, boulderData.INITIAL_RICOCHET_SPEED);
 
@@ -157,9 +140,31 @@ namespace Ephymeral.BoulderNS
                 //            bounceDirection += new Vector2(dotProduct * boulderData.BOUNCE_COEFFICIENT * Mathf.Sign(velocity.x), 0);
 
                 //            velocity = bounceDirection;
+
+                //            objectsColChecked[a] += INTERVAL * 2;
                 //        }
                 //    }
                 //}
+
+                //Handle collision checks for enemies
+                foreach (GameObject go in Resources.FindObjectsOfTypeAll(typeof(GameObject)) as GameObject[])
+                {
+                    if (go.tag == "Enemy")
+                    {
+                        // Handle ricochet
+                        if (bounds.Intersects(go.GetComponent<Collider2D>().bounds))
+                        {
+                            Vector2 bounceDirection = new Vector2(0, boulderData.INITIAL_RICOCHET_SPEED);
+
+                            float dotProduct = Mathf.Abs(Vector2.Dot(Vector2.up, velocity));
+
+                            bounceDirection += new Vector2(dotProduct * boulderData.BOUNCE_COEFFICIENT * Mathf.Sign(velocity.x), 0);
+
+                            velocity = bounceDirection;
+                            rolling = true;
+                        }
+                    }
+                }
 
                 // Handle collision check for wall
                 if (position.x > screenBounds.xMax || position.x < screenBounds.xMin)
