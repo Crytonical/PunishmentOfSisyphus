@@ -32,8 +32,10 @@ public class LevelChng : MonoBehaviour
         {
             if(enemySpawner.EnemiesCnt == 0)
             {
-                player.resetPlayer();
                 enemySpawner.IncrementLevel();
+
+                //player.resetPlayer();
+                player.ToggleLevelTransition();
             }
         }
     }

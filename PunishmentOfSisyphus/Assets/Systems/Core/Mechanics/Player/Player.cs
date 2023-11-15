@@ -46,6 +46,7 @@ namespace Ephymeral.PlayerNS
         SlamScript slamScript;
         private GameObject enemyInfo;
         private int invincibilityFrames, currentActiveIFrames;
+        private bool levelTransition;
 
         // Only exists so that directions input during roll are registered
         // When it ends. Otherwise, you'll need to press the key again
@@ -93,6 +94,8 @@ namespace Ephymeral.PlayerNS
 
             invincibilityFrames = playerData.I_FRAMES;
 
+            levelTransition = false;
+
 
             // Run parent's awake method
             base.Awake();
@@ -102,87 +105,93 @@ namespace Ephymeral.PlayerNS
         // Update is called once per frame
         protected override void Update()
         {
-            //Death
-            if (health <= 0)
+            if (!levelTransition)
             {
-                Die();
-            }
+                //Death
+                if (health <= 0)
+                {
+                    Die();
+                }
 
-            if (dodgeCooldown > 0)
-                dodgeCooldown -= Time.deltaTime;
+                if (dodgeCooldown > 0)
+                    dodgeCooldown -= Time.deltaTime;
 
-            switch (state)
-            {
-                case PlayerState.CarryingBounder:
-                    // Always predict boulder position when carrying
-                    if (!boulderEvent.UpdatePosition)
-                    {
-                        boulderEvent.Predict();
-                        boulderEvent.UpdatePosition = true;
-                    }
+                switch (state)
+                {
+                    case PlayerState.CarryingBounder:
+                        // Always predict boulder position when carrying
+                        if (!boulderEvent.UpdatePosition)
+                        {
+                            boulderEvent.Predict();
+                            boulderEvent.UpdatePosition = true;
+                        }
 
-                    break;
+                        break;
 
-                case PlayerState.Dodge:
-                    // Dodge roll has ended. ONLY FOR TESTING
-                    if (speed <= 0)
-                    {
+                    case PlayerState.Dodge:
+                        // Dodge roll has ended. ONLY FOR TESTING
+                        if (speed <= 0)
+                        {
+                            state = PlayerState.Free;
+                            speed = playerData.FREE_SPEED;
+                        }
+
+                        // Reduce the velocity until it reaches (0,0). Set to reduce so dodge lasts set amount of time
+                        acceleration += (playerData.DODGE_SPEED / playerData.DODGE_DURATION) * (dodgeDirection * -1);
+
+                        // Only used for the sake of determining when the roll is over. Checking with vectors is messier
+                        speed -= (playerData.DODGE_SPEED / playerData.DODGE_DURATION) * Time.deltaTime;
+                        break;
+
+                    case PlayerState.Throwing:
+                        // FOR TESTING JUST SWITCH BACK TO FREE
                         state = PlayerState.Free;
                         speed = playerData.FREE_SPEED;
-                    }
+                        break;
+                }
 
-                    // Reduce the velocity until it reaches (0,0). Set to reduce so dodge lasts set amount of time
-                    acceleration += (playerData.DODGE_SPEED / playerData.DODGE_DURATION) * (dodgeDirection * -1);
+                // No need for switch statements for Free or CarryingBoulder
+                if (state != PlayerState.Dodge)
+                    velocity = direction * speed;
 
-                    // Only used for the sake of determining when the roll is over. Checking with vectors is messier
-                    speed -= (playerData.DODGE_SPEED / playerData.DODGE_DURATION) * Time.deltaTime;
-                    break;
+                UpdateEventObject();
 
-                case PlayerState.Throwing:
-                    // FOR TESTING JUST SWITCH BACK TO FREE
-                    state = PlayerState.Free;
-                    speed = playerData.FREE_SPEED;
-                    break;
+                //Keep in bounds
+                if (!levelBounds.GetComponent<RectTransform>().rect.Contains(transform.position))
+                {
+                    Rect rect = levelBounds.GetComponent<RectTransform>().rect;
+                    Vector2 vector = position;
+
+                    // Clamp the x component to be within the rectangle's x boundaries
+                    float clampedX = Mathf.Clamp(vector.x, rect.xMin, rect.xMax);
+
+                    // Clamp the y component to be within the rectangle's y boundaries
+                    float clampedY = Mathf.Clamp(vector.y, rect.yMin, rect.yMax);
+
+                    // Return the new vector with clamped components
+                    position = new Vector2(clampedX, clampedY);
+                }
             }
-
-            // No need for switch statements for Free or CarryingBoulder
-            if (state != PlayerState.Dodge)
-                velocity = direction * speed;
-
-            UpdateEventObject();
 
             base.Update();
-
-            //Keep in bounds
-            if (!levelBounds.GetComponent<RectTransform>().rect.Contains(transform.position))
-            {
-                Rect rect = levelBounds.GetComponent<RectTransform>().rect;
-                Vector2 vector = position;
-
-                // Clamp the x component to be within the rectangle's x boundaries
-                float clampedX = Mathf.Clamp(vector.x, rect.xMin, rect.xMax);
-
-                // Clamp the y component to be within the rectangle's y boundaries
-                float clampedY = Mathf.Clamp(vector.y, rect.yMin, rect.yMax);
-
-                // Return the new vector with clamped components
-                position = new Vector2(clampedX, clampedY);
-            }
-
         }
 
         protected override void FixedUpdate()
         {
-            if (currentActiveIFrames > 0)
+            if(!levelTransition)
             {
-                currentActiveIFrames--;
-                Debug.Log(currentActiveIFrames);
-                spriteRenderer.color = Color.yellow;
+                if (currentActiveIFrames > 0)
+                {
+                    currentActiveIFrames--;
+                    Debug.Log(currentActiveIFrames);
+                    spriteRenderer.color = Color.yellow;
+                }
+                else
+                {
+                    spriteRenderer.color = Color.white;
+                }
             }
-            else
-            {
-                spriteRenderer.color = Color.white;
-            }
+
             base.FixedUpdate();
         }
 
@@ -219,7 +228,7 @@ namespace Ephymeral.PlayerNS
 
         private void TakeDamage(float damage)
         {
-            if(currentActiveIFrames <= 0)
+            if (currentActiveIFrames <= 0)
             {
                 health -= damage;
                 currentActiveIFrames = invincibilityFrames;
@@ -277,7 +286,7 @@ namespace Ephymeral.PlayerNS
 
             if (state == PlayerState.CarryingBounder)
             {
-                if(context.started)
+                if (context.started)
                 {
                     state = PlayerState.Throwing;
                     boulderEvent.UpdatePosition = false;
@@ -371,6 +380,12 @@ namespace Ephymeral.PlayerNS
         public void resetPlayer()
         {
             this.position.y = -8.5f;
+        }
+
+        // Swap between enabled and disabled in one method. MIGHT BE BAD IDEA FOR IMPLEMENTATION
+        public void ToggleLevelTransition()
+        {
+            levelTransition = !levelTransition;
         }
     }
 }

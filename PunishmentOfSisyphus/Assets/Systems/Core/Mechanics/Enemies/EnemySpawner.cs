@@ -26,6 +26,7 @@ namespace Ephymeral.EnemyNS
         private List<GameObject> enemiesAlive;
         private int waveNum, levelNum, maxWaves, maxEnemiesInWave;
         [SerializeField] private Dictionary<string, List<List<string>>> levelWaves;
+        [SerializeField] private float screenTransitionDuration = 2.0f;
         #endregion
 
         #region PROPERTIES
@@ -91,14 +92,16 @@ namespace Ephymeral.EnemyNS
                 };
             }
 
-            // Initialize default wave info
-            waveNum = 0; // 1
-            levelNum = 1;
-            maxWaves = levelWaves["Level" + levelNum].Count;
-            maxEnemiesInWave = levelWaves["Level" + levelNum][waveNum].Count;
+            waveNum = 0;
+            levelNum = 0;
+            //// Initialize default wave info
+            //waveNum = 0; // 1
+            //levelNum = 1;
+            //maxWaves = levelWaves["Level" + levelNum].Count;
+            //maxEnemiesInWave = levelWaves["Level" + levelNum][waveNum].Count;
 
             // Spawn initial wave
-            SpawnWave();
+            //SpawnWave();
         }
 
         /// <summary>
@@ -226,12 +229,19 @@ namespace Ephymeral.EnemyNS
         {
             // Updates values
             levelNum++;
+
             waveNum = 0;
             maxWaves = levelWaves["Level" + levelNum].Count;
             maxEnemiesInWave = levelWaves["Level" + levelNum][waveNum].Count;
 
             // Spawn initial wave
             SpawnWave();
+        }
+
+        public void ToggleLevelTransition()
+        {
+            //foreach (GameObject enemy in enemiesAlive)
+            //    enemy.GetComponent<Enemy>.ToggleLevelTransition();
         }
     }
 }

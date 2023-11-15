@@ -47,6 +47,7 @@ namespace Ephymeral.EnemyNS
         // Inhereted data
         protected float damage, attackRange, attackWindUp, attackDuration, attackCooldown;
         protected bool canAttack;
+        private bool levelTransition;
         protected Vector2 goal;
         [SerializeField] protected Vector3 hpBarOffset;
 
@@ -103,96 +104,107 @@ namespace Ephymeral.EnemyNS
 
             acceleration = new Vector2(1.0f, 1.0f);
 
+            // Find better way to get this
+            levelBounds = GameObject.Find("LevelBounds");
+
+            Rect levelRect = levelBounds.GetComponent<RectTransform>().rect;
+
             // Spawn enemies in a random position between given constrictions
-            float enemyX = Random.Range(-8, 8);
-            float enemyY = Random.Range(-4, 7);
+            //float enemyX = Random.Range(-8, 8);
+            //float enemyY = Random.Range(-4, 7);
+            float enemyX = Random.Range(levelRect.xMin * 0.80f, levelRect.xMax * 0.80f);
+            float enemyY = Random.Range(levelRect.yMin * 0.40f, levelRect.yMax * 0.70f) + levelRect.height;
             position = new Vector2(enemyX, enemyY);
 
             hpBar.fillAmount = health / enemyData.HEALTH;
-
-            // Find better way to get this
-            levelBounds = GameObject.Find("LevelBounds");
         }
 
         protected override void Update()
         {
+            if (!levelTransition)
+            {
+                if (boulderInvul < boulderInvulSec)
+                {
+                    boulderInvul += Time.deltaTime;
+                }
+
+                // Update hp bar
+                // Counteract parent rotation
+                hpBar.transform.rotation = Quaternion.Euler(transform.rotation.x, transform.rotation.y, transform.rotation.z * -1.0f);
+                // Keep position 'above' enemy
+                hpBar.transform.position = transform.position + hpBarOffset;
+
+                // Should force enemies inside the bounds of the level
+                if (!levelBounds.GetComponent<RectTransform>().rect.Contains(transform.position))
+                {
+                    Rect rect = levelBounds.GetComponent<RectTransform>().rect;
+                    Vector2 vector = position;
+
+                    // Clamp the x component to be within the rectangle's x boundaries
+                    float clampedX = Mathf.Clamp(vector.x, rect.xMin, rect.xMax);
+
+                    // Clamp the y component to be within the rectangle's y boundaries
+                    float clampedY = Mathf.Clamp(vector.y, rect.yMin, rect.yMax);
+
+                    // Return the new vector with clamped components
+                    position = new Vector2(clampedX, clampedY);
+                }
+            }
+
             base.Update();
-            if (boulderInvul < boulderInvulSec)
-            {
-                boulderInvul += Time.deltaTime;
-            }
-
-            // Update hp bar
-            // Counteract parent rotation
-            hpBar.transform.rotation = Quaternion.Euler(transform.rotation.x, transform.rotation.y, transform.rotation.z * -1.0f);
-            // Keep position 'above' enemy
-            hpBar.transform.position = transform.position + hpBarOffset;
-
-            // Should force enemies inside the bounds of the level
-            if (!levelBounds.GetComponent<RectTransform>().rect.Contains(transform.position))
-            {
-                Rect rect = levelBounds.GetComponent<RectTransform>().rect;
-                Vector2 vector = position;
-
-                // Clamp the x component to be within the rectangle's x boundaries
-                float clampedX = Mathf.Clamp(vector.x, rect.xMin, rect.xMax);
-
-                // Clamp the y component to be within the rectangle's y boundaries
-                float clampedY = Mathf.Clamp(vector.y, rect.yMin, rect.yMax);
-
-                // Return the new vector with clamped components
-                position = new Vector2(clampedX, clampedY);
-            }
         }
 
         protected override void FixedUpdate()
         {
-            switch (state)
+            if (!levelTransition)
             {
-                case EnemyState.Seeking:
-                    //direction = ((playerEvent.Position - position).normalized) / 1000;
-                    direction = (playerEvent.Position - position).normalized;
+                switch (state)
+                {
+                    case EnemyState.Seeking:
+                        //direction = ((playerEvent.Position - position).normalized) / 1000;
+                        direction = (playerEvent.Position - position).normalized;
 
-                    if ((playerEvent.Position - position).magnitude > attackRange)
-                    {
-                        speed = enemyData.MOVE_SPEED;
-                        velocity = direction * speed;
-                    }
-                    else
-                    {
-                        speed = 0;
-                        velocity = direction * speed;
-                    }
-
-                    // Rotate towards player position
-                    Quaternion xToY = Quaternion.LookRotation(Vector3.forward, Vector3.left);
-                    Quaternion targetRotation = Quaternion.LookRotation(transform.forward, direction);
-                    transform.rotation = targetRotation * xToY;
-
-
-                    if (attackState == AttackState.None)
-                    {
-                        spriteRenderer.color = Color.red;
-                        if ((playerEvent.Position - position).magnitude < attackRange)
+                        if ((playerEvent.Position - position).magnitude > attackRange)
                         {
-                            state = EnemyState.Attacking;
+                            speed = enemyData.MOVE_SPEED;
+                            velocity = direction * speed;
                         }
-                    }
-                    break;
+                        else
+                        {
+                            speed = 0;
+                            velocity = direction * speed;
+                        }
 
-                case EnemyState.Attacking:
-                    if (attackState == AttackState.None)
-                    {
-                        direction = Vector2.zero;
-                        velocity = direction * speed;
-                        StartCoroutine(AttackWindUP(attackWindUp));
-                    }
-                    break;
+                        // Rotate towards player position
+                        Quaternion xToY = Quaternion.LookRotation(Vector3.forward, Vector3.left);
+                        Quaternion targetRotation = Quaternion.LookRotation(transform.forward, direction);
+                        transform.rotation = targetRotation * xToY;
 
-                case EnemyState.Damage:
-                    spriteRenderer.color = Color.gray;
-                    StartCoroutine(DamageStun(enemyData.DAMAGE_STUN_DURATION));
-                    break;
+
+                        if (attackState == AttackState.None)
+                        {
+                            spriteRenderer.color = Color.red;
+                            if ((playerEvent.Position - position).magnitude < attackRange)
+                            {
+                                state = EnemyState.Attacking;
+                            }
+                        }
+                        break;
+
+                    case EnemyState.Attacking:
+                        if (attackState == AttackState.None)
+                        {
+                            direction = Vector2.zero;
+                            velocity = direction * speed;
+                            StartCoroutine(AttackWindUP(attackWindUp));
+                        }
+                        break;
+
+                    case EnemyState.Damage:
+                        spriteRenderer.color = Color.gray;
+                        StartCoroutine(DamageStun(enemyData.DAMAGE_STUN_DURATION));
+                        break;
+                }
             }
 
             base.FixedUpdate();
@@ -329,6 +341,12 @@ namespace Ephymeral.EnemyNS
                 knockback *= 0.9f;
                 yield return new WaitForFixedUpdate();
             }
+        }
+
+        // Swap between enabled and disabled in one method. MIGHT BE BAD IDEA FOR IMPLEMENTATION
+        public void ToggleLevelTransition()
+        {
+            levelTransition = !levelTransition;
         }
 
     }
