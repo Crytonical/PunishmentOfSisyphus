@@ -116,6 +116,7 @@ GameObject:
   - component: {fileID: 7468393294522737508}
   - component: {fileID: 7000526664687035829}
   - component: {fileID: 5431436773634048006}
+  - component: {fileID: 6633909065747765329}
   m_Layer: 7
   m_Name: Ranged Enemy
   m_TagString: Enemy
@@ -180,8 +181,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Sprite: {fileID: 1116146658, guid: 39bc121ceb351e64fbcaecd521165978, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -227,7 +228,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
+    oldSize: {x: 3.5, y: 2.38}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -295,6 +296,27 @@ MonoBehaviour:
   state: 0
   attackState: 0
   bulletPrefab: {fileID: 2793706143090711197, guid: 6dcd79a13e3fed94b823c02a12ba6fcf, type: 3}
+--- !u!95 &6633909065747765329
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6654809712982780285}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 7aeab37a7d935c74ba0aea4be5fc4420, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &7023410408894947856
 GameObject:
   m_ObjectHideFlags: 0
@@ -306,6 +328,7 @@ GameObject:
   - component: {fileID: 6050263403153874686}
   - component: {fileID: 5621659996383131721}
   - component: {fileID: 4122864653978340857}
+  - component: {fileID: 8449754846396357075}
   m_Layer: 5
   m_Name: HP Bar
   m_TagString: Enemy HP Bar
@@ -331,7 +354,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 4.808, y: 14.267}
+  m_AnchoredPosition: {x: 4.81, y: 15.08}
   m_SizeDelta: {x: 1, y: 0.25}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5621659996383131721
@@ -372,6 +395,21 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &8449754846396357075
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7023410408894947856}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfabb0440166ab443bba8876756fdfa9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
+  m_EffectDistance: {x: 0.05, y: -0.05}
+  m_UseGraphicAlpha: 1
 --- !u!1 &8836160682518578366
 GameObject:
   m_ObjectHideFlags: 0

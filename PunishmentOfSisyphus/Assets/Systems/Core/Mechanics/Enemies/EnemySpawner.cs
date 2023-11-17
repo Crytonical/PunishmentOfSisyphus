@@ -81,7 +81,7 @@ namespace Ephymeral.EnemyNS
 
                     // Make a new entry in the dictionary with a key of level + i + 1
                     //  (so for level one AKA i = 0, the key would be 'Level1'
-                    levelWaves["Level" + (i + 1)] = LoadEnemyWaveFromFile(randomLevelIndex);
+                    levelWaves["Level" + i] = LoadEnemyWaveFromFile(randomLevelIndex);
                 }
             }
             else // Default loaded wave if the list is empty
@@ -101,7 +101,7 @@ namespace Ephymeral.EnemyNS
             //maxEnemiesInWave = levelWaves["Level" + levelNum][waveNum].Count;
 
             // Spawn initial wave
-            //SpawnWave();
+            SpawnWave();
         }
 
         /// <summary>
@@ -154,6 +154,8 @@ namespace Ephymeral.EnemyNS
         {
             // Save the level key (i.e 'Level1')
             string levelKey = "Level" + levelNum;
+
+            Debug.Log(levelWaves.Keys);
 
             // Loop through the list of enemies at the given level key
             for (int i = 0; i < levelWaves[levelKey][waveNum].Count; i++)

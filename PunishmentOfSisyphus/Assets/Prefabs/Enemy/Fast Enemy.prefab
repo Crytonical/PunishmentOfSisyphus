@@ -296,6 +296,7 @@ GameObject:
   - component: {fileID: 8878693795761453551}
   - component: {fileID: 4767959898136013841}
   - component: {fileID: 2647042591113181904}
+  - component: {fileID: 1122854414418246557}
   m_Layer: 7
   m_Name: Fast Enemy
   m_TagString: Enemy
@@ -475,6 +476,27 @@ MonoBehaviour:
   hpBarOffset: {x: 0, y: 1, z: 0}
   state: 0
   attackState: 0
+--- !u!95 &1122854414418246557
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3030512484931649770}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &9106059974915517231
 GameObject:
   m_ObjectHideFlags: 0
