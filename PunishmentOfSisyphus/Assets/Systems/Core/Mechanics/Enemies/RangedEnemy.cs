@@ -36,7 +36,7 @@ namespace Ephymeral.EnemyNS
             while (duration > 0)
             {
                 duration -= Time.deltaTime;
-                spriteRenderer.color = Color.yellow;
+                spriteRenderer.color = Color.white;
                 yield return null;
             }
 
@@ -51,13 +51,14 @@ namespace Ephymeral.EnemyNS
             while (time > 0)
             {
                 time -= Time.deltaTime;
-                spriteRenderer.color = Color.cyan;
-                // Lerp away from player
+                spriteRenderer.color = Color.red;
 
-                direction = (playerEvent.Position - position).normalized;
-                Quaternion xToY = Quaternion.LookRotation(Vector3.forward, Vector3.left);
-                Quaternion targetRotation = Quaternion.LookRotation(transform.forward, direction);
-                transform.rotation = targetRotation * xToY;
+                // Rotate towards player
+                //direction = (playerEvent.Position - position).normalized;
+                //Quaternion xToY = Quaternion.LookRotation(Vector3.forward, Vector3.left);
+                //Quaternion targetRotation = Quaternion.LookRotation(transform.forward, direction);
+                //transform.rotation = targetRotation * xToY;
+
                 yield return null;
             }
 
@@ -70,7 +71,7 @@ namespace Ephymeral.EnemyNS
             while (time > 0)
             {
                 time -= Time.deltaTime;
-                spriteRenderer.color = Color.white;
+                spriteRenderer.color = Color.green;
                 yield return null;
             }
 
