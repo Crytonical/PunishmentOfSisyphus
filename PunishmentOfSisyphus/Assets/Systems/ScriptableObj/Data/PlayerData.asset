@@ -21,3 +21,4 @@ MonoBehaviour:
   SLAM_DURATION: 8
   SLAM_DAMAGE: 20
   MAX_HP: 100
+  I_FRAMES: 15
