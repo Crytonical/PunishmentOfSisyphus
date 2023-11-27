@@ -19,11 +19,12 @@ namespace Ephymeral.EnemyNS
         protected override IEnumerator Attack(float duration)
         {
             weaponHitbox.enabled = true;
+            speed = enemyData.CHARGE_SPEED;
             while (duration > 0)
             {
                 spriteRenderer.color = Color.yellow;
                 duration -= Time.deltaTime;
-                velocity = enemyData.CHARGE_SPEED * direction;
+                velocity = speed * direction;
                 //position = velocity * Time.deltaTime;
 
                 // Check for collision with wall. End early if so
@@ -34,6 +35,7 @@ namespace Ephymeral.EnemyNS
             }
 
             state = EnemyState.Seeking;
+            speed = enemyData.MOVE_SPEED;
             attackState = AttackState.CoolingDown;
             if (weaponHitbox)
             {

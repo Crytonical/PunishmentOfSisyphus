@@ -188,7 +188,7 @@ namespace Ephymeral.EnemyNS
                         if (attackState == AttackState.None)
                         {
                             spriteRenderer.color = Color.red;
-                            if ((playerEvent.Position - position).magnitude < attackRange)
+                            if ((playerEvent.Position - position).magnitude - 0.5f <= attackRange)
                             {
                                 state = EnemyState.Attacking;
                             }

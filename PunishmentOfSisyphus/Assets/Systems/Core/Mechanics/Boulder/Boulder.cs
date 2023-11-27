@@ -35,6 +35,7 @@ namespace Ephymeral.BoulderNS
         private float elapsedTime;  // Currently unused
         private float ricochetTime;
         private float damage;
+        private float comboCount;   // Increases damage as the combo continues
         private Rect bounds;
 
         // State
