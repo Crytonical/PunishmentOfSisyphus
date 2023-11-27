@@ -112,7 +112,8 @@ namespace Ephymeral.EnemyNS
             //float enemyX = Random.Range(-8, 8);
             //float enemyY = Random.Range(-4, 7);
             float enemyX = Random.Range(levelRect.xMin * 0.80f, levelRect.xMax * 0.80f);
-            float enemyY = Random.Range(levelRect.yMin * 0.40f, levelRect.yMax * 0.70f) + levelRect.height;
+            //float enemyY = Random.Range(levelRect.yMin * 0.40f, levelRect.yMax * 0.70f) + levelRect.height;
+            float enemyY = Random.Range(levelRect.yMin * 0.40f, levelRect.yMax * 0.70f);
             position = new Vector2(enemyX, enemyY);
 
             hpBar.fillAmount = health / enemyData.HEALTH;
