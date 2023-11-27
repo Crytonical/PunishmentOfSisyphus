@@ -40,7 +40,7 @@ namespace Ephymeral.EnemyNS
         [SerializeField] private Image hpBar;
         protected BoxCollider2D weaponHitbox;
         protected SpriteRenderer spriteRenderer;
-        private GameObject levelBounds;
+        protected GameObject levelBounds;
         #endregion
 
         #region FIELDS
@@ -179,9 +179,8 @@ namespace Ephymeral.EnemyNS
                         // Rotate towards player position
                         if (rotateTowardsPlayer)
                         {
-                            Quaternion xToY = Quaternion.LookRotation(Vector3.forward, Vector3.left);
-                            Quaternion targetRotation = Quaternion.LookRotation(transform.forward, direction);
-                            transform.rotation = targetRotation * xToY;
+                            Quaternion targetRotation = Quaternion.LookRotation(Vector3.forward, -direction);
+                            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 360f);
                         }
 
 
