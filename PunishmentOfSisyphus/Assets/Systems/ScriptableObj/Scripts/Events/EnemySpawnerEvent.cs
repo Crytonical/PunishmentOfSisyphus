@@ -15,6 +15,7 @@ namespace Ephymeral.Events
         public UnityEvent<GameObject> enemyDeathEvent;
         public UnityEvent waveEnd;
         public UnityEvent levelEnd;
+        public UnityEvent spawnWave;
         #endregion
         #endregion
 
@@ -36,6 +37,10 @@ namespace Ephymeral.Events
             {
                 levelEnd = new UnityEvent();
             }
+            if (spawnWave == null)
+            {
+                waveEnd = new UnityEvent();
+            }
             #endregion
         }
 
@@ -52,6 +57,11 @@ namespace Ephymeral.Events
         public void EndLevel()
         {
             levelEnd.Invoke();
+        }
+
+        public void WaveSpawned()
+        {
+            spawnWave.Invoke();
         }
     }
 }

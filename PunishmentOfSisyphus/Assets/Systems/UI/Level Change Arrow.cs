@@ -21,11 +21,13 @@ public class LevelChangeArrow : MonoBehaviour
 
     private void OnEnable()
     {
-        enemySpawnEvent.levelEnd.AddListener(ToggleArrow);
+        enemySpawnEvent.levelEnd.AddListener(EnableArrow);
+        enemySpawnEvent.spawnWave.AddListener(DisableArrow);
     }
     private void OnDisable()
     {
-        enemySpawnEvent.levelEnd.RemoveListener(ToggleArrow);
+        enemySpawnEvent.levelEnd.RemoveAllListeners();
+        enemySpawnEvent.spawnWave.RemoveAllListeners();
     }
 
     private void Awake()
@@ -33,7 +35,7 @@ public class LevelChangeArrow : MonoBehaviour
         toggled = false;
         movingUpwards = false;
         rectT = GetComponent<RectTransform>();
-        rectT.localPosition = new Vector3(0.0f, 700f, 0.0f);
+        rectT.position = new Vector3(0.0f, 700f, 0.0f);
     }
 
     private void Update()
@@ -42,11 +44,11 @@ public class LevelChangeArrow : MonoBehaviour
         {
             moveSpeed = Mathf.Abs(moveSpeed);
 
-            if (rectT.position.y >= 370)
+            if (rectT.position.y >= 3)
             {
                 movingUpwards = false;
             }
-            if (rectT.position.y <= 300)
+            if (rectT.position.y <= 2)
             {
                 movingUpwards = true;
             }
@@ -55,22 +57,22 @@ public class LevelChangeArrow : MonoBehaviour
             {
                 moveSpeed = -moveSpeed;
             }
-            rectT.localPosition = new Vector3(rectT.position.x, rectT.position.y + moveSpeed, rectT.position.z);
+            rectT.position = new Vector3(rectT.position.x, rectT.position.y + moveSpeed, rectT.position.z);
         }
     }
 
-    private void ToggleArrow()
+    private void DisableArrow()
     {
-        Debug.Log("Yumps");
-        toggled = !toggled;
+        Debug.Log("Disable Arrow");
+        toggled = false;
 
-        if (toggled)
-        {
-            rectT.localPosition = new Vector3(0.0f, 370f, 0.0f);
-        }
-        else
-        {
-            rectT.localPosition = new Vector3(0.0f, 700f, 0f);
-        }
+        rectT.position = new Vector3(0.0f, 70000f, 0f);
+    }
+
+    private void EnableArrow()
+    {
+        Debug.Log("Enable Arrow");
+        toggled = true;
+        rectT.position = new Vector3(0.0f, 3f, 0.0f);
     }
 }

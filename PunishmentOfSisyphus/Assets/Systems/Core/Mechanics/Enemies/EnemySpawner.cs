@@ -153,6 +153,8 @@ namespace Ephymeral.EnemyNS
         /// </summary>
         private void SpawnWave()
         {
+            enemySpawnEvent.WaveSpawned();
+
             // Save the level key (i.e 'Level1')
             string levelKey = "Level" + levelNum;
 

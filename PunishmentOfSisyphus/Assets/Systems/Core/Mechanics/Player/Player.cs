@@ -183,7 +183,6 @@ namespace Ephymeral.PlayerNS
                 if (currentActiveIFrames > 0)
                 {
                     currentActiveIFrames--;
-                    Debug.Log(currentActiveIFrames);
                     spriteRenderer.color = Color.yellow;
                 }
                 else

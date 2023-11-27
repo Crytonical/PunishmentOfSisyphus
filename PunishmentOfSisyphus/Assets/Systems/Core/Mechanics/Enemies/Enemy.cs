@@ -92,7 +92,6 @@ namespace Ephymeral.EnemyNS
             // Get a reference to the hitbox, disable it 
             if (weaponHitbox = gameObject.transform.GetChild(0).GetComponent<BoxCollider2D>())
             {
-                Debug.Log(weaponHitbox);
                 weaponHitbox.enabled = false;
             }
             spriteRenderer = GetComponent<SpriteRenderer>();
