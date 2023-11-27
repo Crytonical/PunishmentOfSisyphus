@@ -1365,11 +1365,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f79d95bba08f014488a7f64561d43689, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dot: {fileID: 0}
+  dot: {fileID: -2413806693520163455, guid: dcdfa49da51dca5428d64c1076b79ee0, type: 3}
   boulderData: {fileID: 11400000, guid: 616287b0a3c030a4caf89a76f2a67b0a, type: 2}
   boulderEvent: {fileID: 11400000, guid: c72588212e952d144b5b97d5ed1afd7e, type: 2}
   levelBoundsGO: {fileID: 276285823}
-  dotSize: 0
+  dotSize: 0.2
 --- !u!50 &1340405289
 Rigidbody2D:
   serializedVersion: 4
