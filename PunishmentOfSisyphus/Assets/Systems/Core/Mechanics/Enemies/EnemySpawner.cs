@@ -6,6 +6,7 @@ using Ephymeral.Events;
 using Ephymeral.FileLoading;
 using System.Linq;
 using System;
+using UnityEngine.SceneManagement;
 
 namespace Ephymeral.EnemyNS
 {
@@ -42,7 +43,6 @@ namespace Ephymeral.EnemyNS
             // Setup events
             enemySpawnEvent.enemyDeathEvent.AddListener(RemoveEnemy);
             enemySpawnEvent.waveEnd.AddListener(IncrementWave);
-            enemySpawnEvent.levelEnd.AddListener(IncrementLevel);
         }
 
         private void OnDisable()
@@ -120,7 +120,8 @@ namespace Ephymeral.EnemyNS
             }
             else
             {
-                // If not, then increment level
+                Debug.Log("Level End Called");
+                enemySpawnEvent.EndLevel();
                 return;
             }
         }
@@ -229,15 +230,23 @@ namespace Ephymeral.EnemyNS
         /// </summary>
         public void IncrementLevel()
         {
-            // Updates values
-            levelNum++;
+            if (levelNum >= levelWaves.Count - 1)
+            {
+                Debug.Log("You Win!!");
+                SceneManager.LoadScene("Victory");
+            }
+            else
+            {
+                // Updates values
+                levelNum++;
 
-            waveNum = 0;
-            maxWaves = levelWaves["Level" + levelNum].Count;
-            maxEnemiesInWave = levelWaves["Level" + levelNum][waveNum].Count;
+                waveNum = 0;
+                maxWaves = levelWaves["Level" + levelNum].Count;
+                maxEnemiesInWave = levelWaves["Level" + levelNum][waveNum].Count;
 
-            // Spawn initial wave
-            SpawnWave();
+                // Spawn initial wave
+                SpawnWave();
+            }
         }
 
         public void ToggleLevelTransition()

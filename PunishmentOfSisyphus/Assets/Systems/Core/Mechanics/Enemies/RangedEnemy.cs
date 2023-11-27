@@ -17,10 +17,13 @@ namespace Ephymeral.EnemyNS
         #region PROPERTIES
         #endregion
 
-        // 
+        protected override void Awake()
+        {
+            base.Awake();
 
-
-
+            rotateTowardsPlayer = false;
+        }
+        
         protected override IEnumerator Attack(float duration)
         {
             // Get the direction of the attack (towards player)

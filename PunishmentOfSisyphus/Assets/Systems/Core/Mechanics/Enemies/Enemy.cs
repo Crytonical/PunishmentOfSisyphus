@@ -46,7 +46,7 @@ namespace Ephymeral.EnemyNS
         #region FIELDS
         // Inhereted data
         protected float damage, attackRange, attackWindUp, attackDuration, attackCooldown;
-        protected bool canAttack;
+        protected bool canAttack, rotateTowardsPlayer;
         private bool levelTransition;
         protected Vector2 goal;
         [SerializeField] protected Vector3 hpBarOffset;
@@ -117,6 +117,8 @@ namespace Ephymeral.EnemyNS
             position = new Vector2(enemyX, enemyY);
 
             hpBar.fillAmount = health / enemyData.HEALTH;
+
+            rotateTowardsPlayer = true;
         }
 
         protected override void Update()
@@ -176,9 +178,12 @@ namespace Ephymeral.EnemyNS
                         }
 
                         // Rotate towards player position
-                        Quaternion xToY = Quaternion.LookRotation(Vector3.forward, Vector3.left);
-                        Quaternion targetRotation = Quaternion.LookRotation(transform.forward, direction);
-                        transform.rotation = targetRotation * xToY;
+                        if (rotateTowardsPlayer)
+                        {
+                            Quaternion xToY = Quaternion.LookRotation(Vector3.forward, Vector3.left);
+                            Quaternion targetRotation = Quaternion.LookRotation(transform.forward, direction);
+                            transform.rotation = targetRotation * xToY;
+                        }
 
 
                         if (attackState == AttackState.None)

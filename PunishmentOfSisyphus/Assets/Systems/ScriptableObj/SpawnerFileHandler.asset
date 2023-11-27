@@ -46,4 +46,4 @@ MonoBehaviour:
     r,r,r,r,f|
 
     s,s,s,f,f,f'
-  enemyLevelFilesLoaded: 0
+  enemyLevelFilesLoaded: 1

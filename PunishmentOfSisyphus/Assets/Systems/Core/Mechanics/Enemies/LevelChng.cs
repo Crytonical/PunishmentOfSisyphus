@@ -15,6 +15,7 @@ using Ephymeral.PlayerNS;
 public class LevelChng : MonoBehaviour
 {
     private EnemySpawner enemySpawner;
+    [SerializeField] private EnemySpawnerEvent enemySpawnEvent;
     private Player player;
 
 
@@ -33,7 +34,6 @@ public class LevelChng : MonoBehaviour
             if(enemySpawner.EnemiesCnt == 0)
             {
                 enemySpawner.IncrementLevel();
-
                 //player.resetPlayer();
                 player.ToggleLevelTransition();
             }

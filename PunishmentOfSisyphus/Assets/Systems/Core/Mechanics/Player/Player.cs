@@ -386,7 +386,9 @@ namespace Ephymeral.PlayerNS
         // Swap between enabled and disabled in one method. MIGHT BE BAD IDEA FOR IMPLEMENTATION
         public void ToggleLevelTransition()
         {
-            levelTransition = !levelTransition;
+            //levelTransition = !levelTransition;
+            position = new Vector3(0.0f, -10.0f, 0.0f);
+            transform.position = position;
         }
     }
 }
