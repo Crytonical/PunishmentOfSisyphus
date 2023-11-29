@@ -69,7 +69,10 @@ namespace Ephymeral.EnemyNS
             //  File format:
             //  4 - # of waves
             //  "r","f","s" - split each enemy type in a wave with a comma
-
+            levelWaves["Level1"] = new List<List<string>>
+            {
+                    new List<string> { "s" }
+            };
             // Check if the list of level strings isn't empty
             if (enemyFileData.LevelFileStrings.Count != 0)
             {
@@ -77,19 +80,12 @@ namespace Ephymeral.EnemyNS
                 for (int i = 0; i < enemyFileData.LevelFileStrings.Count; i++)
                 {
                     // Get a random index for a level from 0 to the # of level strings
-                    int randomLevelIndex = UnityEngine.Random.Range(0, enemyFileData.LevelFileStrings.Count);
+                    //int randomLevelIndex = UnityEngine.Random.Range(0, enemyFileData.LevelFileStrings.Count);
 
                     // Make a new entry in the dictionary with a key of level + i + 1
                     //  (so for level one AKA i = 0, the key would be 'Level1'
-                    levelWaves["Level" + i] = LoadEnemyWaveFromFile(randomLevelIndex);
+                    levelWaves["Level" + i] = LoadEnemyWaveFromFile(i);
                 }
-            }
-            else // Default loaded wave if the list is empty
-            {
-                levelWaves["Level1"] = new List<List<string>> 
-                { 
-                    new List<string> { "s" }
-                };
             }
 
             waveNum = 0;
@@ -97,7 +93,7 @@ namespace Ephymeral.EnemyNS
             //// Initialize default wave info
             //waveNum = 0; // 1
             //levelNum = 1;
-            //maxWaves = levelWaves["Level" + levelNum].Count;
+            maxWaves = 1;
             //maxEnemiesInWave = levelWaves["Level" + levelNum][waveNum].Count;
 
             // Spawn initial wave
@@ -187,7 +183,7 @@ namespace Ephymeral.EnemyNS
             }
 
             // Update UI text values
-            maxEnemiesInWave = levelWaves["Level" + levelNum][waveNum].Count;
+            maxEnemiesInWave = levelWaves[levelKey][waveNum].Count;
 
             wavesText.text = $"Wave\r\n {waveNum + 1} / {maxWaves}";
 

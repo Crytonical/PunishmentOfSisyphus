@@ -13,6 +13,7 @@ namespace Ephymeral.Data
 
         [Header("Movement")]
         public float MOVE_SPEED;
+        public float CHARGE_SPEED;
 
         [Header("Combat")]
         public float DAMAGE;

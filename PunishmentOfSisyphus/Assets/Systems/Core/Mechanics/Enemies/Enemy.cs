@@ -40,7 +40,7 @@ namespace Ephymeral.EnemyNS
         [SerializeField] private Image hpBar;
         protected BoxCollider2D weaponHitbox;
         protected SpriteRenderer spriteRenderer;
-        private GameObject levelBounds;
+        protected GameObject levelBounds;
         #endregion
 
         #region FIELDS
@@ -112,7 +112,8 @@ namespace Ephymeral.EnemyNS
             //float enemyX = Random.Range(-8, 8);
             //float enemyY = Random.Range(-4, 7);
             float enemyX = Random.Range(levelRect.xMin * 0.80f, levelRect.xMax * 0.80f);
-            float enemyY = Random.Range(levelRect.yMin * 0.40f, levelRect.yMax * 0.70f) + levelRect.height;
+            //float enemyY = Random.Range(levelRect.yMin * 0.40f, levelRect.yMax * 0.70f) + levelRect.height;
+            float enemyY = Random.Range(levelRect.yMin * 0.40f, levelRect.yMax * 0.70f);
             position = new Vector2(enemyX, enemyY);
 
             hpBar.fillAmount = health / enemyData.HEALTH;
@@ -179,16 +180,15 @@ namespace Ephymeral.EnemyNS
                         // Rotate towards player position
                         if (rotateTowardsPlayer)
                         {
-                            Quaternion xToY = Quaternion.LookRotation(Vector3.forward, Vector3.left);
-                            Quaternion targetRotation = Quaternion.LookRotation(transform.forward, direction);
-                            transform.rotation = targetRotation * xToY;
+                            Quaternion targetRotation = Quaternion.LookRotation(Vector3.forward, -direction);
+                            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 360f);
                         }
 
 
                         if (attackState == AttackState.None)
                         {
                             spriteRenderer.color = Color.red;
-                            if ((playerEvent.Position - position).magnitude < attackRange)
+                            if ((playerEvent.Position - position).magnitude - 0.5f <= attackRange)
                             {
                                 state = EnemyState.Attacking;
                             }

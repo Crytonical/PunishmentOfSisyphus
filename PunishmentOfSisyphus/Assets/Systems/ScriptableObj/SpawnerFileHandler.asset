@@ -17,6 +17,7 @@ MonoBehaviour:
   - {fileID: 4900000, guid: 15088a2514f755042a5ee40153631732, type: 3}
   - {fileID: 4900000, guid: 6ff2a14e63dcc6c41b35ba3c6697e8cc, type: 3}
   - {fileID: 4900000, guid: 444c2062ef098e0409c87d3c3b3eb5ff, type: 3}
+  - {fileID: 4900000, guid: 444c2062ef098e0409c87d3c3b3eb5ff, type: 3}
   levelFileStrings:
   - '4|
 
@@ -29,7 +30,7 @@ MonoBehaviour:
     f,s'
   - '3|
 
-    f,r,r,r,r,r,r,r,r,r,r,r|
+    f,r,r,r,r|
 
     f,f,f,f,s|
 

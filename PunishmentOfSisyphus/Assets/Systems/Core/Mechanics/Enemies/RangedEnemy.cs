@@ -21,7 +21,7 @@ namespace Ephymeral.EnemyNS
         {
             base.Awake();
 
-            rotateTowardsPlayer = false;
+            //rotateTowardsPlayer = false;
         }
         
         protected override IEnumerator Attack(float duration)

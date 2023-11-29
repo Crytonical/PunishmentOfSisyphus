@@ -11,92 +11,31 @@ namespace Ephymeral.EnemyNS
 {
     public class FastEnemy : Enemy
     {
-        float attackRadius;
-        float attackDelay;
-        float chargeSpeed;
-        float turnSpeed;
-
-        protected override void Awake()
-        {
-            base.Awake();
-            attackRadius = 5f;
-            attackDelay = 2;
-            chargeSpeed = 10.0f;
-        }
-
-        //protected override void FixedUpdate()
+        //protected override void Awake()
         //{
-        //    //Enemy state logic
-        //    switch (state)
-        //    {
-        //        case EnemyState.Seeking:
-        //            direction = (playerEvent.Position - position).normalized;
-
-        //            // Rotate towards player position
-        //            Quaternion xToY = Quaternion.LookRotation(Vector3.forward, Vector3.left);
-        //            Quaternion targetRotation = Quaternion.LookRotation(transform.forward, direction);
-        //            transform.rotation = targetRotation * xToY;
-
-        //            if ( (position - playerEvent.Position).magnitude <= attackRadius)
-        //            {
-        //                StartCoroutine(Attack(0));
-        //                state = EnemyState.Attacking;
-        //            }
-        //            break;
-
-        //        case EnemyState.Attacking:
-
-        //            break;
-
-        //        case EnemyState.Damage:
-        //            spriteRenderer.color = Color.gray;
-        //            StartCoroutine(DamageStun(enemyData.DAMAGE_STUN_DURATION));
-        //            break;
-        //    }
-
+        //    base.Awake();
         //}
 
         protected override IEnumerator Attack(float duration)
         {
-            //while (duration < 16)
-            //{
-            //    duration++;
-            //    direction = (playerEvent.Position - position).normalized;
-
-            //    // Rotate towards player position
-            //    Quaternion xToY = Quaternion.LookRotation(Vector3.forward, Vector3.left);
-            //    Quaternion targetRotation = Quaternion.LookRotation(transform.forward, direction);
-            //    transform.rotation = targetRotation * xToY;
-            //    yield return new WaitForFixedUpdate();
-            //}
-            //while (duration >= 16 && duration <= 24)
-            //{
-            //    duration++;
-            //    velocity = chargeSpeed * direction;
-            //    //position += velocity;
-            //    yield return new WaitForFixedUpdate();
-            //}
-
-            //state = EnemyState.Seeking;
-            //attackState = AttackState.CoolingDown;
-
-            //if (weaponHitbox)
-            //{
-            //    weaponHitbox.enabled = false;
-            //}
-            //StartCoroutine(AttackCooldown(attackCooldown));
-
             weaponHitbox.enabled = true;
+            speed = enemyData.CHARGE_SPEED;
             while (duration > 0)
             {
                 spriteRenderer.color = Color.yellow;
                 duration -= Time.deltaTime;
-                velocity = chargeSpeed * direction;
-                position += velocity * Time.deltaTime;
+                velocity = speed * direction;
+                //position = velocity * Time.deltaTime;
+
+                // Check for collision with wall. End early if so
+                if (!levelBounds.GetComponent<RectTransform>().rect.Contains(transform.position))
+                    duration = 0;
+
                 yield return null;
             }
 
             state = EnemyState.Seeking;
+            speed = enemyData.MOVE_SPEED;
             attackState = AttackState.CoolingDown;
             if (weaponHitbox)
             {
@@ -108,17 +47,16 @@ namespace Ephymeral.EnemyNS
         protected override IEnumerator AttackWindUP(float time)
         {
             attackState = AttackState.WindingUp;
-            float tTime = time;
             while (time > 0)
             {
                 time -= Time.deltaTime;
                 spriteRenderer.color = Color.cyan;
-                // Lerp away from player
 
+                // Lerp direction away from player
                 direction = (playerEvent.Position - position).normalized;
-                Quaternion xToY = Quaternion.LookRotation(Vector3.forward, Vector3.left);
-                Quaternion targetRotation = Quaternion.LookRotation(transform.forward, direction);
-                transform.rotation = targetRotation * xToY;
+                //Quaternion xToY = Quaternion.LookRotation(Vector3.forward, Vector3.left);
+                //Quaternion targetRotation = Quaternion.LookRotation(transform.forward, direction);
+                //transform.rotation = targetRotation * xToY;
                 yield return null;
             }
 
@@ -149,7 +87,8 @@ namespace Ephymeral.EnemyNS
 
         private void OnDrawGizmos()
         {
-            Gizmos.DrawWireSphere(position, attackRadius);
+            //Gizmos.DrawWireSphere(position, attackRadius);
+            Gizmos.DrawWireSphere(position, attackRange);
         }
     }
 }

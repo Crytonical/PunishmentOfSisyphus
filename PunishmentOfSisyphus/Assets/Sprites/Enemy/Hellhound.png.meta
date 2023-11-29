@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 39bc121ceb351e64fbcaecd521165978
+guid: 50958b2499ad47f488d11c08184869b8
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -106,56 +106,17 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 3
-    buildTarget: Android
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 0
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 3
-    buildTarget: iPhone
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 0
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 3
-    buildTarget: WebGL
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 0
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Harpy_0
+      name: Hellhound_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 238
-        width: 350
-        height: 238
+        y: 128
+        width: 128
+        height: 128
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -163,20 +124,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c5b8b043028f0594287229614e5a465d
-      internalID: 1116146658
+      spriteID: 5d47b35238e90cc42b9d627419f1b6b8
+      internalID: -82493783
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Harpy_1
+      name: Hellhound_1
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 350
-        height: 238
+        x: 128
+        y: 128
+        width: 128
+        height: 128
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -184,8 +145,50 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e1d7b417f232bfd47824fdc203ac5260
-      internalID: 2051559514
+      spriteID: a7c7f761516ad554896511361b927e41
+      internalID: -1588773706
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hellhound_2
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d58796e09c7eddb4187d18d401ed2190
+      internalID: 85224557
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hellhound_3
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 0
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 051f69fb056c58e4c84b17a2fec2c76b
+      internalID: 136452787
       vertices: []
       indices: 
       edges: []
@@ -201,8 +204,10 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Harpy_0: 1116146658
-      Harpy_1: 2051559514
+      Hellhound_0: -82493783
+      Hellhound_1: -1588773706
+      Hellhound_2: 85224557
+      Hellhound_3: 136452787
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
