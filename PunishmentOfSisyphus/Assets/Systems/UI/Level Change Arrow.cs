@@ -63,7 +63,6 @@ public class LevelChangeArrow : MonoBehaviour
 
     private void DisableArrow()
     {
-        Debug.Log("Disable Arrow");
         toggled = false;
 
         rectT.position = new Vector3(0.0f, 70000f, 0f);
@@ -71,7 +70,6 @@ public class LevelChangeArrow : MonoBehaviour
 
     private void EnableArrow()
     {
-        Debug.Log("Enable Arrow");
         toggled = true;
         rectT.position = new Vector3(0.0f, 3f, 0.0f);
     }

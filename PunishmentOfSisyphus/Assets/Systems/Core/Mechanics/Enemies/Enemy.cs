@@ -45,7 +45,7 @@ namespace Ephymeral.EnemyNS
 
         #region FIELDS
         // Inhereted data
-        protected float damage, attackRange, attackWindUp, attackDuration, attackCooldown;
+        protected float damage, attackRange, attackWindUp, attackDuration, attackCooldown, gracePeriod;
         protected bool canAttack, rotateTowardsPlayer;
         private bool levelTransition;
         protected Vector2 goal;
@@ -86,6 +86,8 @@ namespace Ephymeral.EnemyNS
             attackWindUp = enemyData.ATTACK_WIND_UP;
             attackDuration = enemyData.ATTACK_DURATION;
             attackCooldown = enemyData.ATTACK_COOLDOWN;
+            gracePeriod = enemyData.GRACE_PERIOD;
+            Debug.Log("GP: " + gracePeriod); ;
 
             boulderInvulSec = 0.5f;
 
@@ -123,7 +125,8 @@ namespace Ephymeral.EnemyNS
 
         protected override void Update()
         {
-            if (!levelTransition)
+            Debug.Log("GP: " + gracePeriod);
+            if (!levelTransition && gracePeriod <= 0)
             {
                 if (boulderInvul < boulderInvulSec)
                 {
@@ -158,11 +161,12 @@ namespace Ephymeral.EnemyNS
 
         protected override void FixedUpdate()
         {
-            if (!levelTransition)
+            if (!levelTransition && gracePeriod <= 0)
             {
                 switch (state)
                 {
                     case EnemyState.Seeking:
+                        spriteRenderer.color = Color.white;
                         //direction = ((playerEvent.Position - position).normalized) / 1000;
                         direction = (playerEvent.Position - position).normalized;
 
@@ -180,14 +184,14 @@ namespace Ephymeral.EnemyNS
                         // Rotate towards player position
                         if (rotateTowardsPlayer)
                         {
-                            Quaternion targetRotation = Quaternion.LookRotation(Vector3.forward, -direction);
-                            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 360f);
+                            Quaternion targetRotation = Quaternion.LookRotation(Vector3.forward, direction);
+                            targetRotation *= Quaternion.Euler(0, 0, 270);
+                            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 180f);
                         }
 
 
                         if (attackState == AttackState.None)
                         {
-                            spriteRenderer.color = Color.red;
                             if ((playerEvent.Position - position).magnitude - 0.5f <= attackRange)
                             {
                                 state = EnemyState.Attacking;
@@ -205,10 +209,14 @@ namespace Ephymeral.EnemyNS
                         break;
 
                     case EnemyState.Damage:
-                        spriteRenderer.color = Color.gray;
                         StartCoroutine(DamageStun(enemyData.DAMAGE_STUN_DURATION));
                         break;
                 }
+            }
+            else if (gracePeriod > 0)
+            {
+                spriteRenderer.color = Color.gray;
+                gracePeriod -= 0.01f;
             }
 
             base.FixedUpdate();

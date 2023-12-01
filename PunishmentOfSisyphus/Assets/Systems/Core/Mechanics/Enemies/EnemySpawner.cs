@@ -154,8 +154,6 @@ namespace Ephymeral.EnemyNS
             // Save the level key (i.e 'Level1')
             string levelKey = "Level" + levelNum;
 
-            Debug.Log(levelWaves.Keys);
-
             // Loop through the list of enemies at the given level key
             for (int i = 0; i < levelWaves[levelKey][waveNum].Count; i++)
             {

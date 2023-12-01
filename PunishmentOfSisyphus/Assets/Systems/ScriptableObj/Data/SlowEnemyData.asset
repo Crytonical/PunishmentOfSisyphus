@@ -13,7 +13,9 @@ MonoBehaviour:
   m_Name: SlowEnemyData
   m_EditorClassIdentifier: 
   GRAVITY: 2
+  GRACE_PERIOD: 1
   MOVE_SPEED: 2
+  CHARGE_SPEED: 0
   DAMAGE: 25
   HEALTH: 100
   ATTACK_RANGE: 1

@@ -13,7 +13,9 @@ MonoBehaviour:
   m_Name: RangedEnemyData
   m_EditorClassIdentifier: 
   GRAVITY: 4
+  GRACE_PERIOD: 1
   MOVE_SPEED: 4
+  CHARGE_SPEED: 0
   DAMAGE: 15
   HEALTH: 25
   ATTACK_RANGE: 12

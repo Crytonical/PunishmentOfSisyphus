@@ -11,6 +11,10 @@ namespace Ephymeral.EnemyNS
 {
     public class FastEnemy : Enemy
     {
+        #region REFERENCES
+        [SerializeField] private Sprite attackSprite;
+        [SerializeField] private Animator animator;
+        #endregion
         //protected override void Awake()
         //{
         //    base.Awake();
@@ -22,7 +26,8 @@ namespace Ephymeral.EnemyNS
             speed = enemyData.CHARGE_SPEED;
             while (duration > 0)
             {
-                spriteRenderer.color = Color.yellow;
+                animator.enabled = false;
+                spriteRenderer.sprite = attackSprite;
                 duration -= Time.deltaTime;
                 velocity = speed * direction;
                 //position = velocity * Time.deltaTime;
@@ -41,6 +46,7 @@ namespace Ephymeral.EnemyNS
             {
                 weaponHitbox.enabled = false;
             }
+            animator.enabled = true;
             StartCoroutine(AttackCooldown(attackCooldown));
         }
 
@@ -50,7 +56,6 @@ namespace Ephymeral.EnemyNS
             while (time > 0)
             {
                 time -= Time.deltaTime;
-                spriteRenderer.color = Color.cyan;
 
                 // Lerp direction away from player
                 direction = (playerEvent.Position - position).normalized;
@@ -69,7 +74,6 @@ namespace Ephymeral.EnemyNS
             while (time > 0)
             {
                 time -= Time.deltaTime;
-                spriteRenderer.color = Color.white;
                 yield return null;
             }
 
