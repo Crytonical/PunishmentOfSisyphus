@@ -233,6 +233,8 @@ namespace Ephymeral.PlayerNS
                 health -= damage;
                 currentActiveIFrames = invincibilityFrames;
             }
+
+            UpdateEventObject();
         }
 
         private void Die()
@@ -387,7 +389,16 @@ namespace Ephymeral.PlayerNS
         {
             //levelTransition = !levelTransition;
             position = new Vector3(0.0f, -10.0f, 0.0f);
+
             transform.position = position;
+
+            // Pickup Boulder
+            state = PlayerState.CarryingBounder;
+            speed = playerData.CARRY_SPEED;
+            boulderEvent.PickUpBoulder();
+
+            // Refill health
+            playerEvent.TakeDamage(health - playerData.MAX_HP);
         }
     }
 }

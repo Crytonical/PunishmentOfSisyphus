@@ -73,6 +73,8 @@ namespace Ephymeral.EnemyNS
             {
                 time -= Time.deltaTime;
                 spriteRenderer.color = Color.yellow;
+                Quaternion targetRotation = Quaternion.LookRotation(Vector3.forward, -direction);
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 180f);
 
                 // Rotate towards player
                 //direction = (playerEvent.Position - position).normalized;

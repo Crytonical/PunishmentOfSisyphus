@@ -48,7 +48,7 @@ namespace Ephymeral.EnemyNS
 
                 // Check for collision with wall. End early if so
                 if (!levelBounds.GetComponent<RectTransform>().rect.Contains(transform.position))
-                    duration = 0;
+                    break;
 
                 yield return null;
             }
@@ -66,6 +66,7 @@ namespace Ephymeral.EnemyNS
 
         protected override IEnumerator AttackWindUP(float time)
         {
+            direction = (playerEvent.Position - position).normalized;
             attackState = AttackState.WindingUp;
             while (time > 0)
             {
@@ -73,7 +74,7 @@ namespace Ephymeral.EnemyNS
                 spriteRenderer.color = Color.yellow;
 
                 // Lerp direction away from player
-                direction = (playerEvent.Position - position).normalized;
+                //direction = (playerEvent.Position - position).normalized;
                 //Quaternion xToY = Quaternion.LookRotation(Vector3.forward, Vector3.left);
                 //Quaternion targetRotation = Quaternion.LookRotation(transform.forward, direction);
                 //transform.rotation = targetRotation * xToY;
@@ -97,11 +98,11 @@ namespace Ephymeral.EnemyNS
 
         public override void TakeDamage(float damage, Vector2 knockback)
         {
-            base.TakeDamage(damage, knockback);
-
             StopCoroutine("Attack");
             StopCoroutine("AttackWindUP");
             StopCoroutine("AttackCooldown");
+
+            base.TakeDamage(damage, knockback);
         }
 
         private void OnDrawGizmos()

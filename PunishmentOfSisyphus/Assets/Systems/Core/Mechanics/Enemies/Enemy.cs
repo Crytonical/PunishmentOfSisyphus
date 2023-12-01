@@ -230,50 +230,53 @@ namespace Ephymeral.EnemyNS
 
         protected virtual IEnumerator Attack(float duration)
         {
-            weaponHitbox.enabled = true;
-            while (duration > 0)
-            {
-                duration -= Time.deltaTime;
-                spriteRenderer.color = Color.yellow;
-                // lerp towards player
-                yield return null;
-            }
+            //weaponHitbox.enabled = true;
+            //while (duration > 0)
+            //{
+            //    duration -= Time.deltaTime;
+            //    spriteRenderer.color = Color.yellow;
+            //    // lerp towards player
+            //    yield return null;
+            //}
 
-            state = EnemyState.Seeking;
-            attackState = AttackState.CoolingDown;
-            if (weaponHitbox)
-            {
-                weaponHitbox.enabled = false;
-            }
-            StartCoroutine(AttackCooldown(attackCooldown));
+            //state = EnemyState.Seeking;
+            //attackState = AttackState.CoolingDown;
+            //if (weaponHitbox)
+            //{
+            //    weaponHitbox.enabled = false;
+            //}
+            //StartCoroutine(AttackCooldown(attackCooldown));
+            yield return null;
         }
 
         protected virtual IEnumerator AttackWindUP(float time)
         {
-            attackState = AttackState.WindingUp;
-            float tTime = time;
+            //attackState = AttackState.WindingUp;
+            //float tTime = time;
 
-            while (time > 0)
-            {
-                time -= Time.deltaTime;
-                spriteRenderer.color = Color.cyan;
-                yield return null;
-            }
+            //while (time > 0)
+            //{
+            //    time -= Time.deltaTime;
+            //    spriteRenderer.color = Color.cyan;
+            //    yield return null;
+            //}
 
-            attackState = AttackState.Executing;
-            StartCoroutine(Attack(attackDuration));
+            //attackState = AttackState.Executing;
+            //StartCoroutine(Attack(attackDuration));
+            yield return null;
         }
 
         protected virtual IEnumerator AttackCooldown(float time)
         {
-            while (time > 0)
-            {
-                time -= Time.deltaTime;
-                spriteRenderer.color = Color.white;
-                yield return null;
-            }
+            //while (time > 0)
+            //{
+            //    time -= Time.deltaTime;
+            //    spriteRenderer.color = Color.white;
+            //    yield return null;
+            //}
 
-            attackState = AttackState.None;
+            //attackState = AttackState.None;
+            yield return null;
         }
 
         protected virtual IEnumerator DamageStun(float time)
@@ -281,10 +284,12 @@ namespace Ephymeral.EnemyNS
             while (time > 0)
             {
                 time -= Time.deltaTime;
+                speed = 0;
                 spriteRenderer.color = Color.gray;
                 velocity = Vector2.zero;
                 yield return null;
             }
+            speed = enemyData.MOVE_SPEED;
             state = EnemyState.Seeking;
         }
 
