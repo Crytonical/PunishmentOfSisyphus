@@ -23,11 +23,25 @@ namespace Ephymeral.EnemyNS
 
             //rotateTowardsPlayer = false;
         }
+
+        protected override void FixedUpdate()
+        {
+            // Rotate towards player position
+            if (state == EnemyState.Seeking && rotateTowardsPlayer)
+            {
+                Quaternion targetRotation = Quaternion.LookRotation(Vector3.forward, -direction);
+                //targetRotation *= Quaternion.Euler(0, 0, 270);
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 180f);
+            }
+
+            base.FixedUpdate();
+        }
         
         protected override IEnumerator Attack(float duration)
         {
             // Get the direction of the attack (towards player)
             direction = (playerEvent.Position - position).normalized;
+            spriteRenderer.color = Color.red;
 
             // Spawn a bullet, get reference to its bullet script
             GameObject bullet = Instantiate(bulletPrefab, transform);
@@ -58,7 +72,7 @@ namespace Ephymeral.EnemyNS
             while (time > 0)
             {
                 time -= Time.deltaTime;
-                spriteRenderer.color = Color.red;
+                spriteRenderer.color = Color.yellow;
 
                 // Rotate towards player
                 //direction = (playerEvent.Position - position).normalized;

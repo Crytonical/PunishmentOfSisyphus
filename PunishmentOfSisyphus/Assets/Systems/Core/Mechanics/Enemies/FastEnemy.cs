@@ -15,10 +15,23 @@ namespace Ephymeral.EnemyNS
         [SerializeField] private Sprite attackSprite;
         [SerializeField] private Animator animator;
         #endregion
-        //protected override void Awake()
-        //{
-        //    base.Awake();
-        //}
+        protected override void Awake()
+        {
+            base.Awake();
+        }
+
+        protected override void FixedUpdate()
+        {
+            // Rotate towards player position
+            if (state == EnemyState.Seeking && rotateTowardsPlayer)
+            {
+                Quaternion targetRotation = Quaternion.LookRotation(Vector3.forward, direction);
+                targetRotation *= Quaternion.Euler(0, 0, 270);
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 180f);
+            }
+
+            base.FixedUpdate();
+        }
 
         protected override IEnumerator Attack(float duration)
         {
@@ -27,6 +40,7 @@ namespace Ephymeral.EnemyNS
             while (duration > 0)
             {
                 animator.enabled = false;
+                spriteRenderer.color = Color.red;
                 spriteRenderer.sprite = attackSprite;
                 duration -= Time.deltaTime;
                 velocity = speed * direction;
@@ -56,6 +70,7 @@ namespace Ephymeral.EnemyNS
             while (time > 0)
             {
                 time -= Time.deltaTime;
+                spriteRenderer.color = Color.yellow;
 
                 // Lerp direction away from player
                 direction = (playerEvent.Position - position).normalized;

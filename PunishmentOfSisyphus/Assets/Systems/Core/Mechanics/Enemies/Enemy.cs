@@ -181,14 +181,7 @@ namespace Ephymeral.EnemyNS
                             velocity = direction * speed;
                         }
 
-                        // Rotate towards player position
-                        if (rotateTowardsPlayer)
-                        {
-                            Quaternion targetRotation = Quaternion.LookRotation(Vector3.forward, direction);
-                            targetRotation *= Quaternion.Euler(0, 0, 270);
-                            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 180f);
-                        }
-
+                        // NOTE: Switching Rotation to be handled on an enemy by enemy basis in their respective fixed updates
 
                         if (attackState == AttackState.None)
                         {
@@ -215,7 +208,8 @@ namespace Ephymeral.EnemyNS
             }
             else if (gracePeriod > 0)
             {
-                spriteRenderer.color = Color.gray;
+                //spriteRenderer.color = Color.gray;
+                spriteRenderer.color = new Color(1, 1, 1, 0.5f);    // Transparency might look better?
                 gracePeriod -= 0.01f;
             }
 

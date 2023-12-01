@@ -10,11 +10,25 @@ namespace Ephymeral.EnemyNS
 {
     public class StrongEnemy : Enemy
     {
+        protected override void FixedUpdate()
+        {
+            // Rotate towards player position
+            if (state == EnemyState.Seeking && rotateTowardsPlayer)
+            {
+                Quaternion targetRotation = Quaternion.LookRotation(Vector3.forward, -direction);
+                //targetRotation *= Quaternion.Euler(0, 0, 270);
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 180f);
+            }
+
+            base.FixedUpdate();
+        }
+
         protected override IEnumerator Attack(float duration)
         {
             weaponHitbox.enabled = true;
             while (duration > 0)
             {
+                spriteRenderer.color = Color.red;
                 duration -= Time.deltaTime;
                 spriteRenderer.color = Color.yellow;
                 // lerp towards player
@@ -37,7 +51,7 @@ namespace Ephymeral.EnemyNS
             while (time > 0)
             {
                 time -= Time.deltaTime;
-                spriteRenderer.color = Color.cyan;
+                spriteRenderer.color = Color.yellow;
                 // Lerp away from player
 
                 direction = (playerEvent.Position - position).normalized;
